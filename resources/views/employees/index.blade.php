@@ -39,7 +39,7 @@
                                 <select class="form-control" name="search_role">
                                     <option value="">All Roles</option>
                                     <option value="Web Developer">Web Developer</option>
-                                    <option value="Software Engineer">Software Engineer</option>
+                                    {{-- <option value="Software Engineer">Software Engineer</option> --}}
                                     <option value="Staff">Staff</option>
                                     <option value="Accountant">Accountant</option>
                                 </select>
@@ -63,23 +63,21 @@
                         <div class="datatable table table-stripped">
                             <table id="employees-table" class="table table-hover">
                                 <thead>
-                                    <tr>
+                                    <tr class="text-center">
                                         <th><a class="text-black"
                                                 href="{{ route('employees.index', ['orderBy' => 'employee_id', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">Employee
                                                 ID</a></th>
                                         <th><a class="text-black"
-                                                href="{{ route('employees.index', ['orderBy' => 'last_name', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">Employee
+                                                href="{{ route('employees.index', ['orderBy' => 'last_name', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">
                                                 Name</a></th>
                                         <th><a class="text-black"
-                                                href="{{ route('employees.index', ['orderBy' => 'department', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">Employee
+                                                href="{{ route('employees.index', ['orderBy' => 'department', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">
                                                 Department</a></th>
                                         <th><a class="text-black"
-                                                href="{{ route('employees.index', ['orderBy' => 'position', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">Employee
+                                                href="{{ route('employees.index', ['orderBy' => 'position', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">
                                                 Position</a></th>
-
-
                                         <th><a class="text-black"
-                                                href="{{ route('employees.index', ['orderBy' => 'date_hired', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">Employee
+                                                href="{{ route('employees.index', ['orderBy' => 'date_hired', 'orderDirection' => $orderDirection === 'asc' ? 'desc' : 'asc']) }}">
                                                 Date Hired</a></th>
                                         <th class="text-black">Status</th>
                                         <th class="text-right text-black">Actions</th>
@@ -89,7 +87,7 @@
                                 <tbody>
                                     @if ($employees->count() > 0)
                                         @foreach ($employees as $employee)
-                                            <tr>
+                                            <tr class="text-center">
                                                 <td>{{ $employee->employee_id }}</td>
                                                 <td>{{ $employee->first_name . ' ' . $employee->last_name }}</td>
                                                 <td>{{ $employee->department->name }}</td>

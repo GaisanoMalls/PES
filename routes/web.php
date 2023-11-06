@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
 use App\Livewire\EvaluationForm;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ use App\Livewire\EvaluationForm;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
+})->name('dashboard');
 
 // Employee Routes
 
@@ -34,9 +35,6 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 
 // Evaluation ALL
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
-
-
-
 
 
 // //Evaluation pages
@@ -65,3 +63,7 @@ Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::c
 
 //PDF
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
