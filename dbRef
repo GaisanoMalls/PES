@@ -1,0 +1,32 @@
+<!-- Ref: "evaluation_templates"."id" < "parts"."evaluation_template_id"/ -->
+<!-- Ref: "parts"."id" < "factors"."part_id" -->
+<!-- Ref: "evaluation_templates"."id" < "factors"."evaluation_template_id" -->
+<!-- Ref: "factors"."id" < "factor_rating_scales"."factor_id" -->
+<!-- Ref: "rating_scales"."id" < "factor_rating_scales"."rating_scale_id" -->
+<!-- Ref: "evaluation_templates"."id" < "factor_rating_scales"."evaluation_template_id" -->
+<!-- Ref: "evaluation_templates"."id" < "evaluations"."evaluation_template_id" -->
+
+Ref: "approvers"."id" < "evaluations"."approver_id"
+<!-- Ref: "employees"."id" < "evaluations"."employee_id" -->
+Ref: "evaluators"."id" < "evaluations"."evaluator_id"
+<!-- Ref: "evaluations"."id" < "evaluation_points"."evaluation_id" -->
+Ref: "employees"."id" < "evaluation_points"."employee_id" Ref: "evaluators"."id"
+< "evaluation_points"."evaluator_id"
+<!-- Ref: "evaluation_templates"."id" < "evaluation_points"."evaluation_template_id" -->
+Ref: "evaluations"."id" < "recommendations"."evaluation_id"
+Ref:"employees"."id" < "recommendations"."employee_id"
+Ref: "roles"."id" <"users"."role_id"
+Ref: "approvers"."id" < "users"."person_id"
+Ref:"evaluators"."id" < "users"."person_id"
+Ref: "employees"."id" <"users"."person_id"
+Ref: "human_resources"."id" < "users"."person_id"
+Ref:"departments"."id" < "evaluators"."department_id"
+Ref: "departments"."id" <"employees"."department_id"
+Ref: "business_units"."id" < "evaluators"."bu_id"
+Ref: "business_units"."id" < "approvers"."bu_id"
+Ref: "approvers"."id" < "clarifications"."approver_id"
+Ref: "evaluators"."id" < "clarifications"."evaluator_id"
+Ref: "evaluations"."id" <"clarifications"."evaluation_id"
+Ref: "approvers"."id" < "disapproval_reasons"."approver_id"
+Ref: "evaluators"."id" < "disapproval_reasons"."evaluator_id"
+Ref: "evaluations"."id" <"disapproval_reasons"."evaluation_id"
