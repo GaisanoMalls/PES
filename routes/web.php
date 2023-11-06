@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\UserController;
 use App\Livewire\EvaluationForm;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +25,9 @@ Route::get('/', function () {
 // Employee Routes
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
+Route::get('/employees/{id}/create', [EmployeeController::class, 'create'])->name('employees.create');
+Route::get('/employees/{id}/setRole', [EmployeeController::class, 'setRole'])->name('employees.role');
+
 Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 Route::get('/employees/{id}', [EmployeeController::class, 'show'])->name('employees.show');
 Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
@@ -67,3 +70,12 @@ Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'gener
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+// Show all users
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+// Create a new user
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Console\Command;
 
@@ -33,25 +34,33 @@ class ImportJsonData extends Command
 
         foreach ($data as $item) {
             $employeeId = $item['EMPID'] ?? 'DEFAULT_EMPLOYEE_ID';
-            $branchName = $item['BRANCHNAME'] ?? 'No branch';
-            $firstName = $item['FNAME'] ?? 'Unknown';
-            $lastName = $item['LNAME'] ?? 'Unknown';
-            $dateHired = $item['DTEHIRED'] ?? now();
-            $position = $item['PSITIONNAME'] ?? 'Unknown';
-            $employmentStatus = $item['EMPLOYMENTSTATUS'] ?? 'Unknown';
+            $departmentName = $item['DEPARTMENTNAME'] ?? 'Default Department Name';
 
-            Employee::create([
-                'employee_id' => $employeeId,
-                'department_id' => 1,
-                'branch_name' => $branchName,
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'date_hired' => $dateHired,
-                'position' => $position,
-                'employment_status' => $employmentStatus,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Find the department by name
+            $department = Department::where('name', $departmentName)->first();
+
+            // Check if the department exists; if not, create a new one
+            if (!$department) {
+                $department = new Department();
+                $department->name = $departmentName;
+                $department->save();
+            }
+
+            // Create or update the employee record
+            Employee::updateOrcreate(
+                ['employee_id' => $employeeId],
+                [
+                    'department_id' => $department->id,
+                    'branch_name' => $item['BRANCHNAME'] ?? 'No branch',
+                    'first_name' => $item['FNAME'] ?? 'Unknown',
+                    'last_name' => $item['LNAME'] ?? 'Unknown',
+                    'date_hired' => $item['DTEHIRED'] ?? now(),
+                    'position' => $item['PSITIONNAME'] ?? 'Unknown',
+                    'employment_status' => $item['EMPLOYMENTSTATUS'] ?? 'Unknown',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
         }
 
         $this->info('JSON data imported successfully.');

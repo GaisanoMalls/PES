@@ -17,25 +17,37 @@ class EmployeeSeeder extends Seeder
         $data = [
             [
                 'department_id' => 1, // Replace with the appropriate department ID
-                'employee_id' => 'EMP001',
-                'branch_name' => 'Davao',
-                'first_name' => 'John',
-                'last_name' => 'Doe',
+                'employee_id' => '1',
+                'branch_name' => 'DAVAO',
+                'first_name' => 'Evaluator',
+                'last_name' => 'Evaluator_LNAME',
                 'contact_no' => '123-456-7890',
-                'date_hired' => '2023-01-15', // Date format may vary
-                'position' => 'Manager',
+                'date_hired' => '2023-01-99', // Date format may vary
+                'position' => 'Evaluator_Position',
                 'employment_status' => 'Regular',
                 'is_active' => 1, // Active
             ],
             [
                 'department_id' => 2, // Replace with the appropriate department ID
-                'employee_id' => 'EMP002',
-                'branch_name' => 'Davao',
-                'first_name' => 'Jane',
-                'last_name' => 'Smith',
+                'employee_id' => '2',
+                'branch_name' => 'DAVAO',
+                'first_name' => 'Approver',
+                'last_name' => 'Approver_LNAME',
                 'contact_no' => '987-654-3210',
-                'date_hired' => '2022-11-20', // Date format may vary
-                'position' => 'Developer',
+                'date_hired' => '2022-11-99', // Date format may vary
+                'position' => 'Approver_Position',
+                'employment_status' => 'Regular',
+                'is_active' => 1, // Active
+            ],
+            [
+                'department_id' => 2, // Replace with the appropriate department ID
+                'employee_id' => '3',
+                'branch_name' => 'DAVAO',
+                'first_name' => 'HR',
+                'last_name' => 'HR_LNAME',
+                'contact_no' => '987-654-3210',
+                'date_hired' => '2022-11-99', // Date format may vary
+                'position' => 'HR_Position',
                 'employment_status' => 'Regular',
                 'is_active' => 1, // Active
             ],

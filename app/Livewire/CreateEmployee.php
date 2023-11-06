@@ -4,56 +4,49 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Employee;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class CreateEmployee extends Component
 {
-    public $employee_id;
-    public $first_name;
-    public $last_name;
+    public $employeeId;
+    public $employee;
+
+    public $name;
     public $email;
-    public $phone_number;
-    public $role;
-    public $join_date;
-    public function rules()
+    public $password;
+    public $passwordConfirmation;
+    public $role_id;
+    public $successMessage;
+
+    public function mount($employee)
     {
-        return [
-            'employee_id' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
-            'role' => 'required',
-            'join_date' => 'required|date',
-        ];
-    }
-
-    public function store()
-    {
-        $this->validate([
-            'employee_id' => 'required|string|unique:employees|max:255',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:employees',
-            'phone_number' => 'required|string|max:255',
-            'role' => 'required|string|max:255',
-            'join_date' => 'required|date',
-        ]);
-
-        Employee::create([
-            'employee_id' => $this->employee_id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'phone_number' => $this->phone_number,
-            'role' => $this->role,
-            'join_date' => $this->join_date,
-        ]);
-
-        session()->flash('success', 'Employee created successfully');
-        return redirect()->route('employees.index');
+        $this->employeeId = $employee;
     }
     public function render()
     {
-        return view('livewire.create-employee');
+        $employee = Employee::find($this->employeeId);
+        $this->name = $employee->first_name . ' ' . $employee->last_name;
+        return view(
+            'livewire.create-employee',
+            [
+                'employee' => $this->employee,
+                'employeeId' => $this->employeeId,
+            ]
+        );
+    }
+    public function register()
+    {
+
+        User::create([
+            'person_id' => $this->employeeId,
+            'role_id' => $this->role_id,
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+            'is_active' => 1,
+        ]);
+
+        $this->successMessage = 'User registered successfully.';
+        $this->reset(['email', 'password', 'passwordConfirmation']);
     }
 }

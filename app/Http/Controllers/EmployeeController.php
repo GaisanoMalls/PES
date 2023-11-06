@@ -43,10 +43,18 @@ class EmployeeController extends Controller
     }
 
 
-    public function create()
+    public function create($id)
     {
         // Display a form to create a new employee
-        return view('employees.create');
+        $employee = Employee::find($id);
+        return view('employees.create', compact('employee'));
+    }
+
+    public function setRole($id)
+    {
+        // Display a form to create a new employee
+        $employee = Employee::find($id);
+        return view('employees.role', compact('employee'));
     }
 
     public function store(Request $request)

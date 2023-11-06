@@ -13,7 +13,33 @@ class DepartmentSeeder extends Seeder
      */
     public function run()
     {
-        $departments = ['ICT', 'Marketing', 'Finance', 'Sales', 'HR'];
+        $departments = [
+            "ICT",
+            "HRD",
+            "MARKETING",
+            "FINANCE",
+            "LEASING",
+            "FOOD AND BEVERAGE",
+            "SUPERMARKET",
+            "SPECIALTY STORE",
+            "CORPORATE",
+            "DEPARTMENT STORE",
+            "FOOD AND BEVERAGE",
+            "FINANCE",
+            "DEPARTMENT STORE",
+            "FPM",
+            "ENGINEERING",
+            "LOGISTICS",
+            "DEPARTMENT STORE",
+            "CINEMA",
+            "DEPARTMENT STORE",
+            "MARKETING",
+            "TRMO",
+            "ADMIN SUPPORT",
+            "NUP",
+            "CCTV"
+        ];
+
 
         foreach ($departments as $departmentName) {
             Department::create([

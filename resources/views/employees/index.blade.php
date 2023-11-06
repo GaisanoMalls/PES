@@ -112,23 +112,37 @@
                                                         </div>
                                                     @endif
                                                 </td>
-
                                                 <td>
-                                                    <div class="dropdown dropdown-action">
-                                                        <a href="#" class="action-icon dropdown-toggle"
-                                                            data-toggle="dropdown" aria-expanded="false"><i
-                                                                class="fas fa-ellipsis-v ellipse_color"></i></a>
-                                                        <div class="dropdown-menu dropdown-menu-right"
-                                                            aria-labelledby="dropdownMenuButton">
-                                                            @foreach ($evaluationTemplates as $template)
+                                                    @if (Auth::user()->role_id == 1)
+                                                        <div class="dropdown dropdown-action">
+                                                            <a href="#" class="action-icon dropdown-toggle"
+                                                                data-toggle="dropdown" aria-expanded="false"><i
+                                                                    class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right"
+                                                                aria-labelledby="dropdownMenuButton">
                                                                 <a class="dropdown-item"
-                                                                    href="{{ route('evaluations.create', ['employee' => $employee->id, 'template' => $template->id, 'templateName' => $template->name]) }}"
-                                                                    data-template-name="{{ $template->name }}"
-                                                                    data-template-id="{{ $template->id }}">{{ $template->name }}</a>
-                                                            @endforeach
+                                                                    href="{{ route('employees.show', ['id' => $employee->id]) }}">Edit
+                                                                    user</a>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @elseif(Auth::user()->role_id == 2)
+                                                        <div class="dropdown dropdown-action">
+                                                            <a href="#" class="action-icon dropdown-toggle"
+                                                                data-toggle="dropdown" aria-expanded="false"><i
+                                                                    class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right"
+                                                                aria-labelledby="dropdownMenuButton">
+                                                                @foreach ($evaluationTemplates as $template)
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('evaluations.create', ['employee' => $employee->id, 'template' => $template->id, 'templateName' => $template->name]) }}"
+                                                                        data-template-name="{{ $template->name }}"
+                                                                        data-template-id="{{ $template->id }}">{{ $template->name }}</a>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     @else
