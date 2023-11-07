@@ -40,6 +40,7 @@ Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evalua
 
 
 
+//livewire
 Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
 
 
@@ -64,3 +65,8 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
 // Create a new user
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+//show specific user
+Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
+Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');

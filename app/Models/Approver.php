@@ -18,6 +18,10 @@ class Approver extends Model
     ];
 
 
+    public function businessUnit()
+    {
+        return $this->belongsTo(BusinessUnit::class, 'bu_id');
+    }
     // Define the relationship with the User model
     public function users()
     {

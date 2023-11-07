@@ -113,7 +113,8 @@
                                                                     class="fas fa-ellipsis-v ellipse_color"></i></a>
                                                             <div class="dropdown-menu dropdown-menu-right"
                                                                 aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item">Manage User</a>
+                                                                <a href="{{ route('user.show', ['id' => $user->id]) }}"
+                                                                    class="dropdown-item">Manage User</a>
                                                             </div>
                                                         </div>
                                                     @endif
