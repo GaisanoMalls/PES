@@ -5,6 +5,6 @@
 @section('content')
     <div class="m-t-30">
         <h1>Create User</h1>
-        <livewire:create-employee :employee="$employee->id" />
+        <livewire:employee-registration :employee="$employee->id" />
     </div>
 @endsection

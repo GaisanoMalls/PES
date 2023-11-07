@@ -43,10 +43,9 @@ class EmployeeController extends Controller
     }
 
 
-    public function create($id)
+    public function create($employeeId)
     {
-        // Display a form to create a new employee
-        $employee = Employee::find($id);
+        $employee = Employee::where('employee_id', $employeeId)->first();
         return view('employees.create', compact('employee'));
     }
 
@@ -82,11 +81,12 @@ class EmployeeController extends Controller
         return redirect()->route('employees.index')->with('success', 'Employee created successfully');
     }
 
-    public function show($id)
+    public function show($employeeId)
     {
-        $employee = Employee::find($id);
+        $employee = Employee::where('employee_id', $employeeId)->first();
         return view('employees.show', compact('employee'));
     }
+
 
     public function edit($id)
     {

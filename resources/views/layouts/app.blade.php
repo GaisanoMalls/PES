@@ -138,9 +138,16 @@
                                         <li><a href="{{ route('evaluations.index') }}">Evaluation </a></li>
                                     </ul>
                                 </li>
+                                @if (Auth::user()->role_id == 1)
+                                    <li>
+                                        <a href="{{ route('users.index') }}"><i class="fa fa-user-circle"></i><span>User
+                                                Management</span></a>
+                                    </li>
+                                @endif
                                 <li>
                                     <a href="#"><i class="fa fa-cog"></i> <span>Settings</span></a>
                                 </li>
+
 
                             </ul>
                         </div>

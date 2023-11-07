@@ -121,7 +121,7 @@
                                                             <div class="dropdown-menu dropdown-menu-right"
                                                                 aria-labelledby="dropdownMenuButton">
                                                                 <a class="dropdown-item"
-                                                                    href="{{ route('employees.show', ['id' => $employee->id]) }}">Edit
+                                                                    href="{{ route('employees.show', ['employee_id' => $employee->employee_id]) }}">Edit
                                                                     user</a>
                                                             </div>
                                                         </div>

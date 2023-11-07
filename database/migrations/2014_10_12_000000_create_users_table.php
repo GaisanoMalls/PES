@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('person_id');
             $table->unsignedBigInteger('role_id');
             $table->string('email');
@@ -20,21 +21,6 @@ return new class extends Migration
             $table->tinyInteger('is_active');
             $table->rememberToken();
             $table->timestamps();
-
-            // Foreign key for approvers
-            $table->foreign('person_id', 'users_person_id_approvers')
-                ->references('id')
-                ->on('approvers');
-
-            // Foreign key for evaluators
-            $table->foreign('person_id', 'users_person_id_evaluators')
-                ->references('id')
-                ->on('evaluators');
-
-            // Foreign key for human resource
-            $table->foreign('person_id', 'users_person_id_human_resources')
-                ->references('id')
-                ->on('human_resources');
         });
     }
 

@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+
         $users = User::all(); // Retrieve all users
-        return view('users.index', compact('users'));
+
+        return view('admin.index', compact('users'));
     }
+
+
+
+
+
 
     public function create()
     {
