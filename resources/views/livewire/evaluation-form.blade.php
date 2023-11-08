@@ -93,7 +93,6 @@
                                                                             value="{{ $ratingScale->equivalent_points }}"
                                                                             wire:model="selectedValues.{{ $factor->id }}"
                                                                             wire:click="updateSelectedValue({{ $factor->id }}, {{ $ratingScale->equivalent_points }})">
-
                                                                     </label>
                                                                 @endforeach
                                                                 <label class="radio-inline">
@@ -434,8 +433,6 @@
                                                                     rating:</label>
                                                                 <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factor->id }}"
                                                                     wire:change="updateNote({{ $factor->id }}, $event.target.value)"></textarea>
-
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -554,13 +551,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
         <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
         <button wire:click="submitStep4" class="btn btn-primary btn-right">Next</button>
     @endif

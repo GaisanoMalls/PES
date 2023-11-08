@@ -31,12 +31,16 @@ class Evaluation extends Model
 
     public function evaluator()
     {
-        return $this->belongsTo(Evaluator::class, 'evaluator_id');
+        return $this->belongsTo(Evaluator::class, 'evaluator_id', 'id');
     }
-
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    public function evaluatorEmployee()
+    {
+        return $this->belongsTo(Employee::class, 'evaluator_id', 'id');
     }
 
     public function evaluationTemplate()

@@ -103,6 +103,8 @@
                                     </div>
                                     <div class="user-text">
                                         <h6> {{ Auth::user()->email }}</h6>
+                                        <p> {{ Auth::user()->employee->first_name . ' ' . Auth::user()->employee->last_name }}
+                                        </p>
                                         <p class="text-muted mb-0">{{ Auth::user()->role->name }}</p>
                                     </div>
                                 </div>
@@ -135,7 +137,9 @@
                                         <span class="menu-arrow"></span></a>
                                     <ul class="submenu_class" style="display: none">
                                         <li><a href="{{ route('employees.index') }}">Employees List </a></li>
-                                        <li><a href="{{ route('evaluations.index') }}">Evaluation </a></li>
+                                        <li><a href="{{ route('evaluations.index') }}">Evaluation List </a></li>
+
+
                                     </ul>
                                 </li>
                                 @if (Auth::user()->role_id == 1)

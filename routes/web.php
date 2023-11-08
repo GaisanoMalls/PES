@@ -35,9 +35,8 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 
 
 
-// Evaluation ALL
+// Evaluation ALL view
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
-
 
 
 //livewire

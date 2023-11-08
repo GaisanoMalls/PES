@@ -12,7 +12,6 @@ use App\Models\Factor;
 use App\Models\FactorRatingScale;
 use App\Models\Part;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
 
 class EvaluationForm extends Component
 {
@@ -136,6 +135,7 @@ class EvaluationForm extends Component
         $rateesComment = session('rateesComment', '');
         $selectedPoints = session('selectedPoints', []);
         $factorNotes = session('factorNotes', []);
+
         $user = auth()->user();
 
 
@@ -162,13 +162,12 @@ class EvaluationForm extends Component
             $factorId = 1; // Reset factor ID for each part
 
             foreach ($factors as $factor) {
-
                 $note = $factorNotes[$factor->id] ?? ''; // Set note to an empty string if it's null
 
                 // Find the appropriate rating scale and factor rating scale based on factor's equivalent points
                 $ratingScaleId = null;
                 $factorRatingScaleId = null;
-                $equivalentPoints = $selectedPoints[$factor->id] ?? null;
+                $equivalentPoints = $selectedPoints[$factor->id]; // Get points based on factor ID
 
                 foreach ($factorRatingScalesData as $frsData) {
                     if ($frsData['part_id'] == $part->id && $frsData['factor_id'] == $factorId) {
@@ -176,7 +175,6 @@ class EvaluationForm extends Component
                         if ($equivalentPoints == $frsData['equivalent_points']) {
                             $ratingScaleId = $frsData['rating_scale_id'];
                             $factorRatingScaleId = $frsData['id'];
-
                             break; // Exit the loop once a match is found
                         }
                     }
@@ -205,7 +203,6 @@ class EvaluationForm extends Component
             $factorId = 1;
         }
         session()->forget(['recommendationNote', 'rateesComment', 'selectedPoints', 'factorNotes']);
-        return redirect()->route('evaluations.index');
     }
 
 

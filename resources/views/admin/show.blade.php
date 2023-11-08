@@ -42,29 +42,11 @@
                     <form method="POST" action="{{ route('user.update', $user->id) }}">
                         @csrf
                         @method('PATCH')
-
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" name="email" id="email" class="form-control"
                                 value="{{ $user->email }}">
                         </div>
-
-                        <div class="form-group">
-                            <label for="business_unit">Business Unit</label>
-                            <select name="business_unit" id="business_unit" class="form-control">
-                                @foreach ($businessUnits as $businessUnit)
-                                    <option value="{{ $businessUnit->id }}"
-                                        @if ($user->role_id == 2) {{ $businessUnit->id === $user->evaluator->bu_id ? 'selected' : '' }}
-                                    @elseif ($user->role_id == 3)
-                                        {{ $businessUnit->id === $user->approver->bu_id ? 'selected' : '' }}
-                                    @else
-                                        {{ $businessUnit->id === $user->approver->bu_id ? 'selected' : '' }} @endif>
-                                        {{ $businessUnit->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
                         <div class="form-group">
                             <label for="role">Role</label>
                             <select name="role_id" id="role" class="form-control">
@@ -77,12 +59,39 @@
                             </select>
                         </div>
 
+                        <div class="form-group" id="bu-group">
+                            <label for="bu_id">Select Business Unit:</label>
+                            <select name="bu_id" id="bu_id" class="form-control">
+                                @foreach ($businessUnits as $bu)
+                                    <option value="{{ $bu->id }}">{{ $bu->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
+                        <div class="form-group" id="department-group">
+                            <label for="department_id">Select Department:</label>
+                            <select name="department_id" id="department_id" class="form-control">
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}"
+                                        @if ($user->evaluator && $department->id == $user->evaluator->department_id) selected @endif>
+                                        {{ $department->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" id="password" class="form-control">
+                            <label for="password">Password (Leave blank to keep current password)</label>
+                            <input type="hidden" name="current_password" id="current_password"
+                                value="{{ $user->password }}">
+
                         </div>
+                        <div class="form-group">
+                            <label for="new_password">New Password (Optional)</label>
+                            <input type="password" name="new_password" id="new_password" class="form-control">
+                        </div>
+
+
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

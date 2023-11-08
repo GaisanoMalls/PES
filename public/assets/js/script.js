@@ -198,3 +198,35 @@ $(document).ready(function () {
         ],
     });
 });
+$(document).ready(function () {
+    $("#role").on("change", function () {
+        if ($(this).val() == 2) {
+            $("#department-group").show();
+        } else {
+            $("#department-group").hide();
+        }
+    });
+
+    // Initially hide the department dropdown if the role is not 'Approver'
+    if ($("#role").val() != 2) {
+        $("#department-group").hide();
+    }
+});
+$(document).ready(function () {
+    $("#bu-group").hide(); // Initially hide the Business Unit dropdown
+
+    $("#role").on("change", function () {
+        var selectedRoleId = $(this).val();
+
+        if (selectedRoleId == 2 || selectedRoleId == 3) {
+            $("#bu-group").show(); // Show the Business Unit dropdown for roles 2 and 3
+        } else {
+            $("#bu-group").hide(); // Hide the Business Unit dropdown for other roles
+        }
+    });
+
+    // Initialize the visibility based on the current selected role
+    if ($("#role").val() == 2 || $("#role").val() == 3) {
+        $("#bu-group").show();
+    }
+});

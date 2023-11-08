@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Livewire\EvaluationsTable;
 use App\Models\Employee;
 use App\Models\Evaluation;
+use App\Models\EvaluationPoint;
 use App\Models\EvaluationTemplate;
 use Illuminate\Http\Request;
+use Livewire\Livewire;
 use PDF;
 
 class EvaluationController extends Controller
 {
 
-    // get all evaluations
     public function index()
     {
-        $evaluations = Evaluation::with('employee')->get();
-        return view('evaluations.index', compact('evaluations'));
-    }
+        Livewire::component('evaluations-table', EvaluationsTable::class);
 
+        return view('evaluations.index');
+    }
     //create evaluation for employee
     public function create($employee, $template)
     {
@@ -33,9 +35,6 @@ class EvaluationController extends Controller
 
         return view('evaluations.create', compact('employee', 'templateName', 'template'));
     }
-
-
-
 
     public function generatePDF($evaluationId)
     {

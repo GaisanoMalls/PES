@@ -11,6 +11,7 @@ use App\Models\HumanResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -22,21 +23,6 @@ class UserController extends Controller
         return view('admin.index', compact('users'));
     }
 
-
-
-    // public function update(Request $request, $id)
-    // {
-    //     $user = User::find($id);
-
-    //     if (!$user) {
-    //         return redirect()->route('admin.index')->with('error', 'User not found');
-    //     }
-
-    //     $user->role_id = $request->input('role_id'); // Make sure to use 'role_id'
-    //     $user->save();
-
-    //     return redirect()->route('users.index')->with('success', 'User details updated successfully');
-    // }
     public function update(Request $request, $id)
     {
         $user = User::find($id);
@@ -50,8 +36,7 @@ class UserController extends Controller
 
         if ($user->role->id === 2) {
             if ($user->evaluator) {
-                $bu_id = $user->evaluator->businessUnit->id;
-                $dept_id = $user->evaluator->department_id;
+                // $bu_id = $user->evaluator->businessUnit->id;
                 $first_name = $user->evaluator->first_name;
                 $last_name = $user->evaluator->last_name;
                 $contact_no = $user->evaluator->contact_no;
@@ -59,12 +44,18 @@ class UserController extends Controller
             }
         } elseif ($user->role->id === 3) {
             if ($user->approver) {
-                $bu_id = $user->approver->businessUnit->id;
-                $dept_id = $user->approver->department_id;
+                //  $bu_id = $user->approver->businessUnit->id;
                 $first_name = $user->approver->first_name;
                 $last_name = $user->approver->last_name;
                 $contact_no = $user->approver->contact_no;
                 $position = $user->approver->position;
+            }
+        } elseif ($user->role->id === 5) {
+            if ($user->human_resource) {
+                $first_name = $user->human_resource->first_name;
+                $last_name = $user->human_resource->last_name;
+                $contact_no = $user->human_resource->contact_no;
+                $position = $user->human_resource->position;
             }
         }
 
@@ -76,9 +67,23 @@ class UserController extends Controller
         $newRoleId = $request->input('role_id');
         $oldRoleId = $user->role_id;
 
-        // Update the user's role
-        $user->role_id = $newRoleId;
+        // Validate the email field (you can add additional validation rules as needed)
+        $request->validate([
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        if ($request->has('new_password') && !empty($request->input('new_password'))) {
+            $hashedPassword = Hash::make($request->input('new_password'));
+            $user->password = $hashedPassword;
+        }
+
+
+
+        $user->email = $request->input('email'); // Update the user's email
+        $user->role_id = $newRoleId; // Update the user's role
+
         $user->save();
+
 
         // Delete the user from the old role's table (e.g., Evaluator)
         if ($oldRoleId == 2) {
@@ -89,11 +94,15 @@ class UserController extends Controller
             HumanResource::where('id', $user->person_id)->delete();
         }
 
+        $buId = $request->input('bu_id'); // Get the selected business unit from the input
+
         // Create a new record in the appropriate role's table (e.g., Approver)
         if ($newRoleId == 2) { // Evaluator
+            $departmentId = $request->input('department_id'); // Get the selected department from the input
+
             $evaluator = Evaluator::create([
-                'bu_id' => $bu_id,
-                'department_id' => 1,
+                'bu_id' => $buId, // Use the selected business unit
+                'department_id' => $departmentId, // Use the selected department
                 'first_name' => $first_name,
                 'last_name' => $last_name,
                 'contact_no' => $contact_no,
@@ -102,8 +111,9 @@ class UserController extends Controller
             ]);
             $user->update(['person_id' => $evaluator->id]);
         } elseif ($newRoleId == 3) { // Approver
+
             $approver = Approver::create([
-                'bu_id' => $bu_id,
+                'bu_id' => $buId,
                 'first_name' => $first_name,
                 'last_name' => $last_name,
                 'contact_no' => $contact_no,
@@ -111,6 +121,16 @@ class UserController extends Controller
                 'is_active' => 1,
             ]);
             $user->update(['person_id' => $approver->id]);
+            // Add more cases for other roles if needed
+        } elseif ($newRoleId == 5) { // Approver
+            $human_resource = HumanResource::create([
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'contact_no' => $contact_no,
+                'position' => $position,
+                'is_active' => 1,
+            ]);
+            $user->update(['person_id' => $human_resource->id]);
             // Add more cases for other roles if needed
         }
 
@@ -126,6 +146,8 @@ class UserController extends Controller
         $roles = Role::all();
         $businessUnits = BusinessUnit::all(); // Retrieve the list of business units
 
+        // Retrieve department data from the database
+        $departments = Department::all(); // Assuming you have a "Department" model
 
         $businessUnitName = null; // Initialize businessUnitName to null
         $departmentName = null; // Initialize businessUnitName to null
@@ -146,7 +168,7 @@ class UserController extends Controller
         }
 
 
-        return view('admin.show', compact('user', 'roles', 'businessUnitName', 'businessUnits', 'departmentName'));
+        return view('admin.show', compact('user', 'roles', 'businessUnitName', 'businessUnits', 'departmentName', 'departments'));
     }
     public function create()
     {
@@ -155,8 +177,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
-
         // Create a new user
         User::create([
             'name' => $request->name,

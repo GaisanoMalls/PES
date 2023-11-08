@@ -125,7 +125,7 @@
                                                                     user</a>
                                                             </div>
                                                         </div>
-                                                    @elseif(Auth::user()->role_id == 2)
+                                                    @elseif(Auth::user()->role_id == 2 || Auth::user()->role_id == 3)
                                                         <div class="dropdown dropdown-action">
                                                             <a href="#" class="action-icon dropdown-toggle"
                                                                 data-toggle="dropdown" aria-expanded="false"><i
