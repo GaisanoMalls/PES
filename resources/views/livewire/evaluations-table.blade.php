@@ -46,28 +46,8 @@
                         @endif
                     </td>
                     <td>
-                        <button class="btn btn-success">Review</button>
-                        {{-- <div class="dropdown dropdown-action">
-                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="fas fa-ellipsis-v ellipse_color"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                @if (Auth::user()->role_id == 2)
-                                    <a href="#" class="dropdown-item">Edit Evaluation</a>
-                                @endif
-
-
-                                <a class="dropdown-item" wire:click="approveEvaluation({{ $evaluation->id }})">
-                                    Review
-                                    {{-- @if ($evaluation->status == 1)
-                                        Approve
-                                    @elseif ($evaluation->status == 2)
-                                        Disapprove
-                                    @endif --}}
-
-
-
+                        <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"
+                            class="btn btn-success">Review</a>
                     </td>
                 </tr>
             @endforeach

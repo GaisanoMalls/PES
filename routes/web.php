@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\UserController;
 use App\Livewire\EvaluationForm;
+use App\Livewire\ReviewEvaluation;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -38,6 +39,7 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 // Evaluation ALL view
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
 
+Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 'review'])->name('evaluations.review');
 
 //livewire
 Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');

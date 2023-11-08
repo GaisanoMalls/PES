@@ -20,6 +20,8 @@ class EvaluationController extends Controller
 
         return view('evaluations.index');
     }
+
+
     //create evaluation for employee
     public function create($employee, $template)
     {
@@ -34,6 +36,12 @@ class EvaluationController extends Controller
         $templateName = $template->name;
 
         return view('evaluations.create', compact('employee', 'templateName', 'template'));
+    }
+    public function review(Evaluation $evaluation)
+    {
+        $evaluation->load('evaluationTemplate');
+
+        return view('evaluations.review', compact('evaluation'));
     }
 
     public function generatePDF($evaluationId)
