@@ -18,6 +18,13 @@ class FactorRatingScale extends Model
         'equivalent_points',
     ];
 
+    protected $appends = ['name'];
+
+    public function getNameAttribute()
+    {
+        return RatingScale::find($this->rating_scale_id)->name;
+    }
+
     // Define any relationships here, for example:
     public function evaluationTemplate()
     {

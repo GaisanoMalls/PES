@@ -108,22 +108,14 @@ class EvaluationForm extends Component
 
     public function submitStep1()
     {
-        // Store selectedPoints in session
-        //dd(session('selectedPoints'));
-
         $this->currentStep = 2;
     }
     public function submitStep2()
     {
-        // Store selectedPoints in session
-        // dd(session('selectedPoints'));
-
-
         $this->currentStep = 3;
     }
     public function submitStep3()
     {
-
         $this->currentStep = 4;
     }
 

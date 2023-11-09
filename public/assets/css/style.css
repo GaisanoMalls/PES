@@ -468,6 +468,12 @@ button.bg-danger:hover {
     padding-right: 70px;
 }
 
+.bg-white2 {
+    background-color: #fff;
+    padding-top: 30px;
+    padding-right: 70px;
+}
+
 .bg-purple,
 .badge-purple {
     background-color: #9368e9 !important
@@ -635,6 +641,14 @@ button.bg-danger:hover {
   margin-top: 1rem;
     width: 8rem;
 }
+
+.btn-summary {
+  float: right;
+  margin-top: 1rem;
+    width: 8rem;
+    padding-bottom: 20px;
+}
+
 
 
 .btn-info:hover,

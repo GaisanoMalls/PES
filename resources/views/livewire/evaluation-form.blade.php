@@ -95,6 +95,7 @@
                                                                             wire:click="updateSelectedValue({{ $factor->id }}, {{ $ratingScale->equivalent_points }})">
                                                                     </label>
                                                                 @endforeach
+
                                                                 <label class="radio-inline">
                                                                     @if ($loop->parent->first && $loop->first)
                                                                         <span>POINTS<br><br>
@@ -196,8 +197,6 @@
                                                                     rating:</label>
                                                                 <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factor->id }}"
                                                                     wire:change="updateNote({{ $factor->id }}, $event.target.value)"></textarea>
-
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -272,18 +271,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {{-- <div class="row">
-                                                    @if ($loop->last && $partWithFactors['part']->id === 2)
-                                                        <div class="col-6 text-left">
-                                                            <h5 hidden>Total Rate (Part 2)</h5>
-                                                        </div>
-                                                        <div class="col-12 text-center m-t-20">
-                                                            <span>Total Rate (Part 2)<br>
-                                                                <span class="box">{{ $totalRatePart2 }}</span>
-                                                            </span>
-                                                        </div>
-                                                    @endif
-                                                </div> --}}
                                             @endif
                                         @endif
                                     @endforeach
@@ -552,6 +539,6 @@
             </div>
         </div>
         <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
-        <button wire:click="submitStep4" class="btn btn-primary btn-right">Next</button>
+        <button wire:click="submitStep4" class="btn btn-primary btn-right">Submit Evaluation</button>
     @endif
 </div>
