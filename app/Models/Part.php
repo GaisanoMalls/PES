@@ -22,4 +22,8 @@ class Part extends Model
     {
         return $this->belongsTo(EvaluationTemplate::class, 'evaluation_template_id');
     }
+    public function factors()
+    {
+        return $this->hasMany(Factor::class);
+    }
 }

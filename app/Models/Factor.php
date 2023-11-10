@@ -29,4 +29,9 @@ class Factor extends Model
     {
         return $this->belongsTo(Part::class, 'part_id');
     }
+
+    public function factorRatingScales()
+    {
+        return $this->hasMany(FactorRatingScale::class);
+    }
 }
