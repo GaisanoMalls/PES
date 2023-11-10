@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\HRController;
 use App\Http\Controllers\UserController;
 use App\Livewire\EvaluationForm;
 use App\Livewire\ReviewEvaluation;
@@ -38,25 +39,29 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 
 // Evaluation ALL view
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
-
+//review evaluation
 Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 'review'])->name('evaluations.review');
-
-//livewire
-Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
-
-
-
-
-
 //PDF
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
 
 
+
+//livewire form- create evaluation to employee
+Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
+
+
+
+Route::get('/templates', [HRController::class, 'index'])->name('templates.index');
+Route::get('/templates/create', [HRController::class, 'create'])->name('templates.create');
+
+
+
+
 //LARAVEL-UI
-
 Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
 
 
 

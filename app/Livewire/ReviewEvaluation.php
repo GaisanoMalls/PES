@@ -8,6 +8,7 @@ use App\Models\Factor;
 use App\Models\FactorRatingScale;
 use App\Models\Part;
 use App\Models\RatingScale;
+use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 
 class ReviewEvaluation extends Component
@@ -25,6 +26,8 @@ class ReviewEvaluation extends Component
     public $selectedValues = [];
     public $factorNotes = [];
     public $totalRates = [];
+    public $ratingScaleNames = [];
+
 
     public function mount(Evaluation $evaluation)
     {
@@ -78,6 +81,7 @@ class ReviewEvaluation extends Component
         // Fetch parts associated with the template ID
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
 
+        $ratingScaleNames = [];
 
         foreach ($parts as $part) {
             $factors = Factor::where('part_id', $part->id)->get();
@@ -85,6 +89,7 @@ class ReviewEvaluation extends Component
             $factorCounter = 1; // Initialize factor counter to 1 for each part
 
             $totalRate = 0; // Initialize total rate for the current part
+            $ratingScaleNamesForPart = []; // Initialize array to store rating scale names
 
             foreach ($factors as $factor) {
                 // Load factor rating scales
@@ -96,12 +101,12 @@ class ReviewEvaluation extends Component
 
                 // Check if rating scales exist before adding them
                 $factor->rating_scales = $ratingScales->isNotEmpty() ? $ratingScales : null;
-                // Check if 'rating_scales' is set before accessing its property
-
 
                 foreach ($factor->rating_scales as $ratingScale) {
                     $ratingScale->acronym = RatingScale::find($ratingScale->rating_scale_id)->acronym;
+                    $ratingScaleNamesForPart[] = $ratingScale->name; // Store rating scale name
                 }
+
                 $evaluationPoint = EvaluationPoint::where([
                     'evaluation_id' => $this->evaluation->id,
                     'part_id' => $part->id,
@@ -128,38 +133,36 @@ class ReviewEvaluation extends Component
                 'factors' => $factors,
             ];
             $this->totalRates[$part->id] = $totalRate;
+            // Store rating scale names in the main array
+            $this->ratingScaleNames[$part->id] = $ratingScaleNamesForPart;
         }
     }
 
 
 
-
+    public function approveEvaluation()
+    {
+        $this->evaluation->status = 2;
+        $this->evaluation->save();
+        return Redirect::to(route('evaluations.index'));
+    }
+    public function disapproveEvaluation()
+    {
+        $this->evaluation->status = 3;
+        $this->evaluation->save();
+        return Redirect::to(route('evaluations.index'));
+    }
 
     public function submitStep1()
     {
         $this->currentStep = 2;
     }
 
-    public function submitStep2()
-    {
-
-        $this->currentStep = 3;
-    }
-    public function submitStep3()
-    {
-        $this->currentStep = 4;
-    }
 
     public function goBack()
     {
-        if ($this->currentStep > 1) {
-            $this->currentStep--;
-        }
 
-        // Re-initialize the component if going back to step 1
-        if ($this->currentStep === 1) {
-            $this->loadPartsWithFactors(); // Reinitialize the data
-        }
+        $this->currentStep = 1;
     }
 
     public function render()

@@ -127,7 +127,9 @@
                                             <div class="row">
                                                 @if ($loop->last)
                                                     <div class="col-6 text-left">
-                                                        <h5 hidden>Total Rate (Part {{ $partWithFactors['part']->id }})
+                                                        <div class="btn-right"></div>
+                                                        <h5 hidden>Total Actual Points Rate (Part
+                                                            {{ $partWithFactors['part']->id }})
                                                         </h5>
                                                     </div>
                                                     <div class="col-12 text-center m-t-20">
@@ -147,7 +149,7 @@
                     </ul>
                 </div>
             </div>
-            <button wire:click="submitStep1" class="btn btn-primary btn-right">Rating Summary</button>
+            <button wire:click="submitStep1" class="btn btn-outline-success btn-right">Rating Summary</button>
         </form>
     @elseif ($currentStep === 2)
         <table class="table table-borderless">
@@ -162,31 +164,67 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($partsWithFactors as $partWithFactors)
+                @foreach ($partsWithFactors as $index => $partWithFactors)
                     <tr>
                         <td>{{ $partWithFactors['part']->name }}</td>
                         <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
                         <td>{{ $totalRates[$partWithFactors['part']->id] }}</td>
-
-                        <td>
-                        </td>
-
-                        <td></td>
-                        <td></td>
-                    </tr>
                 @endforeach
-
-
+                <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
+                <td>
+                    @foreach ($partWithFactors['factors'] as $factorIndex => $factor)
+                        {{ $ratingScaleNames[$partWithFactors['part']->id][$factorIndex] }}
+                        @if (!$loop->last)
+                            <br> <!-- Add a line break if it's not the last factor -->
+                        @endif
+                    @endforeach
+                </td>
+                <td></td>
+                <td></td>
+                </tr>
                 <tr>
                     <td>Total</td>
                     <td>100%</td>
                     <td>{{ $combinedTotalRate }}</td>
                     <td></td>
-                    <td>
-                    </td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="m-t-50">
+            <div class="comment">
+                <div class="form-group">
+                    <label for="recommendations">RECOMMENDATION:</label>
+                    <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control" readonly>{{ $evaluation->recommendation_note }}</textarea>
+                </div>
+            </div>
+
+            <div class="comment m-t-10">
+                <div class="form-group">
+                    <label for="ratee_comments">RATEE’S COMMENTS:</label>
+                    <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control" readonly>{{ $evaluation->ratees_comment }}</textarea>
+                </div>
+            </div>
+
+        </div>
+        <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
+                class="btn btn-outline-success">Back</button></a>
+
+
+        <button wire:click="approveEvaluation"
+            @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-success btn-right" @endif>Approve
+            Evaluation</button>
+
+        <button wire:click="disapproveEvaluation"
+            @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>Disapprove
+            Evaluation</button>
+
+
+
+
+
+
 
 
     @endif

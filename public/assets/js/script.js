@@ -230,3 +230,10 @@ $(document).ready(function () {
         $("#bu-group").show();
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("recommendations").value =
+        "Default recommendation text";
+    document.getElementById("ratee_comments").value =
+        "Default ratee's comments text";
+});

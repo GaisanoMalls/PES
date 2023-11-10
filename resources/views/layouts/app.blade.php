@@ -148,6 +148,13 @@
                                                 Management</span></a>
                                     </li>
                                 @endif
+                                @if (Auth::user()->role_id == 5)
+                                    <li>
+                                        <a href="{{ route('templates.index') }}"><i
+                                                class="fa fa-user-circle"></i><span>Evaluation Template
+                                            </span></a>
+                                    </li>
+                                @endif
                                 <li>
                                     <a href="#"><i class="fa fa-cog"></i> <span>Settings</span></a>
                                 </li>

@@ -5,7 +5,7 @@
 
     <table class="table">
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th>ID</th>
                 <th>Employee ID</th>
                 <th>Employee Name</th>
@@ -13,9 +13,10 @@
                 <th>Total Rate</th>
                 <th>Recommendation Note</th>
                 <th>Ratees comment</th>
-                <th>Status</th>
+
                 <th>Evaluated By</th>
-                <th>Download</th>
+                <th>Status</th>
+
                 @if (Auth::user()->role_id != 4)
                     <th>Actions</th>
                 @endif
@@ -23,7 +24,7 @@
         </thead>
         <tbody>
             @foreach ($evaluations as $evaluation)
-                <tr>
+                <tr class="text-center">
                     <td>{{ $evaluation->id }}</td>
                     <td>{{ $evaluation->employee->employee_id }}</td>
                     <td>{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}</td>
@@ -31,23 +32,51 @@
                     <td>{{ $evaluationTotals[$evaluation->id] }}</td>
                     <td>{{ $evaluation->recommendation_note }}</td>
                     <td>{{ $evaluation->ratees_comment }}</td>
-                    <td>
-                        @if ($evaluation->status == 1)
-                            Pending
-                        @elseif($evaluation->status == 2)
-                            Approved
-                        @endif
-                    </td>
                     <td>{{ $evaluation->evaluatorEmployee->first_name }} {{ $evaluation->evaluatorEmployee->last_name }}
                     </td>
                     <td>
-                        @if (Auth::user()->role_id != 4)
-                            <a href="{{ route('evaluations.pdf', ['evaluation' => $evaluation->id]) }}">Generate PDF</a>
+                        @if ($evaluation->status == 1)
+                            <div class="actions">
+                                <a href="#" class="btn btn-sm bg-default-light mr-2">Pending</a>
+                            </div>
+                        @elseif($evaluation->status == 2)
+                            <div class="actions">
+                                <a href="#" class="btn btn-sm bg-success-light mr-2">Approved</a>
+                            </div>
+                        @elseif($evaluation->status == 3)
+                            <div class="actions">
+                                <a href="#" class="btn btn-sm bg-danger-light mr-2">Disapproved</a>
+                            </div>
                         @endif
                     </td>
+
                     <td>
-                        <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"
-                            class="btn btn-success">Review</a>
+                        <div class="dropdown dropdown-action">
+                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                @if ($evaluation->status == 1)
+                                    <a class="dropdown-item"
+                                        href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
+                                        Review
+                                    </a>
+                                @elseif($evaluation->status == 2 || $evaluation->status == 3)
+                                    <a class="dropdown-item"
+                                        href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
+                                        Edit
+                                    </a>
+                                @endif
+                                @if (Auth::user()->role_id != 4)
+                                    <a class="dropdown-item"
+                                        href="{{ route('evaluations.pdf', ['evaluation' => $evaluation->id]) }}">Generate
+                                        PDF</a>
+                                @endif
+                                @if ($evaluation->status == 2 || $evaluation->status == 3)
+                                    <a class="dropdown-item" wire:click="approveEvaluation({{ $evaluation->id }})">
+                                        Mark as pending</a>
+                                @endif
+                            </div>
+                        </div>
                     </td>
                 </tr>
             @endforeach

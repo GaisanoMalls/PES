@@ -14,10 +14,12 @@ class EvaluationsTable extends Component
 
         if ($evaluation) {
             // Toggle the status between 1 and 2
-            $newStatus = ($evaluation->status == 1) ? 2 : 1;
+            $newStatus = 1;
             $evaluation->update(['status' => $newStatus]);
         }
     }
+
+
     public function render()
     {
         $evaluations = Evaluation::with('employee', 'evaluatorEmployee')

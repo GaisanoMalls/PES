@@ -633,8 +633,7 @@ button.bg-danger:hover {
 }
 .btn-right {
   float: right;
-  margin-top: 1rem;
-    width: 8rem;
+
 }
 .btn-left {
   float: left;

@@ -37,6 +37,8 @@ class EmployeeController extends Controller
             $query->where('position', $searchRole);
         }
         $employees = $query->orderBy($orderBy, $orderDirection)->paginate(15);
+
+
         $evaluationTemplates = EvaluationTemplate::all();
 
         return view('employees.index', compact('employees', 'evaluationTemplates', 'search', 'orderBy', 'orderDirection'));
