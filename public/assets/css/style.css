@@ -288,6 +288,10 @@ table.table td h2 span {
     padding: 1rem .75rem;
     white-space: nowrap
 }
+div.c {
+  text-align: right;
+}
+
 
 .p-20 {
     padding: 20px !important
@@ -306,6 +310,9 @@ table.table td h2 span {
 }
 
 .m-r-10 {
+    margin-right: 10px !important
+}
+.m-r-15 {
     margin-right: 10px !important
 }
 
