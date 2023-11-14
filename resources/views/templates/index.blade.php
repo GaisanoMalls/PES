@@ -15,7 +15,6 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-
             </div>
         </div>
         <div class="row">
@@ -32,8 +31,7 @@
                                                 Name</a></th>
                                         <th><a class="text-black">
                                                 Created At</a></th>
-
-                                        <th class="text-right text-black">Actions</th>
+                                        <th class="text-center text-black">Actions</th>
                                     </tr>
                                 </thead>
 
@@ -43,26 +41,33 @@
                                             <td>{{ $template->id }}</td>
                                             <td>{{ $template->name }}</td>
                                             <td>{{ $template->created_at }}</td>
-                                            <td class="text-right">
-                                                <form action="{{ route('templates.edit', $template->id) }}" method="GET">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-warning">Edit</button>
-                                                </form>
-                                                <form action="{{ route('templates.destroy', $template->id) }}"
-                                                    method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger"
-                                                        onclick="return confirm('Are you sure you want to delete this template?')">Delete</button>
-                                                </form>
+                                            <td class="text-center">
+
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><i
+                                                            class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right"
+                                                        aria-labelledby="dropdownMenuButton">
+
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('templates.edit', $template->id) }}">
+                                                            @csrf
+                                                            Edit
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            onclick="return confirm('Are you sure you want to delete this template?')"
+                                                            href="{{ route('templates.destroy', $template->id) }}">
+                                                            @csrf
+                                                            Delete
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
-
                                 </tbody>
-
                             </table>
-
                         </div>
                     </div>
                 </div>

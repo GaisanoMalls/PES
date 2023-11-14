@@ -28,7 +28,6 @@ Route::get('/', function () {
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/{employee_id}/create', [EmployeeController::class, 'create'])->name('employees.create');
-
 Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 Route::get('/employees/{employee_id}', [EmployeeController::class, 'show'])->name('employees.show');
 Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
@@ -41,22 +40,20 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
 //review evaluation
 Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 'review'])->name('evaluations.review');
-
-
 //PDF
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
-
-
-
-//livewire form- create evaluation to employee
+//Create evaluation to employee
 Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
 
 
-
+//TEMPLATES
+//view all template
 Route::get('/templates', [HRController::class, 'index'])->name('templates.index');
+//create template
 Route::get('/templates/create', [HRController::class, 'create'])->name('templates.create');
 //edit template
 Route::get('/templates/{template}/edit', [HRController::class, 'edit'])->name('templates.edit');
+//delete template
 Route::delete('/templates/{template}', [HRController::class, 'destroy'])->name('templates.destroy');
 
 

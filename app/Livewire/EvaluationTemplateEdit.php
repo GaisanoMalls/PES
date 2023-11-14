@@ -34,6 +34,7 @@ class EvaluationTemplateEdit extends Component
                     'name' => $factor->name,
                     'description' => $factor->description,
                     'rating_scales' => $factor->factorRatingScales->pluck('equivalent_points', 'rating_scale_id')->toArray(),
+                    'model' => $factor, // Include the model key
                 ];
 
                 $partData['factors'][] = $factorData;
@@ -42,6 +43,7 @@ class EvaluationTemplateEdit extends Component
             $this->parts[] = $partData;
         }
     }
+
 
 
     public function addPart()
@@ -64,9 +66,14 @@ class EvaluationTemplateEdit extends Component
 
     public function removeFactor($partIndex, $factorIndex)
     {
+        $factorModel = $this->parts[$partIndex]['factors'][$factorIndex]['model'];
+
+        if ($factorModel && $factorModel->exists) {
+            $factorModel->delete();
+        }
+
         array_splice($this->parts[$partIndex]['factors'], $factorIndex, 1);
     }
-
     public function saveEvaluationTemplate()
     {
         // Update the template and related entities based on the form data
@@ -125,6 +132,10 @@ class EvaluationTemplateEdit extends Component
                     );
                 }
             }
+            // Remove any factors that were deleted in the form
+            $partModel->factors->filter(function ($factor, $index) use ($part, $factorModel) {
+                return !collect($part['factors'])->pluck('name')->contains($factor->name);
+            })->each->delete();
         }
 
         // Remove any parts that were deleted in the form
