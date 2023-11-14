@@ -17,4 +17,13 @@ class EvaluationTemplate extends Model
     {
         return $this->hasMany(Part::class, 'evaluation_template_id');
     }
+    public function factors()
+    {
+        return $this->hasMany(Factor::class);
+    }
+
+    public function factorRatingScales()
+    {
+        return $this->hasMany(FactorRatingScale::class);
+    }
 }

@@ -41,6 +41,8 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
 //review evaluation
 Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 'review'])->name('evaluations.review');
+
+
 //PDF
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
 
@@ -53,7 +55,9 @@ Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::c
 
 Route::get('/templates', [HRController::class, 'index'])->name('templates.index');
 Route::get('/templates/create', [HRController::class, 'create'])->name('templates.create');
-
+//edit template
+Route::get('/templates/{template}/edit', [HRController::class, 'edit'])->name('templates.edit');
+Route::delete('/templates/{template}', [HRController::class, 'destroy'])->name('templates.destroy');
 
 
 

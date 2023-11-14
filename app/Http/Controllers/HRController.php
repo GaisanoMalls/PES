@@ -16,4 +16,22 @@ class HRController extends Controller
     {
         return view('templates.create');
     }
+
+    public function edit($templateId)
+    {
+        return view('templates.edit', ['templateId' => $templateId]);
+    }
+    public function destroy(EvaluationTemplate $template)
+    {
+        // Delete associated records (parts, factors, and factorRatingScales)
+        $template->parts()->delete();
+        $template->factors()->delete();
+        $template->factorRatingScales()->delete();
+
+        // Delete the template itself
+        $template->delete();
+
+        // Optionally, you can redirect or return a response here
+        return redirect()->route('templates.index')->with('message', 'Template and associated records deleted successfully');
+    }
 }

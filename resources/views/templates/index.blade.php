@@ -43,7 +43,19 @@
                                             <td>{{ $template->id }}</td>
                                             <td>{{ $template->name }}</td>
                                             <td>{{ $template->created_at }}</td>
-                                            <td class="text-right"> <!-- Actions column content here --> </td>
+                                            <td class="text-right">
+                                                <form action="{{ route('templates.edit', $template->id) }}" method="GET">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-warning">Edit</button>
+                                                </form>
+                                                <form action="{{ route('templates.destroy', $template->id) }}"
+                                                    method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this template?')">Delete</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
 
