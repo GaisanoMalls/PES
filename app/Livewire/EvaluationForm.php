@@ -41,6 +41,8 @@ class EvaluationForm extends Component
     public $selectedEquivalentPoints = [];
     public $recommendationNote = '';
     public $rateesComment = '';
+    public $factorsPerPage = 6; // Number of factors per page
+    public $currentPage = 1; // Make sure $currentPage is declared in your Livewire component
 
     public function mount($employee)
     {
@@ -106,9 +108,50 @@ class EvaluationForm extends Component
         // Store the updated data in the session.
         session(['selectedPoints' => $this->selectedValues]);
     }
+    public function goBack()
+    {
+        if ($this->currentStep > 1) {
+            $this->currentStep--;
+        }
 
+        // Re-initialize the component if going back to step 1
+        if ($this->currentStep === 1) {
+        }
+    }
 
     public function submitStep1()
+    {
+        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
+        $count = $parts->count();
+        if ($count < 4) {
+            $this->currentStep = 2;
+        } else if ($count == 1) {
+            $this->currentStep = 0;
+        }
+    }
+
+    public function submitStep2()
+    {
+        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
+        $count = $parts->count();
+        if ($count == 3) {
+            $this->currentStep = 3;
+        } else if ($count == 2) {
+            $this->currentStep = 0;
+        }
+    }
+
+
+    public function submitStep3()
+    {
+        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
+        $count = $parts->count();
+        if ($count == 3) {
+            $this->currentStep = 0;
+        }
+    }
+
+    public function submitForm()
     {
         // Retrieve data from the session
         $recommendationNote = session('recommendationNote', '');
@@ -203,10 +246,12 @@ class EvaluationForm extends Component
 
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $this->partsWithFactors = [];
+        $totalRateForAllParts = 0; // Initialize the total rate for all parts
 
         foreach ($parts as $part) {
             $factors = Factor::where('part_id', $part->id)->get();
             $factorsData = [];
+            $totalRateForPart = 0; // Initialize the total rate for the part
 
             foreach ($factors as $factor) {
                 $factorData = [
@@ -222,13 +267,17 @@ class EvaluationForm extends Component
                     }),
                 ];
 
+
+                $totalRateForPart += ($this->selectedValues[$factor->id] ?? 0);
                 $factorsData[] = $factorData;
             }
 
             $this->partsWithFactors[] = [
                 'part' => $part,
                 'factors' => $factorsData,
+                'totalRate' => $totalRateForPart, // Include the total rate in the array
             ];
+            $totalRateForAllParts += $totalRateForPart;
         }
 
 
@@ -241,6 +290,9 @@ class EvaluationForm extends Component
             'ratingScales' => $this->ratingScales,
             'currentStep' => $this->currentStep,
             'totalRates' => $totalRates,
+            'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
+
+
 
         ]);
     }

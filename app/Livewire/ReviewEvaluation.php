@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Department;
+use App\Models\Employee;
 use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
 use App\Models\Factor;
@@ -15,6 +17,7 @@ class ReviewEvaluation extends Component
 {
     public $currentStep = 1;
     public $evaluation;
+    public $employeeId;
     public $employee;
     public $departmentName;
     public $employeeIdCompany;
@@ -22,19 +25,20 @@ class ReviewEvaluation extends Component
     public $position;
     public $date_hired;
     public $ratingScales;
-    public $partsWithFactors = [];
-    public $selectedValues = [];
-    public $factorNotes = [];
+    public $partsWithFactors;
+
+
     public $totalRates = [];
     public $ratingScaleNames = [];
-
+    public $selectedValues = [];
+    public $factorNotes = [];
+    public $selectedScale = [];
 
     public function mount(Evaluation $evaluation)
     {
         $this->evaluation = $evaluation->load('evaluationTemplate');
         $this->loadEmployeeData();
         $this->loadRatingScales();
-        $this->loadPartsWithFactors();
     }
 
     private function loadEmployeeData()
@@ -52,94 +56,34 @@ class ReviewEvaluation extends Component
         $this->ratingScales = RatingScale::all();
     }
 
-    public function calculateTotalRates()
+    public function calculateTotalRate()
     {
         $totalRates = [];
 
+        // Loop through each part and calculate the total rate for each part
         foreach ($this->partsWithFactors as $partWithFactors) {
-            $totalRate = 0;
+            $partTotal = 0;
 
-            foreach ($partWithFactors['factors'] as $factor) {
-                $factorId = $factor->id;
-                $totalRate += $this->selectedValues[$factorId];
-            }
+            // Loop through factors within each part and calculate their total rate
+            foreach ($partWithFactors['factors'] as $factorData) {
+                $factorId = $factorData['factor']->id;
+                $selectedValue = $this->selectedValues[$factorId] ?? 0;
 
-            $totalRates[$partWithFactors['part']->id] = $totalRate;
-        }
-
-        // Calculate the combined total rate
-        $combinedTotalRate = array_sum($totalRates);
-
-        return [
-            'totalRates' => $totalRates,
-            'combinedTotalRate' => $combinedTotalRate,
-        ];
-    }
-
-    public function loadPartsWithFactors()
-    {
-        // Fetch parts associated with the template ID
-        $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
-
-        $ratingScaleNames = [];
-
-        foreach ($parts as $part) {
-            $factors = Factor::where('part_id', $part->id)->get();
-
-            $factorCounter = 1; // Initialize factor counter to 1 for each part
-
-            $totalRate = 0; // Initialize total rate for the current part
-            $ratingScaleNamesForPart = []; // Initialize array to store rating scale names
-
-            foreach ($factors as $factor) {
-                // Load factor rating scales
-                $ratingScales = FactorRatingScale::where([
-                    'evaluation_template_id' => $this->evaluation->evaluation_template_id,
-                    'part_id' => $part->id,
-                    'factor_id' => $factorCounter,
-                ])->get();
-                $factor->rating_scales = []; // Initialize as an empty array
-
-                // Check if rating scales exist before adding them
-                $factor->rating_scales = $ratingScales->isNotEmpty() ? $ratingScales : []; // Set as an array if not empty, otherwise as an empty array
-                if ($factor->rating_scales) { // Check if not null or empty before the foreach loop
-
-                    foreach ($factor->rating_scales as $ratingScale) {
-                        $ratingScale->acronym = RatingScale::find($ratingScale->rating_scale_id)->acronym;
-                        $ratingScaleNamesForPart[] = $ratingScale->name; // Store rating scale name
-                    }
-                }
-
-                $evaluationPoint = EvaluationPoint::where([
-                    'evaluation_id' => $this->evaluation->id,
-                    'part_id' => $part->id,
-                    'factor_id' => $factorCounter,
-                ])->first();
-
-                if ($evaluationPoint) {
-                    $this->selectedValues[$factor->id] = $evaluationPoint->points;
-                    $this->factorNotes[$factor->id] = $evaluationPoint->note;
-                    $totalRate += $evaluationPoint->points; // Add the points to the total rate
+                // Ensure $selectedValue is always an integer
+                if (is_array($selectedValue)) {
+                    $partTotal += array_sum($selectedValue);
                 } else {
-                    $this->selectedValues[$factor->id] = 0;
-                    $this->factorNotes[$factor->id] = '';
+                    $partTotal += (int) $selectedValue; // Convert to integer if not already
                 }
-
-                $factorCounter++; // Increment the factor counter
             }
 
-            // Assign the total rate to the current part
-            $part->totalRate = $totalRate;
-
-            $this->partsWithFactors[] = [
-                'part' => $part,
-                'factors' => $factors,
-            ];
-            $this->totalRates[$part->id] = $totalRate;
-            // Store rating scale names in the main array
-            $this->ratingScaleNames[$part->id] = $ratingScaleNamesForPart;
+            // Store the total rate for this part
+            $totalRates[$partWithFactors['part']->id] = $partTotal;
         }
+
+        return $totalRates;
     }
+
 
 
 
@@ -170,16 +114,73 @@ class ReviewEvaluation extends Component
 
     public function render()
     {
-        $totals = $this->calculateTotalRates();
+
+
+        $this->ratingScales = RatingScale::all();
+
+        $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
+        $this->partsWithFactors = [];
+        $totalRateForAllParts = 0; // Initialize the total rate for all parts
+
+        foreach ($parts as $part) {
+            $factors = Factor::where('part_id', $part->id)->get();
+            $factorsData = [];
+            $totalRateForPart = 0; // Initialize the total rate for the part
+
+            foreach ($factors as $factor) {
+                $factorData = [
+                    'factor' => $factor,
+                    'rating_scales' => FactorRatingScale::where([
+                        'evaluation_template_id' =>
+                        $this->evaluation->evaluation_template_id,
+                        'part_id' => $part->id,
+                        'factor_id' => $factor->id,
+                    ])->get()->map(function ($scale) {
+                        $ratingScale = RatingScale::find($scale->rating_scale_id);
+                        $scale->acronym = $ratingScale->acronym;
+                        $scale->name = $ratingScale->name; // Include the rating scale name
+                        return $scale;
+                    })
+
+                ];
+                $evaluationPoint = EvaluationPoint::where([
+                    'evaluation_id' => $this->evaluation->id,
+                    'part_id' => $part->id,
+                    'factor_id' => $factor->id,
+                ])->first();
+
+                if ($evaluationPoint) {
+                    $this->selectedValues[$factor->id] = $evaluationPoint->points;
+                    $this->selectedScale[$factor->id] = $evaluationPoint->rating_scale_id;
+                    $this->factorNotes[$factor->id] = $evaluationPoint->note;
+                } else {
+                    $this->selectedValues[$factor->id] = 0;
+                    $this->selectedScale[$factor->id] = 0;
+
+                    $this->factorNotes[$factor->id] = '';
+                }
+                $totalRateForPart += ($this->selectedValues[$factor->id] ?? 0);
+                $factorsData[] = $factorData;
+            }
+
+            $this->partsWithFactors[] = [
+                'part' => $part,
+                'factors' => $factorsData,
+                'totalRate' => $totalRateForPart, // Include the total rate in the array
+            ];
+            $totalRateForAllParts += $totalRateForPart;
+        }
+
+
 
         return view('livewire.review-evaluation', [
             'employee' => $this->employee,
             'department' => $this->departmentName,
             'ratingScales' => $this->ratingScales,
             'partsWithFactors' => $this->partsWithFactors,
+            'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
             'currentStep' => $this->currentStep,
-            'totalRates' => $totals['totalRates'],
-            'combinedTotalRate' => $totals['combinedTotalRate'],
+
         ]);
     }
 }
