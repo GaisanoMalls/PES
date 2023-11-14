@@ -98,13 +98,16 @@ class ReviewEvaluation extends Component
                     'part_id' => $part->id,
                     'factor_id' => $factorCounter,
                 ])->get();
+                $factor->rating_scales = []; // Initialize as an empty array
 
                 // Check if rating scales exist before adding them
-                $factor->rating_scales = $ratingScales->isNotEmpty() ? $ratingScales : null;
+                $factor->rating_scales = $ratingScales->isNotEmpty() ? $ratingScales : []; // Set as an array if not empty, otherwise as an empty array
+                if ($factor->rating_scales) { // Check if not null or empty before the foreach loop
 
-                foreach ($factor->rating_scales as $ratingScale) {
-                    $ratingScale->acronym = RatingScale::find($ratingScale->rating_scale_id)->acronym;
-                    $ratingScaleNamesForPart[] = $ratingScale->name; // Store rating scale name
+                    foreach ($factor->rating_scales as $ratingScale) {
+                        $ratingScale->acronym = RatingScale::find($ratingScale->rating_scale_id)->acronym;
+                        $ratingScaleNamesForPart[] = $ratingScale->name; // Store rating scale name
+                    }
                 }
 
                 $evaluationPoint = EvaluationPoint::where([

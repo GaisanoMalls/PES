@@ -38,7 +38,7 @@
                                                             <!-- Radio button for each rating scale -->
                                                             <input class="custom-radio" type="radio"
                                                                 name="rating_scale_id_{{ $factorData['factor']->id }}"
-                                                                value="{{ $ratingScale->rating_scale_id }}"
+                                                                value="{{ $ratingScale->equivalent_points }}"
                                                                 wire:model="selectedValues.{{ $factorData['factor']->id }}"
                                                                 wire:click="updateSelectedValue({{ $factorData['factor']->id }}, {{ $ratingScale->equivalent_points }})">
 

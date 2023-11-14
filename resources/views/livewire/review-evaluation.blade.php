@@ -83,8 +83,9 @@
                                                             @if ($loop->parent->first && $loop->first)
                                                                 <span>Allotted%<br><br></span>
                                                             @endif
-                                                            <span
-                                                                class="box">{{ $factor->rating_scales->first()->equivalent_points }}%</span>
+
+
+
                                                         </label>
 
                                                         @foreach ($factor->rating_scales as $ratingScale)
