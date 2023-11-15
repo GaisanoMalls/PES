@@ -2,7 +2,10 @@
 
 <div class="m-t-30">
     <h1>Evaluations</h1>
-
+    <!-- Button to toggle between all evaluations and user's evaluations -->
+    <button wire:click="toggleShowAllEvaluations" class="btn btn-primary mb-3">
+        {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
+    </button>
     <table class="table">
         <thead>
             <tr class="text-center">
@@ -28,7 +31,7 @@
                     <td>{{ $evaluation->id }}</td>
                     <td>{{ $evaluation->employee->employee_id }}</td>
                     <td>{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}</td>
-                    <td>{{ \Carbon\Carbon::parse($evaluation->date_of_evaluation)->format('F d, Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($evaluation->created_at)->format('F d, Y') }}</td>
                     <td>{{ $evaluationTotals[$evaluation->id] }}</td>
                     <td>{{ $evaluation->recommendation_note }}</td>
                     <td>{{ $evaluation->ratees_comment }}</td>
@@ -74,6 +77,17 @@
                                 @if ($evaluation->status == 2 || $evaluation->status == 3)
                                     <a class="dropdown-item" wire:click="approveEvaluation({{ $evaluation->id }})">
                                         Mark as pending</a>
+                                @endif
+                                <a class="dropdown-item"
+                                    href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}">
+                                    Edit evaluation
+                                </a>
+
+                                @if ($evaluation->evaluator_id == Auth::user()->employee_id)
+                                    <a class="dropdown-item" wire:click="deleteEvaluation({{ $evaluation->id }})">
+                                        @csrf
+                                        Delete
+                                    </a>
                                 @endif
                             </div>
                         </div>

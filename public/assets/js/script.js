@@ -237,3 +237,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("ratee_comments").value =
         "Default ratee's comments text";
 });
+
+// Show modal when "Disapprove Evaluation" button is clicked
+document.getElementById("disapproveBtn").addEventListener("click", function () {
+    $("#disapprovalModal").modal("show");
+});

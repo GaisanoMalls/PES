@@ -210,7 +210,7 @@ class EvaluationForm extends Component
                     // Create the evaluation point record with the found IDs
                     EvaluationPoint::create([
                         'evaluation_id' => $evaluation->id,
-                        'evaluator_id' => 1002,
+                        'evaluator_id' => $user->employee->id,
                         'employee_id' => $this->employeeId,
                         'evaluation_template_id' => $this->templateId,
                         'part_id' => $part->id,

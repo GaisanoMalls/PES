@@ -44,6 +44,13 @@ class EvaluationController extends Controller
         return view('evaluations.review', compact('evaluation'));
     }
 
+
+    public function edit(Evaluation $evaluation)
+    {
+        $evaluation->load('evaluationTemplate');
+
+        return view('evaluations.edit', compact('evaluation'));
+    }
     public function generatePDF($evaluationId)
     {
         $evaluation = Evaluation::find($evaluationId);

@@ -5,9 +5,11 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HRController;
 use App\Http\Controllers\UserController;
+use App\Livewire\EditEvaluation;
 use App\Livewire\EvaluationForm;
 use App\Livewire\ReviewEvaluation;
 use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,9 @@ Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 're
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
 //Create evaluation to employee
 Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
+
+Route::get('/evaluations/edit/{evaluation}', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+
 
 
 //TEMPLATES

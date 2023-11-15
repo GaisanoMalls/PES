@@ -153,12 +153,13 @@
                                 </tbody>
 
                             </table>
-                            {{ $employees->appends(['search' => $search])->links() }}
 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {{ $employees->appends(['search' => $search])->links() }}
+
     </div>
 @endsection

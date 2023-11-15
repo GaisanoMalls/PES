@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Department;
+use App\Models\DisapprovalReason;
 use App\Models\Employee;
 use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
@@ -33,6 +34,9 @@ class ReviewEvaluation extends Component
     public $selectedValues = [];
     public $factorNotes = [];
     public $selectedScale = [];
+
+
+    public $disapprovalDescription; // Add this property to store the disapproval description
 
     public function mount(Evaluation $evaluation)
     {
@@ -95,9 +99,22 @@ class ReviewEvaluation extends Component
     }
     public function disapproveEvaluation()
     {
+        $this->validate([
+            'disapprovalDescription' => 'required|string', // Add validation rules if necessary
+        ]);
+
         $this->evaluation->status = 3;
         $this->evaluation->save();
-        return Redirect::to(route('evaluations.index'));
+        $user = auth()->user();
+        // Store disapproval reason
+        DisapprovalReason::create([
+            'evaluation_id' => $this->evaluation->id,
+            'approver_id' => $user->employee->id, // Assuming the approver is the authenticated user
+            'evaluator_id' => $this->evaluation->evaluator_id, // Assuming you have the evaluator ID available
+            'description' => $this->disapprovalDescription, // Use the entered description
+            'status' =>   $this->evaluation->status, // Set the status as needed
+        ]);
+        return redirect()->to(route('evaluations.index'));
     }
 
     public function submitStep1()
@@ -114,8 +131,6 @@ class ReviewEvaluation extends Component
 
     public function render()
     {
-
-
         $this->ratingScales = RatingScale::all();
 
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();

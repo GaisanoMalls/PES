@@ -51,10 +51,9 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="date_of_evaluation">Date of Evaluation</label>
-                                <input class="form-control" type="date" wire:model="date_of_evaluation"
-                                    id="date_of_evaluation" name="date_of_evaluation"
-                                    value="{{ $evaluation->employee->created_at }}" required readonly>
+                                <label for="created_at">Date of Evaluation</label>
+                                <input class="form-control" type="date" id="created_at" name="created_at"
+                                    value="{{ $evaluation->created_at }}" required readonly>
                             </div>
                         </div>
                     </div>
@@ -91,32 +90,52 @@
                                                                     <label class="radio-inline">
                                                                         {{ $ratingScale->acronym }}<br>
                                                                         {{ $ratingScale->equivalent_points }}<br>
-                                                                        <input disabled class="custom-radio"
-                                                                            type="radio"
+                                                                        <input
+                                                                            wire:click="updateSelectedValue({{ $ratingScale->factor_id }}, {{ $ratingScale->equivalent_points }})"
+                                                                            wire:click="updateSelectedScale({{ $ratingScale->factor_id }}, {{ $ratingScale->equivalent_points }})"
+                                                                            class="custom-radio" type="radio"
                                                                             name="rating_{{ $ratingScale->factor_id }}"
                                                                             value="{{ $ratingScale->equivalent_points }}"
-                                                                            @if (isset($selectedValues[$ratingScale->factor_id]) &&
-                                                                                    $selectedValues[$ratingScale->factor_id] === $ratingScale->equivalent_points) checked @endif>
+                                                                            @if (isset($originalValues[$ratingScale->factor_id]) &&
+                                                                                    $originalValues[$ratingScale->factor_id] === $ratingScale->equivalent_points) checked @endif>
                                                                     </label>
                                                                 @endforeach
+
+                                                                <br>
                                                                 <label class="radio-inline">
                                                                     @if ($loop->parent->first && $loop->first)
-                                                                        <span>POINTS<br><br>
+                                                                        <span>OLD POINT<br><br>
                                                                     @endif
-                                                                    <span id="points-{{ $factorData['factor']->id }}"
+                                                                    <span
+                                                                        id="old-points-{{ $factorData['factor']->id }}"
+                                                                        class="box">
+                                                                        {{ $originalValues[$factorData['factor']->id] ?? 0 }}
+                                                                    </span>
+                                                                </label>
+
+                                                                <label class="radio-inline">
+                                                                    @if ($loop->parent->first && $loop->first)
+                                                                        <span>NEW POINT<br><br>
+                                                                    @endif
+                                                                    <span
+                                                                        id="new-points-{{ $factorData['factor']->id }}"
                                                                         class="box">
                                                                         {{ $selectedValues[$factorData['factor']->id] ?? 0 }}
                                                                     </span>
                                                                 </label>
                                                             </div>
+
+
                                                             <div class="comment m-t-10">
                                                                 <div class="form-group">
-                                                                    <label for="">Specific
-                                                                        situations/incidents
+                                                                    <label for="">Specific situations/incidents
                                                                         to support rating:</label>
-                                                                    <textarea class="form-control" readonly>{{ $factorNotes[$factorData['factor']->id] ?? '' }}</textarea> {{-- Display the factor note --}}
+                                                                    <textarea class="form-control" placeholder="{{ $originalNotes[$factorData['factor']->id] ?? '' }}"
+                                                                        wire:model="factorNotes.{{ $factorData['factor']->id }}">{{ $factorNotes[$factorData['factor']->id] ?? '' }}</textarea>
                                                                 </div>
                                                             </div>
+
+
                                                         </div>
                                                     </div>
 
@@ -170,45 +189,49 @@
                                 @if ($loop->first)
                                     <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
                                     <td rowspan="5">
-                                        <ul>
-                                            @foreach ($ratingScales as $scale)
-                                                @if ($scale['name'] == 'Outstanding')
-                                                    @if ($totalRateForAllParts >= 95)
-                                                        <strong> 95-100% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        95-100% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'High Average')
-                                                    @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
-                                                        <strong>90-94% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        90-94% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Average')
-                                                    @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
-                                                        <strong>80-89% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        80-89% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Satisfactory')
-                                                    @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
-                                                        <strong>70-79% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        70-79% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Poor')
-                                                    @if ($totalRateForAllParts <= 69)
-                                                        <strong> 69% & below {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        69% & below {{ $scale['name'] }}
-                                                    @endif
-                                        </ul>
-                                @endif
-                        @endforeach
+
+                                        @foreach ($ratingScales as $scale)
+                                            @if ($scale['name'] == 'Outstanding')
+                                                @if ($totalRateForAllParts >= 95)
+                                                    <strong style="color: #39BF26;"> 95-100%
+                                                        {{ $scale['name'] }}</strong>
+                                                @else
+                                                    95-100% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'High Average')
+                                                @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
+                                                    <strong style="color: #268EBF;">90-94%
+                                                        {{ $scale['name'] }}</strong>
+                                                @else
+                                                    90-94% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'Average')
+                                                @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
+                                                    <strong style="color: #B3BF26;">80-89%
+                                                        {{ $scale['name'] }}</strong>
+                                                @else
+                                                    80-89% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'Satisfactory')
+                                                @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
+                                                    <strong style="color: #BF6226;">70-79%
+                                                        {{ $scale['name'] }}</strong>
+                                                @else
+                                                    70-79% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'Poor')
+                                                @if ($totalRateForAllParts <= 69)
+                                                    <strong style="color: #BF3426;">69% & below
+                                                        {{ $scale['name'] }}</strong>
+                                                @else
+                                                    69% & below {{ $scale['name'] }}
+                                                @endif
+                                            @endif
+                                        @endforeach
             </ul>
             </td>
     @endif
@@ -244,65 +267,38 @@
     </table>
 
     <div class="m-t-50">
+
+
         <div class="comment">
             <div class="form-group">
                 <label for="recommendations">RECOMMENDATION:</label>
-                <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control" readonly>{{ $evaluation->recommendation_note }}</textarea>
+                <textarea class="form-control" wire:model="recommendationNote">{{ $evaluation->recommendation_note }}</textarea>
             </div>
         </div>
+
 
         <div class="comment m-t-10">
             <div class="form-group">
                 <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control" readonly>{{ $evaluation->ratees_comment }}</textarea>
+                <textarea class="form-control" wire:model="rateesComment">{{ $evaluation->ratees_comment }}</textarea>
             </div>
         </div>
-
     </div>
-    <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
+    <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 
 
-    <button wire:click="approveEvaluation"
-        @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-success btn-right" @endif>Approve
+    <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
         Evaluation</button>
 
-    <button data-toggle="modal" data-target="#disapproveModal"
-        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>Disapprove
-        Evaluation</button>
+
+
+
+
+
 
     @endif
 
-    <!-- Modal -->
-    <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
-        aria-labelledby="disapproveModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <textarea wire:model="disapprovalDescription" id="description" placeholder="Please state the reason for disapproval"
-                            class="form-control"></textarea>
-                        @error('disapprovalDescription')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                    <button wire:click="disapproveEvaluation"
-                        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>Disapprove
-                        Evaluation</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>
 <!-- Add any additional content or buttons for the review page -->
