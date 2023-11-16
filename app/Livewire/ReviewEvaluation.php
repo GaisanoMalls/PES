@@ -11,8 +11,15 @@ use App\Models\Factor;
 use App\Models\FactorRatingScale;
 use App\Models\Part;
 use App\Models\RatingScale;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
+use Carbon\Carbon;
+
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailNotification;
 
 class ReviewEvaluation extends Component
 {
@@ -25,6 +32,8 @@ class ReviewEvaluation extends Component
     public $name;
     public $position;
     public $date_hired;
+
+    public $created_at;
     public $ratingScales;
     public $partsWithFactors;
 
@@ -35,11 +44,12 @@ class ReviewEvaluation extends Component
     public $factorNotes = [];
     public $selectedScale = [];
 
-
+    public $isFormSubmitted = false; // Add this property
     public $disapprovalDescription; // Add this property to store the disapproval description
 
     public function mount(Evaluation $evaluation)
     {
+
         $this->evaluation = $evaluation->load('evaluationTemplate');
         $this->loadEmployeeData();
         $this->loadRatingScales();
@@ -53,7 +63,11 @@ class ReviewEvaluation extends Component
         $this->name = $this->employee->first_name . ' ' . $this->employee->last_name;
         $this->position = $this->employee->position;
         $this->date_hired = $this->employee->date_hired;
+
+        // Convert JSON string to a Carbon date instance
+        $this->created_at = \Carbon\Carbon::parse($this->evaluation->created_at)->toDateTimeString();
     }
+
 
     private function loadRatingScales()
     {
@@ -93,12 +107,60 @@ class ReviewEvaluation extends Component
 
     public function approveEvaluation()
     {
+        if ($this->isFormSubmitted) {
+            return;
+        }
+
+        $userEmployeeId = Auth::user()->employee_id;
         $this->evaluation->status = 2;
+        $this->evaluation->approver_id = $userEmployeeId;
         $this->evaluation->save();
+        $user = auth()->user();
+
+        // Find the user who evaluated the performance
+        $evaluator = User::where('employee_id', $this->evaluation->evaluator_id)->first();
+
+        // Find all HR users (role_id = 5)
+        $hrUsers = User::where('role_id', 5)->get();
+
+        // Check if the evaluator is found
+        if ($evaluator && $evaluator->email) {
+            $dataEvaluator = [
+                'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
+                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' .    $this->evaluation->employee->last_name,
+
+                // Add any additional data you want to pass to the email view
+            ];
+
+            // Send email to the evaluator
+            Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+        }
+
+        // Check if there are HR users
+        if ($hrUsers->count() > 0) {
+            $dataHR = [
+                'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
+                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' .    $this->evaluation->employee->last_name,
+                // Add any additional data you want to pass to the email view
+            ];
+
+            // Send email to each HR user
+            foreach ($hrUsers as $hrUser) {
+                if ($hrUser->email) {
+                    Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
+                }
+            }
+        }
+
+        $this->isFormSubmitted = true;
+
         return Redirect::to(route('evaluations.index'));
     }
     public function disapproveEvaluation()
     {
+        if ($this->isFormSubmitted) {
+            return;
+        }
         $this->validate([
             'disapprovalDescription' => 'required|string', // Add validation rules if necessary
         ]);
@@ -106,6 +168,24 @@ class ReviewEvaluation extends Component
         $this->evaluation->status = 3;
         $this->evaluation->save();
         $user = auth()->user();
+
+
+
+        // Find the user who evaluated the performance
+        $evaluator = User::where('employee_id', $this->evaluation->evaluator_id)->first();
+
+        // Check if the evaluator is found
+        if ($evaluator && $evaluator->email) {
+            $dataEvaluator = [
+                'subject' => 'Disapprove Evaluation ' . 'ID: ' . $this->evaluation->id,
+                'body' => 'Reason of disapproval: ' . $this->disapprovalDescription,
+                // Add any additional data you want to pass to the email view
+            ];
+            // Send email to the evaluator
+            Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+        }
+
+
         // Store disapproval reason
         DisapprovalReason::create([
             'evaluation_id' => $this->evaluation->id,
@@ -114,6 +194,7 @@ class ReviewEvaluation extends Component
             'description' => $this->disapprovalDescription, // Use the entered description
             'status' =>   $this->evaluation->status, // Set the status as needed
         ]);
+        $this->isFormSubmitted = true;
         return redirect()->to(route('evaluations.index'));
     }
 

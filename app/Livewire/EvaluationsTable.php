@@ -34,12 +34,8 @@ class EvaluationsTable extends Component
 
             // Delete associated EvaluationPoints
             EvaluationPoint::where('evaluation_id', $evaluation->id)->delete();
-
-            // Optionally, you can add a success message or perform other actions after deletion
-            session()->flash('success', 'Evaluation deleted successfully.');
         } else {
             // Optionally, you can add an error message or perform other actions if the user is not authorized to delete
-            session()->flash('error', 'You are not authorized to delete this evaluation.');
         }
 
         // You may also want to redirect the user back to the previous page or perform other actions
@@ -51,14 +47,18 @@ class EvaluationsTable extends Component
     public function render()
     {
         $userEmployeeId = Auth::user()->employee_id;
+        $userRoleId = Auth::user()->role_id;
 
-        $evaluationsQuery = Evaluation::with('employee', 'evaluatorEmployee')
-            ->where('id', '>', 0)
-            ->whereRaw('id % 2 = 1');
+        $evaluationsQuery = Evaluation::with('employee', 'evaluatorEmployee');
 
         // Show only the user's evaluations if the property is set
         if (!$this->showAllEvaluations) {
             $evaluationsQuery->where('evaluator_id', $userEmployeeId);
+        }
+
+        // Additional condition for user role 5
+        if ($userRoleId == 5) {
+            $evaluationsQuery->where('status', 2);
         }
 
         $evaluations = $evaluationsQuery->get();
@@ -70,6 +70,6 @@ class EvaluationsTable extends Component
             $evaluationTotals[$evaluation->id] = $totalPoints;
         }
 
-        return view('livewire.evaluations-table', compact('evaluations', 'evaluationTotals'));
+        return view('livewire.evaluations-table', compact('evaluations', 'evaluationTotals', 'userRoleId'));
     }
 }

@@ -51,12 +51,13 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="date_of_evaluation">Date of Evaluation</label>
-                                <input class="form-control" type="date" wire:model="date_of_evaluation"
-                                    id="date_of_evaluation" name="date_of_evaluation"
-                                    value="{{ $evaluation->employee->created_at }}" required readonly>
+                                <label for="created_at">Date of Evaluation</label>
+                                <input class="form-control" type="text" id="created_at" name="created_at"
+                                    value="{{ \Carbon\Carbon::parse($evaluation->created_at)->toDateTimeString() }}"
+                                    required readonly>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

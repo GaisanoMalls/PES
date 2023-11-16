@@ -6,12 +6,16 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
+use App\Models\User;
 use Livewire\Component;
 use App\Models\RatingScale;
 use App\Models\Factor;
 use App\Models\FactorRatingScale;
 use App\Models\Part;
 
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailNotification;
 
 class EvaluationForm extends Component
 {
@@ -33,9 +37,6 @@ class EvaluationForm extends Component
     public $partsWithFactors;
     public $selectedValues = []; // Initialize as an empty array
     public $factorNotes = [];
-
-
-
     public $selectedRatingScaleIds = [];
 
     public $selectedEquivalentPoints = [];
@@ -43,6 +44,7 @@ class EvaluationForm extends Component
     public $rateesComment = '';
     public $factorsPerPage = 6; // Number of factors per page
     public $currentPage = 1; // Make sure $currentPage is declared in your Livewire component
+    public $isFormSubmitted = false; // Add this property
 
     public function mount($employee)
     {
@@ -51,6 +53,7 @@ class EvaluationForm extends Component
         $this->recommendationNote = session('recommendationNote', '');
         $this->rateesComment = session('rateesComment', '');
         $this->employeeId = $employee;
+        $this->date_of_evaluation = now()->toDateString();
     }
 
     public function updateNote($factorId, $note)
@@ -153,6 +156,10 @@ class EvaluationForm extends Component
 
     public function submitForm()
     {
+
+        if ($this->isFormSubmitted) {
+            return;
+        }
         // Retrieve data from the session
         $recommendationNote = session('recommendationNote', '');
         $rateesComment = session('rateesComment', '');
@@ -162,7 +169,7 @@ class EvaluationForm extends Component
 
 
         // Create a new evaluation record
-        $evaluation = Evaluation::create([
+        $evaluation =  Evaluation::create([
             'approver_id' => 0, // Change to the appropriate value
             'evaluator_id' => $user->employee->id, // Change to the appropriate value
             'employee_id' => $this->employeeId, // Change to the appropriate value
@@ -227,8 +234,25 @@ class EvaluationForm extends Component
                 }
             }
         }
+
+        // Get all users with role_id 3
+        $userss = User::where('role_id', 3)->get();
+
+        // Prepare the data for the email
+        $data = [
+            'subject' => 'New evaluation ' . 'ID: ' . $evaluation->id,
+            'body' => 'Evaluation for ' . $evaluation->employee->first_name . ' ' .   $evaluation->employee->last_name,
+
+            // Add any additional data you want to pass to the email view
+        ];
+
+        // Send email to each user
+        foreach ($userss as $user) {
+            Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
+        }
+        $this->isFormSubmitted = true;
         session()->forget(['recommendationNote', 'rateesComment', 'selectedPoints', 'factorNotes']);
-        return redirect()->route('evaluations.index');
+        return redirect()->route('evaluations.index')->with('success', 'Form submitted successfully.');
     }
 
 
