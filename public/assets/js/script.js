@@ -242,3 +242,4 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("disapproveBtn").addEventListener("click", function () {
     $("#disapprovalModal").modal("show");
 });
+// Add an event listener to the clickable footer link

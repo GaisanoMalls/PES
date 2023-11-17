@@ -32,4 +32,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class);
     }
+    // Define the inverse relationship with the Recommendation model
+    public function recommendations()
+    {
+        return $this->hasMany(Recommendation::class, 'employee_id', 'id');
+    }
 }

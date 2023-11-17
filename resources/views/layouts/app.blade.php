@@ -22,6 +22,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.css" />
+
+    <!-- Include SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @livewireStyles
     @livewireScripts
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -175,6 +180,8 @@
 
     </div>
 
+    <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -189,6 +196,68 @@
 
 
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        window.addEventListener('swal:modal', event => {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-secondary",
+                    cancelButton: "btn btn-info"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                reverseButtons: true,
+                icon: "success",
+                title: "Evaluation Submitted",
+                text: "You will be notified if the evaluation is approved",
+                confirmButtonText: "Close",
+                footer: ''
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectAfterClose();
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                }
+            });
+        });
+
+        window.addEventListener('swal:modal2', event => {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-secondary",
+                    cancelButton: "btn btn-info"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                reverseButtons: true,
+                icon: "success",
+                title: "Evaluation Submitted with recommendations",
+                text: "2nd text",
+                footer: `2nd footer`,
+                confirmButtonText: "Close",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectAfterClose();
+                }
+            });
+        });
+
+
+
+
+
+
+        function redirectAfterClose() {
+            window.location.href = '{{ route('evaluations.index') }}';
+        }
+    </script>
+
+
+
+
 
 </body>
 

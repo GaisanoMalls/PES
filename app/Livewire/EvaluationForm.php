@@ -16,6 +16,7 @@ use App\Models\Part;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
+use App\Models\Recommendation;
 
 class EvaluationForm extends Component
 {
@@ -45,6 +46,18 @@ class EvaluationForm extends Component
     public $factorsPerPage = 6; // Number of factors per page
     public $currentPage = 1; // Make sure $currentPage is declared in your Livewire component
     public $isFormSubmitted = false; // Add this property
+
+    public $evaluationID; // Add this property
+    public $showRecommendationSection = false;
+
+    public $currentSalary;
+    public $recommendedPosition;
+    public $level;
+    public $recommendedSalary;
+    public $remarks;
+    public $effectivityTimestamp;
+
+
 
     public function mount($employee)
     {
@@ -104,6 +117,13 @@ class EvaluationForm extends Component
     }
 
 
+
+    // Other properties and methods...
+
+    public function displayRecommendationSection()
+    {
+        $this->showRecommendationSection = true;
+    }
     public function updateSelectedValue($factorId, $value)
     {
         $this->selectedValues[$factorId] = $value;
@@ -121,6 +141,8 @@ class EvaluationForm extends Component
         if ($this->currentStep === 1) {
         }
     }
+
+
 
     public function submitStep1()
     {
@@ -154,9 +176,11 @@ class EvaluationForm extends Component
         }
     }
 
+
+
+
     public function submitForm()
     {
-
         if ($this->isFormSubmitted) {
             return;
         }
@@ -168,6 +192,9 @@ class EvaluationForm extends Component
         $user = auth()->user();
 
 
+        $this->dispatch('swal:modal', [
+            'callback' => 'redirectAfterClose'
+        ]);
         // Create a new evaluation record
         $evaluation =  Evaluation::create([
             'approver_id' => 0, // Change to the appropriate value
@@ -178,6 +205,7 @@ class EvaluationForm extends Component
             'ratees_comment' => $rateesComment,
             'status' => 1, // Set the default status
         ]);
+
 
         // Fetch data from the factor_rating_scales table
         $factorRatingScalesData = FactorRatingScale::where('evaluation_template_id', $this->templateId)->get();
@@ -250,10 +278,48 @@ class EvaluationForm extends Component
         foreach ($userss as $user) {
             Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
         }
+
+
+        if (
+            $this->currentSalary || $this->recommendedPosition || $this->level ||
+            $this->recommendedSalary || $this->remarks || $this->effectivityTimestamp
+        ) {
+            // Create a new recommendation record
+            Recommendation::create([
+                'evaluation_id' => $evaluation->id,
+                'employee_id' => $this->employeeId,
+                'current_salary' => $this->currentSalary,
+                'recommended_position' => $this->recommendedPosition,
+                'level' => $this->level,
+                'employment_status' => 'active',
+                'recommended_salary' => $this->recommendedSalary,
+                'percentage_increase' => (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100,
+                'remarks' => $this->remarks,
+                'effectivity' => $this->effectivityTimestamp,
+            ]);
+        }
+
         $this->isFormSubmitted = true;
         session()->forget(['recommendationNote', 'rateesComment', 'selectedPoints', 'factorNotes']);
-        return redirect()->route('evaluations.index')->with('success', 'Form submitted successfully.');
+        // return redirect()->route('evaluations.index')->with('success', 'Form submitted successfully.');
     }
+
+
+    public function submitReco()
+    {
+
+        $user = auth()->user();
+
+
+
+        $this->dispatch('swal:modal2', [
+            'callback' => 'redirectAfterClose'
+        ]);
+
+        $evaluation = $this->evaluationID;
+        dd($evaluation);
+    }
+
 
 
     public function render()

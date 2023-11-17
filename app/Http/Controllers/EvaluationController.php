@@ -16,10 +16,12 @@ class EvaluationController extends Controller
 
     public function index()
     {
+
         Livewire::component('evaluations-table', EvaluationsTable::class);
 
         return view('evaluations.index');
     }
+
 
 
     //create evaluation for employee

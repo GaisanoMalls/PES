@@ -500,115 +500,165 @@
     @elseif($currentStep === 4)
         <div>page 3</div>
     @elseif($currentStep === 0)
-        <form wire:submit.prevent="submitForm">
-            <table class="table table-borderless">
-                <thead>
-                    <tr>
-                        <th>Performance Measurement</th>
-                        <th>Criteria</th>
-                        <th>Total Actual Points/Rate</th>
-                        <th>Passing Points/Rate</th>
-                        <th>Ratee's Performance Level</th>
-                        <th>Remarks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($partsWithFactors as $index => $partWithFactors)
-                        <tr>
-                            <td>{{ $partWithFactors['part']->name }}</td>
-                            <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                            <td>{{ $partWithFactors['totalRate'] }}</td>
-                            @if ($loop->first)
-                                <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
-                                <td rowspan="5">
-                                    <ul>
-                                        @foreach ($ratingScales as $scale)
-                                            @if ($scale['name'] == 'Outstanding')
-                                                @if ($totalRateForAllParts >= 95)
-                                                    <strong> 95-100% {{ $scale['name'] }}</strong>
-                                                @else
-                                                    95-100% {{ $scale['name'] }}
-                                                @endif
-                                                <br>
-                                            @elseif ($scale['name'] == 'High Average')
-                                                @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
-                                                    <strong>90-94% {{ $scale['name'] }}</strong>
-                                                @else
-                                                    90-94% {{ $scale['name'] }}
-                                                @endif
-                                                <br>
-                                            @elseif ($scale['name'] == 'Average')
-                                                @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
-                                                    <strong>80-89% {{ $scale['name'] }}</strong>
-                                                @else
-                                                    80-89% {{ $scale['name'] }}
-                                                @endif
-                                                <br>
-                                            @elseif ($scale['name'] == 'Satisfactory')
-                                                @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
-                                                    <strong>70-79% {{ $scale['name'] }}</strong>
-                                                @else
-                                                    70-79% {{ $scale['name'] }}
-                                                @endif
-                                                <br>
-                                            @elseif ($scale['name'] == 'Poor')
-                                                @if ($totalRateForAllParts <= 69)
-                                                    <strong> 69% & below {{ $scale['name'] }}</strong>
-                                                @else
-                                                    69% & below {{ $scale['name'] }}
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    </ul>
 
-                                </td>
-                            @endif
-                            <td>
-                                @if ($loop->iteration == 1)
-                                    @if ($totalRateForAllParts >= 80)
-                                        <a class="btn btn-sm bg-success-light mr-2">Passed</a>
-                                    @else
-                                        Passed
-                                    @endif
-                                @elseif ($loop->iteration == 2)
-                                    @if ($totalRateForAllParts < 80)
-                                        <a class="btn btn-sm bg-danger-light mr-2">Failed</a>
-                                    @else
-                                        Failed
-                                    @endif
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                    <tr>
-                        <td>Total</td>
-                        <td>100%</td>
-                        <td>{{ $totalRateForAllParts }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-
-
+        @if ($showRecommendationSection)
             <div class="m-t-30">
-                <div class="comment">
-                    <div class="form-group">
-                        <label for="recommendations">RECOMMENDATION:</label>
-                        <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control"
-                            wire:model="recommendationNote" wire:change="updateComment('recommendations')"></textarea>
-                    </div>
+                <div class="form-group">
+                    <label for="current_salary">Current Salary:</label>
+                    <input type="number" class="form-control" wire:model="currentSalary">
                 </div>
-                <div class="comment m-t-10">
-                    <div class="form-group">
-                        <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                        <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control"
-                            wire:model="rateesComment" wire:change="updateComment('ratee_comments')"></textarea>
-                    </div>
+                <div class="form-group">
+                    <label for="recommended_position">Recommended Position:</label>
+                    <input type="text" class="form-control" wire:model="recommendedPosition">
                 </div>
+                <div class="form-group">
+                    <label for="level">Level:</label>
+                    <input type="text" class="form-control" wire:model="level">
+                </div>
+                <div class="form-group">
+                    <label for="recommended_salary">Recommended Salary:</label>
+                    <input type="number" class="form-control" wire:model="recommendedSalary">
+                </div>
+                <div class="form-group">
+                    <label for="remarks">Remarks:</label>
+                    <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                    <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp">
+                </div>
+
             </div>
-            <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
-            <button type="submit" class="btn btn-primary btn-right">Submit</button>
-        </form>
+        @endif
+
+        <div class="m-b-30">
+            <div class="m-b-30">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>Performance Measurement</th>
+                            <th>Criteria</th>
+                            <th>Total Actual Points/Rate</th>
+                            <th>Passing Points/Rate</th>
+                            <th>Ratee's Performance Level</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($partsWithFactors as $index => $partWithFactors)
+                            <tr>
+                                <td>{{ $partWithFactors['part']->name }}</td>
+                                <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
+                                <td>{{ $partWithFactors['totalRate'] }}</td>
+                                @if ($loop->first)
+                                    <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
+                                    <td rowspan="5">
+                                        <ul>
+                                            @foreach ($ratingScales as $scale)
+                                                @if ($scale['name'] == 'Outstanding')
+                                                    @if ($totalRateForAllParts >= 95)
+                                                        <strong> 95-100% {{ $scale['name'] }}</strong>
+                                                    @else
+                                                        95-100% {{ $scale['name'] }}
+                                                    @endif
+                                                    <br>
+                                                @elseif ($scale['name'] == 'High Average')
+                                                    @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
+                                                        <strong>90-94% {{ $scale['name'] }}</strong>
+                                                    @else
+                                                        90-94% {{ $scale['name'] }}
+                                                    @endif
+                                                    <br>
+                                                @elseif ($scale['name'] == 'Average')
+                                                    @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
+                                                        <strong>80-89% {{ $scale['name'] }}</strong>
+                                                    @else
+                                                        80-89% {{ $scale['name'] }}
+                                                    @endif
+                                                    <br>
+                                                @elseif ($scale['name'] == 'Satisfactory')
+                                                    @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
+                                                        <strong>70-79% {{ $scale['name'] }}</strong>
+                                                    @else
+                                                        70-79% {{ $scale['name'] }}
+                                                    @endif
+                                                    <br>
+                                                @elseif ($scale['name'] == 'Poor')
+                                                    @if ($totalRateForAllParts <= 69)
+                                                        <strong> 69% & below {{ $scale['name'] }}</strong>
+                                                    @else
+                                                        69% & below {{ $scale['name'] }}
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                @endif
+                                <td>
+                                    @if ($loop->iteration == 1)
+                                        @if ($totalRateForAllParts >= 80)
+                                            <a class="btn btn-sm bg-success-light mr-2">Passed</a>
+                                        @else
+                                            Passed
+                                        @endif
+                                    @elseif ($loop->iteration == 2)
+                                        @if ($totalRateForAllParts < 80)
+                                            <a class="btn btn-sm bg-danger-light mr-2">Failed</a>
+                                        @else
+                                            Failed
+                                        @endif
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td>Total</td>
+                            <td>100%</td>
+                            <td>{{ $totalRateForAllParts }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="m-t-30">
+                    <div class="comment">
+                        <div class="form-group">
+                            <label for="recommendations">RECOMMENDATION:</label>
+                            <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control"
+                                wire:model="recommendationNote" wire:change="updateComment('recommendations')"></textarea>
+                        </div>
+                    </div>
+                    <div class="comment m-t-10">
+                        <div class="form-group">
+                            <label for="ratee_comments">RATEE’S COMMENTS:</label>
+                            <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control"
+                                wire:model="rateesComment" wire:change="updateComment('ratee_comments')"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+            </div>
+
+        </div>
+
+        <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
+
+
+        <button wire:click="submitForm" class="btn btn-primary btn-right" id="submitButton"
+            style="margin-left: 10px;">
+            Submit
+        </button>
+        <button wire:click="displayRecommendationSection" class="btn btn-primary btn-right"
+            style="margin-right: 10px;">
+            Add Recommendation
+        </button>
     @endif
 </div>

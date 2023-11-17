@@ -52,4 +52,10 @@ class Evaluation extends Model
     {
         return $this->hasMany(EvaluationPoint::class, 'evaluation_id', 'id');
     }
+
+    // Define the inverse relationship with the Recommendation model
+    public function recommendation()
+    {
+        return $this->hasOne(Recommendation::class, 'evaluation_id', 'id');
+    }
 }
