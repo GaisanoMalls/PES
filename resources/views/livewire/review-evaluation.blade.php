@@ -243,7 +243,6 @@
     </tr>
     </tbody>
     </table>
-
     <div class="m-t-50">
         <div class="comment">
             <div class="form-group">
@@ -260,6 +259,40 @@
         </div>
 
     </div>
+    <div class="m-t-30">
+        <h3>Recommendation</h3>
+        <div class="form-group">
+            <label for="current_salary">Current Salary:</label>
+            <input type="number" class="form-control" wire:model="currentSalary" readonly
+                value="{{ $evaluation->recommendation->current_salary }}">
+        </div>
+        <div class="form-group">
+            <label for="recommended_position">Recommended Position:</label>
+            <input type="text" class="form-control" wire:model="recommendedPosition" readonly
+                value="{{ $evaluation->recommendation->recommended_position }}">
+        </div>
+        <div class="form-group">
+            <label for="level">Level:</label>
+            <input type="text" class="form-control" wire:model="level" readonly
+                value="{{ $evaluation->recommendation->level }}">
+        </div>
+        <div class="form-group">
+            <label for="recommended_salary">Recommended Salary:</label>
+            <input type="number" class="form-control" wire:model="recommendedSalary" readonly
+                value="{{ $evaluation->recommendation->recommended_salary }}">
+        </div>
+
+        <div class="form-group">
+            <label for="remarks">Remarks:</label>
+            <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks" readonly>{{ $evaluation->recommendation->remarks }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                value="{{ $evaluation->recommendation->effectivity }}" readonly>
+        </div>
+    </div>
+
     <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 

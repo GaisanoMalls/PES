@@ -1,5 +1,4 @@
 <!-- resources/views/livewire/evaluations-table.blade.php -->
-
 <div class="m-t-30">
     <h1>Evaluations</h1>
     <!-- Button to toggle between all evaluations and user's evaluations -->
@@ -20,6 +19,7 @@
                 <th>Recommendation Note</th>
                 <th>Ratees comment</th>
                 <th>Evaluated By</th>
+                <th>Recommendations</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -40,6 +40,15 @@
                     <td>{{ $evaluation->recommendation_note }}</td>
                     <td>{{ $evaluation->ratees_comment }}</td>
                     <td>{{ $evaluation->evaluatorEmployee->first_name }} {{ $evaluation->evaluatorEmployee->last_name }}
+                    </td>
+                    <td>
+                        @if (\App\Models\Recommendation::where('evaluation_id', $evaluation->id)->exists())
+                            <a href="#" class="btn btn-sm bg-success-light mr-2">
+                                Yes</a>
+                        @else
+                            <a href="#" class="btn btn-sm bg-danger-light mr-2">
+                                No</a>
+                        @endif
                     </td>
                     <td>
                         @if ($evaluation->status == 1)
