@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Clarification;
 use Livewire\Component;
 use App\Models\Evaluation;
 use App\Models\RatingScale;
@@ -9,6 +10,8 @@ use App\Models\EvaluationPoint;
 use App\Models\Factor;
 use App\Models\FactorRatingScale;
 use App\Models\Part;
+use App\Models\Recommendation;
+use Carbon\Carbon;
 
 class EditEvaluation extends Component
 {
@@ -40,6 +43,18 @@ class EditEvaluation extends Component
     public $rateesComment;
     public $recommendationNoteOld;
     public $rateesCommentOld;
+
+
+    public $currentSalary;
+    public $recommendedPosition;
+    public $level;
+    public $recommendedSalary;
+    public $remarks;
+    public $effectivityTimestamp;
+
+    public $showClarificationSection = false;
+    public $clarificationDescription;
+
     public function mount(Evaluation $evaluation)
     {
         $this->evaluation = $evaluation->load('evaluationTemplate');
@@ -48,6 +63,12 @@ class EditEvaluation extends Component
         $this->loadEmployeeData();
         $this->loadRatingScales();
     }
+
+    public function displayClarificationSection()
+    {
+        $this->showClarificationSection = true;
+    }
+
     private function loadEmployeeData()
     {
         $this->employee = $this->evaluation->employee;
@@ -57,6 +78,8 @@ class EditEvaluation extends Component
         $this->position = $this->employee->position;
         $this->date_hired = $this->employee->date_hired;
     }
+
+
     private function loadRatingScales()
     {
         $this->ratingScales = RatingScale::all();
@@ -147,7 +170,52 @@ class EditEvaluation extends Component
             'recommendation_note' => $this->recommendationNote,
             'ratees_comment' => $this->rateesComment,
         ]);
-        // Additional logic after updating EvaluationPoints if needed
+
+
+
+        // Update recommendation fields
+
+
+
+        // Set effectivity based on the provided timestamp
+        $effectivity = $this->effectivityTimestamp ? now()->parse($this->effectivityTimestamp) : null;
+
+        // Check if a recommendation exists
+        if ($this->evaluation->recommendation) {
+            // Update existing recommendation
+            $this->evaluation->recommendation->update([
+                'current_salary' => $this->currentSalary ?? $this->evaluation->recommendation->current_salary,
+                'recommended_position' => $this->recommendedPosition ?? $this->evaluation->recommendation->recommended_position,
+                'level' => $this->level ?? $this->evaluation->recommendation->level,
+                'recommended_salary' => $this->recommendedSalary ?? $this->evaluation->recommendation->recommended_salary,
+                'remarks' => $this->remarks ?? $this->evaluation->recommendation->remarks,
+                'effectivity' => $effectivity ?? $this->evaluation->recommendation->effectivity,
+            ]);
+        } elseif (
+            $this->currentSalary !== null &&
+            $this->recommendedPosition !== null &&
+            $this->level !== null &&
+            $this->recommendedSalary !== null &&
+            $this->effectivityTimestamp !== null
+        ) {
+            // Create a new recommendation entry only if required fields are not null
+            Recommendation::create([
+                'evaluation_id' => $this->evaluation->id,
+                'employee_id' => $this->evaluation->employee_id,
+                'current_salary' => $this->currentSalary,
+                'recommended_position' => $this->recommendedPosition,
+                'level' => $this->level,
+                'employment_status' => 'Active',
+                'recommended_salary' => $this->recommendedSalary,
+                'percentage_increase' => (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100,
+                'remarks' => $this->remarks,
+                'effectivity' => $effectivity,
+            ]);
+        }
+
+        // You may want to update the $this->evaluation variable with the latest data
+        $this->evaluation = $this->evaluation->fresh();
+
 
         // After updating, you can redirect or perform any other actions
         session()->flash('success', 'Evaluation updated successfully.');
@@ -159,6 +227,8 @@ class EditEvaluation extends Component
     public function render()
     {
         $this->ratingScales = RatingScale::all();
+        $clarifications = Clarification::where('evaluation_id', $this->evaluation->id)->get();
+
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
         $this->partsWithFactors = [];
         $totalRateForAllParts = 0;
@@ -231,9 +301,42 @@ class EditEvaluation extends Component
             'ratingScales' => $this->ratingScales,
             'partsWithFactors' => $this->partsWithFactors,
             'totalRateForAllParts' => $totalRateForAllParts,
+            'clarifications' => $clarifications,
 
             'currentStep' => $this->currentStep,
         ]);
+    }
+
+    public function submitClarification()
+    {
+        // Validate the input if necessary
+        $this->validate([
+            'clarificationDescription' => 'required|string',
+        ]);
+        $user = auth()->user();
+
+
+        // Save the clarification to the database
+        $clarification = new Clarification();
+        $clarification->evaluation_id = $this->evaluation->id;
+        $clarification->approver_id = $user->employee->id;
+        $clarification->evaluator_id = $this->evaluation->evaluator_id;
+        $clarification->description = $this->clarificationDescription;
+        $clarification->commentor_id = $user->employee->id;
+        $clarification->status = 4;
+        $clarification->save();
+
+        // Change the evaluation status
+        $this->evaluation->status = 4;
+        $this->evaluation->save();
+
+        // Other logic if needed...
+
+        // Clear the input field after submission
+        $this->clarificationDescription = '';
+
+        // Refresh the Livewire component or any other necessary action
+        $this->dispatch('refreshComponent');
     }
 
     public function submitStep1()

@@ -58,4 +58,8 @@ class Evaluation extends Model
     {
         return $this->hasOne(Recommendation::class, 'evaluation_id', 'id');
     }
+    public function clarification()
+    {
+        return $this->hasOne(Clarification::class, 'evaluation_id', 'id');
+    }
 }

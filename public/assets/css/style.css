@@ -4613,11 +4613,15 @@ h3.page-sub-title {
 }
 
 .blog-author-name {
-    color: #6675e9;
+    color: #009ce7;
     font-size: 18px;
     font-weight: 500
 }
-
+.span-left {
+  text-align: right;
+  font-size: 15px;
+  margin-left: 10px;
+}
 .text-red {
     color: red
 }
@@ -4655,18 +4659,19 @@ h3.page-sub-title {
 
 .about-author-img {
     background-color: #fff;
-    height: 120px;
+    height: auto;
     overflow: hidden;
     position: absolute;
     width: 120px
 }
 
 .author-details {
-    margin-left: 145px
+    margin-top: 15px;
+    margin-left: 5px
 }
 
 .about-author {
-    min-height: 120px
+    min-height: auto
 }
 
 .author-details .blog-author-name {

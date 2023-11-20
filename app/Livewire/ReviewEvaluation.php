@@ -20,6 +20,7 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
+use App\Models\Clarification;
 
 class ReviewEvaluation extends Component
 {
@@ -46,6 +47,10 @@ class ReviewEvaluation extends Component
 
     public $isFormSubmitted = false; // Add this property
     public $disapprovalDescription; // Add this property to store the disapproval description
+    public $showClarificationSection = false;
+
+    public $clarificationDescription;
+
 
     public function mount(Evaluation $evaluation)
     {
@@ -67,7 +72,10 @@ class ReviewEvaluation extends Component
         // Convert JSON string to a Carbon date instance
         $this->created_at = \Carbon\Carbon::parse($this->evaluation->created_at)->toDateTimeString();
     }
-
+    public function displayClarificationSection()
+    {
+        $this->showClarificationSection = true;
+    }
 
     private function loadRatingScales()
     {
@@ -167,7 +175,7 @@ class ReviewEvaluation extends Component
 
         $this->evaluation->status = 3;
         $this->evaluation->save();
-        $user = auth()->user();
+        $userEmployeeId = Auth::user()->employee_id;
 
 
 
@@ -189,13 +197,45 @@ class ReviewEvaluation extends Component
         // Store disapproval reason
         DisapprovalReason::create([
             'evaluation_id' => $this->evaluation->id,
-            'approver_id' => $user->employee->id, // Assuming the approver is the authenticated user
+            'approver_id' => $userEmployeeId, // Assuming the approver is the authenticated user
             'evaluator_id' => $this->evaluation->evaluator_id, // Assuming you have the evaluator ID available
             'description' => $this->disapprovalDescription, // Use the entered description
             'status' =>   $this->evaluation->status, // Set the status as needed
         ]);
         $this->isFormSubmitted = true;
         return redirect()->to(route('evaluations.index'));
+    }
+
+    public function submitClarification()
+    {
+        // Validate the input if necessary
+        $this->validate([
+            'clarificationDescription' => 'required|string',
+        ]);
+        $user = auth()->user();
+
+
+        // Save the clarification to the database
+        $clarification = new Clarification();
+        $clarification->evaluation_id = $this->evaluation->id;
+        $clarification->approver_id = $user->employee->id;
+        $clarification->evaluator_id = $this->evaluation->evaluator_id;
+        $clarification->description = $this->clarificationDescription;
+        $clarification->commentor_id = $user->employee->id;
+        $clarification->status = 4;
+        $clarification->save();
+
+        // Change the evaluation status
+        $this->evaluation->status = 4;
+        $this->evaluation->save();
+
+        // Other logic if needed...
+
+        // Clear the input field after submission
+        $this->clarificationDescription = '';
+
+        // Refresh the Livewire component or any other necessary action
+        $this->dispatch('refreshComponent');
     }
 
     public function submitStep1()
@@ -213,6 +253,7 @@ class ReviewEvaluation extends Component
     public function render()
     {
         $this->ratingScales = RatingScale::all();
+        $clarifications = Clarification::where('evaluation_id', $this->evaluation->id)->get();
 
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
         $this->partsWithFactors = [];
@@ -276,6 +317,7 @@ class ReviewEvaluation extends Component
             'partsWithFactors' => $this->partsWithFactors,
             'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
             'currentStep' => $this->currentStep,
+            'clarifications' => $clarifications,
 
         ]);
     }

@@ -269,40 +269,47 @@
         <div class="form-group">
             <label for="current_salary">Current Salary:</label>
             <input type="number" class="form-control" wire:model="currentSalary"
-                value="{{ $evaluation->recommendation->current_salary }}">
+                placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}">
         </div>
         <div class="form-group">
             <label for="recommended_position">Recommended Position:</label>
             <input type="text" class="form-control" wire:model="recommendedPosition"
-                value="{{ $evaluation->recommendation->recommended_position }}">
+                placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}">
         </div>
         <div class="form-group">
             <label for="level">Level:</label>
             <input type="text" class="form-control" wire:model="level"
-                value="{{ $evaluation->recommendation->level }}">
+                placeholder="{{ $evaluation->recommendation->level ?? '' }}">
         </div>
         <div class="form-group">
             <label for="recommended_salary">Recommended Salary:</label>
             <input type="number" class="form-control" wire:model="recommendedSalary"
-                value="{{ $evaluation->recommendation->recommended_salary }}">
+                placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}">
         </div>
-
         <div class="form-group">
             <label for="remarks">Remarks:</label>
-            <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks">{{ $evaluation->recommendation->remarks }}</textarea>
+            <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
+                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}"></textarea>
         </div>
         <div class="form-group">
-            <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+            @php
+                $effectivity = optional($evaluation->recommendation)->effectivity;
+            @endphp
+            <label for="effectivityTimestamp">Effectivity Timestamp:
+                {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
+
+            </label>
             <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp">
         </div>
+
+
     </div>
     <div class="m-t-50">
-
 
         <div class="comment">
             <div class="form-group">
                 <label for="recommendations">RECOMMENDATION:</label>
-                <textarea class="form-control" wire:model="recommendationNote">{{ $evaluation->recommendation_note }}</textarea>
+                <textarea class="form-control" wire:model="recommendationNote" placeholder="{{ $evaluation->recommendation_note }}"></textarea>
             </div>
         </div>
 
@@ -310,10 +317,45 @@
         <div class="comment m-t-10">
             <div class="form-group">
                 <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                <textarea class="form-control" wire:model="rateesComment">{{ $evaluation->ratees_comment }}</textarea>
+                <textarea class="form-control" wire:model="rateesComment" placeholder="{{ $evaluation->ratees_comment }}"></textarea>
             </div>
         </div>
     </div>
+
+
+    @if ($showClarificationSection)
+
+
+
+        <div class="m-t-30">
+            @foreach ($clarifications as $clarification)
+                <div class="widget author-widget">
+                    <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
+                        {{ $clarification->commentorName->last_name }} -
+                        {{ $clarification->commentor->role->name }}</span>
+                    <div class="about-author">
+                        <div class="author-details">
+                            <p>{{ $clarification->description }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea rows="3" wire:model="clarificationDescription" id="description" class="form-control"
+                    placeholder="Write your clarifications.."></textarea>
+            </div>
+
+            <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
+                Clarification</button>
+        </div>
+
+    @endif
+
+
+
     <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 
@@ -321,7 +363,8 @@
     <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
         Evaluation</button>
 
-
+    <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
+        Clarifications</button>
 
 
 

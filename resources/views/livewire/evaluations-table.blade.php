@@ -63,6 +63,10 @@
                             <div class="actions">
                                 <a href="#" class="btn btn-sm bg-danger-light mr-2">Disapproved</a>
                             </div>
+                        @elseif($evaluation->status == 4)
+                            <div class="actions">
+                                <a href="#" class="btn btn-sm bg-default-light mr-2">Clarifications</a>
+                            </div>
                         @endif
                     </td>
 
@@ -71,12 +75,14 @@
                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
                                 aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                @if (Auth::user()->role_id == 3 && $evaluation->status == 1)
+                                @if (
+                                    (Auth::user()->role_id == 3 && $evaluation->status == 1) ||
+                                        (Auth::user()->role_id == 3 && $evaluation->status == 4))
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
                                         Review
                                     </a>
-                                @elseif($evaluation->approver_id == Auth::user()->employee_id && ($evaluation->status == 2 || $evaluation->status == 3))
+                                @elseif(Auth::user()->employee_id == $evaluation->approver_id)
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
                                         Edit Review
@@ -112,4 +118,5 @@
             @endforeach
         </tbody>
     </table>
+
 </div>

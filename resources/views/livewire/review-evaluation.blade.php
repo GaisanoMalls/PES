@@ -260,7 +260,7 @@
 
     </div>
     <div class="m-t-30">
-        <h3>Recommendation</h3>
+        <h4 class="text-center">Recommendation</h4>
         <div class="form-group">
             <label for="current_salary">Current Salary:</label>
             <input type="number" class="form-control" wire:model="currentSalary" readonly
@@ -296,14 +296,56 @@
     <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 
-
     <button wire:click="approveEvaluation"
-        @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-success btn-right" @endif>Approve
-        Evaluation</button>
+        @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>Approve
+        Evaluation
+    </button>
 
     <button data-toggle="modal" data-target="#disapproveModal"
-        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>Disapprove
-        Evaluation</button>
+        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
+        Evaluation
+    </button>
+
+    <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
+        Clarifications</button>
+
+
+    @if ($showClarificationSection)
+
+
+
+        <div class="m-t-30">
+            @if ($clarifications->count() > 0)
+
+                @foreach ($clarifications as $clarification)
+                    <div class="widget author-widget">
+                        <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
+                            {{ $clarification->commentorName->last_name }} -
+                            {{ $clarification->commentor->role->name }}</span>
+                        <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
+                        <div class="about-author">
+                            <div class="author-details">
+                                <p>{{ $clarification->description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p>No clarifications available.</p>
+            @endif
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea rows="3" wire:model="clarificationDescription" id="description" class="form-control"
+                    placeholder="Write your clarifications.."></textarea>
+            </div>
+
+            <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
+                Clarification</button>
+        </div>
+
+    @endif
+
 
     @endif
 
