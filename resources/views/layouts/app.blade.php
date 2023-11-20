@@ -93,6 +93,64 @@
                     </a>
                     <a class="mobile_btn" id="mobile_btn"> <i class="fas fa-bars"></i> </a>
                     <ul class="nav user-menu">
+                        @auth
+                            <?php
+                            // Get the current authenticated user
+                            $user = Auth::user();
+                            
+                            // Retrieve user notifications based on employee_id
+                            $notifications = \App\Models\Notification::where('employee_id', $user->employee_id)->get();
+                            ?>
+                        @endauth
+
+                        <li class="nav-item dropdown noti-dropdown">
+                            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                                <i class="fe fe-bell"></i>
+                                <span
+                                    class="badge badge-pill">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
+                            </a>
+                            <div class="dropdown-menu notifications">
+                                <div class="topnav-dropdown-header">
+                                    <span class="notification-title">Notifications</span>
+                                    <a href="{{ route('markAllAsRead') }}" class="clear-noti"> Clear All </a>
+                                </div>
+                                <div class="noti-content">
+                                    <ul class="notification-list">
+                                        @auth
+                                            @forelse ($notifications as $notification)
+                                                <li class="notification-message">
+                                                    <a href="#">
+                                                        <div class="media">
+                                                            <div class="media-body">
+                                                                <p class="noti-details">
+                                                                    <span
+                                                                        class="noti-title">{{ $notification->notif_title }}</span>
+                                                                    <span
+                                                                        class="noti-title">{{ $notification->notif_desc }}</span>
+                                                                </p>
+                                                                <p class="noti-time">
+                                                                    <span
+                                                                        class="notification-time">{{ $notification->created_at->diffForHumans() }}</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @empty
+                                                <li class="notification-message">
+                                                    <p>No notifications</p>
+                                                </li>
+                                            @endforelse
+                                        @endauth
+                                    </ul>
+                                </div>
+                                <div class="topnav-dropdown-footer">
+                                    <a href="#">View all Notifications</a>
+                                </div>
+                            </div>
+                        </li>
+
+
                         <li class="nav-item dropdown has-arrow">
                             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                                 <span class="user-img">
@@ -244,10 +302,6 @@
                 }
             });
         });
-
-
-
-
 
 
         function redirectAfterClose() {

@@ -2,8 +2,7 @@
     @if ($currentStep === 1)
         <span>Non-Supervisory (Support & Non-Sales)</span>
         <h1>{{ $evaluation->evaluationTemplate->name }}</h1>
-        {{-- <span>Template ID: {{ $templateId }}</span>
-        <span>Employee ID: {{ $employeeId }} </span> --}}
+        <button wire:click="exportPDF" class="btn btn-primary">Export PDF</button>
 
         <form wire:submit.prevent="submitStep1">
             @csrf
@@ -53,8 +52,7 @@
                             <div class="form-group">
                                 <label for="created_at">Date of Evaluation</label>
                                 <input class="form-control" type="text" id="created_at" name="created_at"
-                                    value="{{ \Carbon\Carbon::parse($evaluation->created_at)->toDateTimeString() }}"
-                                    required readonly>
+                                    value="{{ $evaluation->created_at }}" required readonly>
                             </div>
                         </div>
 
@@ -316,7 +314,6 @@
 
         <div class="m-t-30">
             @if ($clarifications->count() > 0)
-
                 @foreach ($clarifications as $clarification)
                     <div class="widget author-widget">
                         <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
@@ -325,7 +322,35 @@
                         <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
                         <div class="about-author">
                             <div class="author-details">
-                                <p>{{ $clarification->description }}</p>
+                                {{-- Editing mode --}}
+                                @if ($editingClarificationId === $clarification->id)
+                                    <textarea wire:model="clarificationDescription" class="form-control" placeholder="Write your clarifications.."></textarea>
+                                    <a href="#"
+                                        wire:click.prevent="submitClarification({{ $clarification->id }})">Update</a>
+                                    <a href="#" wire:click.prevent="cancelEdit">Cancel</a>
+                                @else
+                                    {{-- Display mode --}}
+                                    <p>
+                                        {{ $clarification->description }}</p>
+                                    {{-- Check if authenticated user's employee_id is equal to clarification's commentor_id --}}
+                                    @auth
+                                        @if (auth()->user()->employee_id == $clarification->commentor_id)
+                                            {{-- Add your delete button here --}}
+                                            <a href="#"
+                                                wire:click.prevent="deleteClarification({{ $clarification->id }})"
+                                                class="span-ED">Delete</a>
+                                            {{-- Change the link based on whether in editing mode or not --}}
+                                            @if ($editingClarificationId === $clarification->id)
+                                                <a href="#" wire:click.prevent="cancelEdit"
+                                                    class="span-ED">Cancel</a>
+                                            @else
+                                                <a href="#"
+                                                    wire:click.prevent="editClarification({{ $clarification->id }})"
+                                                    class="span-ED">Update</a>
+                                            @endif
+                                        @endif
+                                    @endauth
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -334,15 +359,21 @@
                 <p>No clarifications available.</p>
             @endif
 
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea rows="3" wire:model="clarificationDescription" id="description" class="form-control"
-                    placeholder="Write your clarifications.."></textarea>
-            </div>
 
-            <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
-                Clarification</button>
+            {{-- Hide the form when in editing mode --}}
+            <div class="form-group">
+                @if ($editingClarificationId)
+                @else
+                    <label for="description">Description:</label>
+                    <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
+                        id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
+
+                    <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
+                        Clarification</button>
+                @endif
+            </div>
         </div>
+
 
     @endif
 

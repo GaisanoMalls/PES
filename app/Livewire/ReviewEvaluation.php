@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use Carbon\Carbon;
-
+use PDF;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
 use App\Models\Clarification;
+use App\Models\Notification;
 
 class ReviewEvaluation extends Component
 {
@@ -50,6 +51,7 @@ class ReviewEvaluation extends Component
     public $showClarificationSection = false;
 
     public $clarificationDescription;
+    public $editingClarificationId = null;
 
 
     public function mount(Evaluation $evaluation)
@@ -60,6 +62,9 @@ class ReviewEvaluation extends Component
         $this->loadRatingScales();
     }
 
+    public function exportPDF()
+    {
+    }
     private function loadEmployeeData()
     {
         $this->employee = $this->evaluation->employee;
@@ -126,6 +131,7 @@ class ReviewEvaluation extends Component
         $user = auth()->user();
 
         // Find the user who evaluated the performance
+        // Find the user who evaluated the performance
         $evaluator = User::where('employee_id', $this->evaluation->evaluator_id)->first();
 
         // Find all HR users (role_id = 5)
@@ -135,20 +141,24 @@ class ReviewEvaluation extends Component
         if ($evaluator && $evaluator->email) {
             $dataEvaluator = [
                 'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
-                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' .    $this->evaluation->employee->last_name,
-
+                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
                 // Add any additional data you want to pass to the email view
             ];
 
             // Send email to the evaluator
             Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+            Notification::create([
+                'employee_id' => $evaluator->employee_id,
+                'notif_title' => $dataEvaluator['subject'],
+                'notif_desc' => $dataEvaluator['body'],
+            ]);
         }
 
         // Check if there are HR users
         if ($hrUsers->count() > 0) {
             $dataHR = [
                 'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
-                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' .    $this->evaluation->employee->last_name,
+                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
                 // Add any additional data you want to pass to the email view
             ];
 
@@ -156,9 +166,16 @@ class ReviewEvaluation extends Component
             foreach ($hrUsers as $hrUser) {
                 if ($hrUser->email) {
                     Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
+                    Notification::create([
+                        'employee_id' => $hrUser->employee_id,
+                        'notif_title' =>  $dataHR['subject'],
+                        'notif_desc' => $dataHR['body'],
+                    ]);
                 }
             }
         }
+
+
 
         $this->isFormSubmitted = true;
 
@@ -191,6 +208,11 @@ class ReviewEvaluation extends Component
             ];
             // Send email to the evaluator
             Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+            Notification::create([
+                'employee_id' => $evaluator->employee_id,
+                'notif_title' => $dataEvaluator['subject'],
+                'notif_desc' => $dataEvaluator['body'],
+            ]);
         }
 
 
@@ -214,28 +236,69 @@ class ReviewEvaluation extends Component
         ]);
         $user = auth()->user();
 
+        // Check if it's an update or a new clarification
+        if ($this->editingClarificationId) {
+            // Update clarification
+            $clarification = Clarification::find($this->editingClarificationId);
+            $clarification->description = $this->clarificationDescription;
+            $clarification->save();
 
-        // Save the clarification to the database
-        $clarification = new Clarification();
-        $clarification->evaluation_id = $this->evaluation->id;
-        $clarification->approver_id = $user->employee->id;
-        $clarification->evaluator_id = $this->evaluation->evaluator_id;
-        $clarification->description = $this->clarificationDescription;
-        $clarification->commentor_id = $user->employee->id;
-        $clarification->status = 4;
-        $clarification->save();
+            // Reset the editing mode
+            $this->editingClarificationId = null;
+        } else {
+            // Save the clarification to the database
+            $clarification = new Clarification();
+            $clarification->evaluation_id = $this->evaluation->id;
+            $clarification->approver_id = $user->employee->id;
+            $clarification->evaluator_id = $this->evaluation->evaluator_id;
+            $clarification->description = $this->clarificationDescription;
+            $clarification->commentor_id = $user->employee->id;
+            $clarification->status = 4;
+            $clarification->save();
 
-        // Change the evaluation status
-        $this->evaluation->status = 4;
-        $this->evaluation->save();
-
-        // Other logic if needed...
+            // Change the evaluation status
+            $this->evaluation->status = 4;
+            $this->evaluation->save();
+        }
 
         // Clear the input field after submission
         $this->clarificationDescription = '';
 
         // Refresh the Livewire component or any other necessary action
         $this->dispatch('refreshComponent');
+    }
+
+    // Add these methods
+    public function editClarification($clarificationId)
+    {
+        $clarification = Clarification::find($clarificationId);
+
+        if ($clarification) {
+            // Set the current description when entering edit mode
+            $this->clarificationDescription = $clarification->description;
+            $this->editingClarificationId = $clarificationId;
+        }
+    }
+
+    public function deleteClarification($clarificationId)
+    {
+        $clarification = Clarification::find($clarificationId);
+
+        if ($clarification) {
+            $clarification->delete();
+            $this->dispatch('refreshComponent');
+        } else {
+            // Handle the case where the clarification does not exist (optional)
+            // For example, you can show an error message or log the issue.
+            // You can also choose to do nothing in this case if it's not critical.
+        }
+    }
+
+    public function cancelEdit()
+    {
+        // Reset the editing mode and clear the textarea
+        $this->editingClarificationId = null;
+        $this->clarificationDescription = '';
     }
 
     public function submitStep1()

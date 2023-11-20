@@ -82,3 +82,9 @@ Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
 Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');
+
+
+Route::get('/markAllAsRead', function () {
+    Auth::user()->unreadNotifications->markAsRead();
+    return redirect()->back();
+})->name('markAllAsRead');

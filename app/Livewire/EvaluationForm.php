@@ -16,6 +16,7 @@ use App\Models\Part;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
+use App\Models\Notification;
 use App\Models\Recommendation;
 
 class EvaluationForm extends Component
@@ -277,6 +278,12 @@ class EvaluationForm extends Component
         // Send email to each user
         foreach ($userss as $user) {
             Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
+            // Store notification in the database
+            Notification::create([
+                'employee_id' => $user->employee_id,
+                'notif_title' => $data['subject'],
+                'notif_desc' => $data['body'],
+            ]);
         }
 
 
@@ -309,8 +316,6 @@ class EvaluationForm extends Component
     {
 
         $user = auth()->user();
-
-
 
         $this->dispatch('swal:modal2', [
             'callback' => 'redirectAfterClose'
