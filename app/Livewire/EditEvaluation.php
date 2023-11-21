@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use App\Models\Clarification;
+use App\Models\DisapprovalReason;
+use App\Models\Employee;
 use Livewire\Component;
 use App\Models\Evaluation;
 use App\Models\RatingScale;
 use App\Models\EvaluationPoint;
 use App\Models\Factor;
 use App\Models\FactorRatingScale;
+use App\Models\Notification;
 use App\Models\Part;
 use App\Models\Recommendation;
 use Carbon\Carbon;
@@ -54,7 +57,21 @@ class EditEvaluation extends Component
 
     public $showClarificationSection = false;
     public $clarificationDescription;
+    public $editingClarificationId = null;
 
+    public $editMode = false;
+    public $disapprovalReason;
+    public $approverFirstName;
+
+
+    public function toggleEditMode()
+    {
+        $this->editMode = !$this->editMode;
+    }
+    public function getModeButtonText()
+    {
+        return $this->editMode ? 'View Mode' : 'Edit Mode';
+    }
     public function mount(Evaluation $evaluation)
     {
         $this->evaluation = $evaluation->load('evaluationTemplate');
@@ -62,6 +79,15 @@ class EditEvaluation extends Component
         $this->rateesComment = $evaluation->ratees_comment;
         $this->loadEmployeeData();
         $this->loadRatingScales();
+
+        // Load disapproval reason information
+        $disapprovalReason = DisapprovalReason::where('evaluation_id', $evaluation->id)->first();
+
+        if ($disapprovalReason) {
+            $this->disapprovalReason = $disapprovalReason;
+            $approver = Employee::find($disapprovalReason->approver_id);
+            $this->approverFirstName = $approver ? $approver->first_name . ' ' . $approver->last_name : '';
+        }
     }
 
     public function displayClarificationSection()
@@ -316,27 +342,71 @@ class EditEvaluation extends Component
         $user = auth()->user();
 
 
-        // Save the clarification to the database
-        $clarification = new Clarification();
-        $clarification->evaluation_id = $this->evaluation->id;
-        $clarification->approver_id = $user->employee->id;
-        $clarification->evaluator_id = $this->evaluation->evaluator_id;
-        $clarification->description = $this->clarificationDescription;
-        $clarification->commentor_id = $user->employee->id;
-        $clarification->status = 4;
-        $clarification->save();
+        // Check if it's an update or a new clarification
+        if ($this->editingClarificationId) {
+            // Update clarification
+            $clarification = Clarification::find($this->editingClarificationId);
+            $clarification->description = $this->clarificationDescription;
+            $clarification->save();
 
-        // Change the evaluation status
-        $this->evaluation->status = 4;
-        $this->evaluation->save();
+            // Reset the editing mode
+            $this->editingClarificationId = null;
+        } else {
+            // Save the clarification to the database
+            $clarification = new Clarification();
+            $clarification->evaluation_id = $this->evaluation->id;
+            $clarification->evaluator_id = $this->evaluation->evaluator_id;
+            $clarification->description = $this->clarificationDescription;
+            $clarification->commentor_id = $user->employee->id;
+            $clarification->status = 4;
+            $clarification->save();
 
-        // Other logic if needed...
+            // Change the evaluation status
+            $this->evaluation->status = 4;
+            $this->evaluation->save();
+            Notification::create([
+                'employee_id' => $this->evaluation->approver_id,
+                'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
+                'notif_desc' => $this->clarificationDescription,
+            ]);
+        }
 
-        // Clear the input field after submission
+
         $this->clarificationDescription = '';
 
         // Refresh the Livewire component or any other necessary action
         $this->dispatch('refreshComponent');
+    }
+    public function editClarification($clarificationId)
+    {
+        $clarification = Clarification::find($clarificationId);
+
+        if ($clarification) {
+            // Set the current description when entering edit mode
+            $this->clarificationDescription = $clarification->description;
+            $this->editingClarificationId = $clarificationId;
+        }
+    }
+
+    public function deleteClarification($clarificationId)
+    {
+        $clarification = Clarification::find($clarificationId);
+
+        if ($clarification) {
+            $clarification->delete();
+            $this->dispatch('refreshComponent');
+        } else {
+            // Handle the case where the clarification does not exist (optional)
+            // For example, you can show an error message or log the issue.
+            // You can also choose to do nothing in this case if it's not critical.
+        }
+    }
+
+    public function cancelEdit()
+    {
+        // Reset the editing mode and clear the textarea
+        $this->editingClarificationId = null;
+        $this->clarificationDescription = '';
     }
 
     public function submitStep1()

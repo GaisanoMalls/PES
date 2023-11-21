@@ -4635,6 +4635,11 @@ h3.page-sub-title {
     font-weight: 500
 }
 
+.container22 {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .new-comment input.form-control {
     border: 1px solid #e5e5e5;
     border-radius: 0;

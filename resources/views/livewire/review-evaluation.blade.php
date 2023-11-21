@@ -2,7 +2,6 @@
     @if ($currentStep === 1)
         <span>Non-Supervisory (Support & Non-Sales)</span>
         <h1>{{ $evaluation->evaluationTemplate->name }}</h1>
-        <button wire:click="exportPDF" class="btn btn-primary">Export PDF</button>
 
         <form wire:submit.prevent="submitStep1">
             @csrf
@@ -58,6 +57,7 @@
 
                     </div>
                 </div>
+
             </div>
             <div class="bg-white2">
                 <div>
@@ -412,5 +412,6 @@
     </div>
 
 </div>
+
 <!-- Add any additional content or buttons for the review page -->
 </div>

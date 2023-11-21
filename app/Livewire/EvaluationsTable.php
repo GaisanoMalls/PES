@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\DisapprovalReason;
 use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,10 @@ class EvaluationsTable extends Component
     {
         $evaluation = Evaluation::find($evaluationId);
 
+        if ($evaluation->status === 3) {
+            // Delete existing entry in DisapprovalReason
+            DisapprovalReason::where('evaluation_id', $evaluation->id)->delete();
+        }
         if ($evaluation) {
             // Toggle the status between 1 and 2
             $newStatus = 1;

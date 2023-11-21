@@ -56,15 +56,11 @@ class ReviewEvaluation extends Component
 
     public function mount(Evaluation $evaluation)
     {
-
         $this->evaluation = $evaluation->load('evaluationTemplate');
         $this->loadEmployeeData();
         $this->loadRatingScales();
     }
 
-    public function exportPDF()
-    {
-    }
     private function loadEmployeeData()
     {
         $this->employee = $this->evaluation->employee;
@@ -122,6 +118,10 @@ class ReviewEvaluation extends Component
     {
         if ($this->isFormSubmitted) {
             return;
+        }    // Check if the status is changing from 3 to 2
+        if ($this->evaluation->status === 3) {
+            // Delete existing entry in DisapprovalReason
+            DisapprovalReason::where('evaluation_id', $this->evaluation->id)->delete();
         }
 
         $userEmployeeId = Auth::user()->employee_id;
@@ -234,6 +234,11 @@ class ReviewEvaluation extends Component
         $this->validate([
             'clarificationDescription' => 'required|string',
         ]);
+
+        if ($this->evaluation->status === 3) {
+            // Delete existing entry in DisapprovalReason
+            DisapprovalReason::where('evaluation_id', $this->evaluation->id)->delete();
+        }
         $user = auth()->user();
 
         // Check if it's an update or a new clarification
@@ -256,9 +261,17 @@ class ReviewEvaluation extends Component
             $clarification->status = 4;
             $clarification->save();
 
+
+            $this->evaluation->approver_id = $user->employee->id;
             // Change the evaluation status
             $this->evaluation->status = 4;
             $this->evaluation->save();
+
+            Notification::create([
+                'employee_id' => $this->evaluation->evaluator_id,
+                'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
+                'notif_desc' => $this->clarificationDescription,
+            ]);
         }
 
         // Clear the input field after submission

@@ -98,8 +98,10 @@
                             // Get the current authenticated user
                             $user = Auth::user();
                             
-                            // Retrieve user notifications based on employee_id
-                            $notifications = \App\Models\Notification::where('employee_id', $user->employee_id)->get();
+                            // Retrieve user notifications based on employee_id, ordered by created_at in descending order
+                            $notifications = \App\Models\Notification::where('employee_id', $user->employee_id)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
                             ?>
                         @endauth
 
