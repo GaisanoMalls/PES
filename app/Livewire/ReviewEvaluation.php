@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
 use App\Models\Clarification;
 use App\Models\Notification;
+use Barryvdh\Snappy\Facades\SnappyPdf;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 
 class ReviewEvaluation extends Component
 {
@@ -60,6 +63,7 @@ class ReviewEvaluation extends Component
         $this->loadEmployeeData();
         $this->loadRatingScales();
     }
+
 
     private function loadEmployeeData()
     {
@@ -110,7 +114,6 @@ class ReviewEvaluation extends Component
 
         return $totalRates;
     }
-
 
 
 
@@ -362,16 +365,11 @@ class ReviewEvaluation extends Component
                     'factor_id' => $factor->id,
                 ])->first();
 
-                if ($evaluationPoint) {
-                    $this->selectedValues[$factor->id] = $evaluationPoint->points;
-                    $this->selectedScale[$factor->id] = $evaluationPoint->rating_scale_id;
-                    $this->factorNotes[$factor->id] = $evaluationPoint->note;
-                } else {
-                    $this->selectedValues[$factor->id] = 0;
-                    $this->selectedScale[$factor->id] = 0;
 
-                    $this->factorNotes[$factor->id] = '';
-                }
+                $this->selectedValues[$factor->id] = $evaluationPoint->points;
+                $this->selectedScale[$factor->id] = $evaluationPoint->rating_scale_id;
+                $this->factorNotes[$factor->id] = $evaluationPoint->note;
+
                 $totalRateForPart += ($this->selectedValues[$factor->id] ?? 0);
                 $factorsData[] = $factorData;
             }

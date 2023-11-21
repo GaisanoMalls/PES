@@ -291,6 +291,9 @@ table.table td h2 span {
 div.c {
   text-align: right;
 }
+.left {
+  text-align: left;
+}
 
 
 .p-20 {

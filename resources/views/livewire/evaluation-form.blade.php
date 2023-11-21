@@ -500,7 +500,6 @@
     @elseif($currentStep === 4)
         <div>page 3</div>
     @elseif($currentStep === 0)
-
         @if ($showRecommendationSection)
             <div class="m-t-30">
                 <div class="form-group">
