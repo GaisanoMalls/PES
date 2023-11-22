@@ -62,7 +62,10 @@ class EvaluationController extends Controller
     {
         // Load the evaluation data using the method
         $evaluationData = $this->loadEvaluationData($evaluationId);
-
+        $evaluation = Evaluation::find($evaluationId);
+        $employee = $evaluation->employee;
+        $templateName = $evaluation->evaluationTemplate->name;
+        $name = $employee->last_name . '_' . $employee->first_name;
         // Check if the evaluation data is not found
         if (!$evaluationData) {
             // Handle the case where the evaluation does not exist
@@ -72,7 +75,7 @@ class EvaluationController extends Controller
         // Load the evaluation data into the PDF view
         $pdf = PDF::loadView('evaluations.evaluation-pdf', $evaluationData);
 
-        return $pdf->download('evaluation.pdf');
+        return $pdf->download($name . '-' . $templateName . '_PES.pdf');
     }
 
     public $selectedValues = [];

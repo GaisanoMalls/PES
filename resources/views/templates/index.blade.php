@@ -42,13 +42,15 @@
                                             <td>{{ $template->name }}</td>
                                             <td>{{ $template->created_at }}</td>
                                             <td class="text-center">
-
                                                 <div class="dropdown dropdown-action">
                                                     <a href="#" class="action-icon dropdown-toggle"
                                                         data-toggle="dropdown" aria-expanded="false"><i
                                                             class="fas fa-ellipsis-v ellipse_color"></i></a>
                                                     <div class="dropdown-menu dropdown-menu-right"
                                                         aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('templates.generatePDFTemplate', $template->id) }}">Generate
+                                                            PDF</a>
 
                                                         <a class="dropdown-item"
                                                             href="{{ route('templates.edit', $template->id) }}">

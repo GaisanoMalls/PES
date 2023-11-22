@@ -61,7 +61,7 @@ Route::get('/templates/{template}/edit', [HRController::class, 'edit'])->name('t
 //delete template
 Route::delete('/templates/{template}', [HRController::class, 'destroy'])->name('templates.destroy');
 
-
+Route::get('/templates/{evaluation}/pdf', [HRController::class, 'generatePDFTemplate'])->name('templates.generatePDFTemplate');
 
 //LARAVEL-UI
 Auth::routes();

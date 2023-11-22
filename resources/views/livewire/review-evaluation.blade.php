@@ -2,7 +2,6 @@
     @if ($currentStep === 1)
         <span>Non-Supervisory (Support & Non-Sales)</span>
         <h1>{{ $evaluation->evaluationTemplate->name }}</h1>
-        <button wire:click="exportPDF" class="btn btn-primary">Export PDF</button>
 
         <form wire:submit.prevent="submitStep1">
             @csrf
@@ -63,6 +62,19 @@
             <div class="bg-white2">
                 <div>
                     <ul style="list-style: none;">
+                        <span>Direction: Rate the following factors by checking the appropriate box which
+                            indicates the most accurate appraisal of the ratee’s performance on the job.
+                            The rating scale are outlined below:
+                        </span>
+
+                        @foreach ($ratingScales as $scale)
+                            <div class="rating-scale-item">
+
+                                <strong> <span class="rating-scale-acronym">{{ $scale->acronym }}=</span>
+                                    <span class="rating-scale-name"> {{ $scale->name }}:</span></strong>
+                                <span class="rating-scale-description">{{ $scale->description }}</span>
+                            </div>
+                        @endforeach
                         @foreach ($partsWithFactors as $partWithFactors)
                             <li style="list-style: none;">
                                 <div class="rating-scale"></div>
