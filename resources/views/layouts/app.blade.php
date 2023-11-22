@@ -20,7 +20,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/feathericon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.css" />
 
@@ -28,6 +29,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @livewireStyles
     @livewireScripts
+
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -253,7 +256,6 @@
     <script src="{{ asset('assets/js/chart.morris.js') }}"></script> --}}
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
 
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 

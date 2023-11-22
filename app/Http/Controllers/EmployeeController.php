@@ -12,36 +12,10 @@ class EmployeeController extends Controller
 {
 
 
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->input('search');
-        $searchId = $request->input('search_id'); // new input for searching by Employee ID
-        $searchRole = $request->input('search_role'); // new input for searching by Role
 
-        $orderBy = $request->input('orderBy', 'employee_id'); // default to sorting by employee_id
-        $orderDirection = $request->input('orderDirection', 'asc'); // default to ascending order
-
-        $query = Employee::with('department');
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'LIKE', "%$search%")
-                    ->orWhere('last_name', 'LIKE', "%$search%");
-            });
-        }
-
-        if (!empty($searchId)) {
-            $query->where('employee_id', 'LIKE', "%$searchId%");
-        }
-        if (!empty($searchRole)) {
-            $query->where('position', $searchRole);
-        }
-        $employees = $query->orderBy($orderBy, $orderDirection)->paginate(15);
-
-
-        $evaluationTemplates = EvaluationTemplate::all();
-
-        return view('employees.index', compact('employees', 'evaluationTemplates', 'search', 'orderBy', 'orderDirection'));
+        return view('employees.index');
     }
 
 

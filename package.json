@@ -13,6 +13,8 @@
     "dependencies": {
         "datatables.net": "^1.13.6",
         "datatables.net-bs4": "^1.13.6",
-        "sweetalert2": "^11.10.0"
+        "slim-select": "^2.6.0",
+        "sweetalert2": "^11.10.0",
+        "tom-select": "^2.3.1"
     }
 }

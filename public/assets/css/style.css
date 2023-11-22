@@ -6138,6 +6138,12 @@ h3.page-sub-title {
 }
 
 
+/* Add your custom styling for the "Edit" button */
+
+
+.form-control2 {
+    max-width: 130px;
+}
 
 
 @-webkit-keyframes ripple {
