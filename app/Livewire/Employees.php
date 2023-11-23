@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -26,9 +27,7 @@ final class Employees extends PowerGridComponent
     {
 
         return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
             Header::make()->showSearchInput()->withoutLoading(),
             Footer::make()
                 ->showPerPage()
@@ -60,7 +59,7 @@ final class Employees extends PowerGridComponent
             ->addColumn('last_name')
             ->addColumn('date_hired')
             ->addColumn('position')
-            ->addColumn('employment_status')
+            // ->addColumn('employment_status')
             // ->addColumn('is_active', fn (Employee $model) => $model->is_active ? 'Active' : 'Inactive')
 
             ->addColumn('created_at_formatted', fn (Employee $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
@@ -70,11 +69,9 @@ final class Employees extends PowerGridComponent
     {
         return [
             Column::make('Employee id', 'employee_id')
-                ->sortable()
                 ->searchable(),
 
-            Column::make('Department id', 'department_name')
-                ->sortable()
+            Column::make('Department Name', 'department_name')
                 ->searchable(),
 
             Column::make('First name', 'first_name')
@@ -91,9 +88,9 @@ final class Employees extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Employment status', 'employment_status')
-                ->sortable()
-                ->searchable(),
+            // Column::make('Employment status', 'employment_status')
+            //     ->sortable()
+            //     ->searchable(),
 
             // Column::make('Is active', 'is_active')
             //     ->toggleable(),
@@ -114,8 +111,13 @@ final class Employees extends PowerGridComponent
     public function filters(): array
     {
         return [
-
-            Filter::multiSelect('department_name', 'department_id')
+            Filter::inputText('employee_id')->operators(['contains']),
+            Filter::inputText('first_name')->operators(['contains']),
+            Filter::inputText('last_name')->operators(['contains']),
+            Filter::inputText('date_hired')->operators(['contains']),
+            Filter::inputText('position')->operators(['contains']),
+            // Filter::inputText('employment_status')->operators(['contains']),
+            Filter::select('department_name', 'department_id')
                 ->dataSource(Department::all())
                 ->optionValue('id')
                 ->optionLabel('name'),
@@ -124,21 +126,41 @@ final class Employees extends PowerGridComponent
     }
 
     #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
+    public function edit($employeeId)
     {
-        $this->js('alert(' . $rowId . ')');
+        return redirect()->route('evaluations.select', ['employeeId' => $employeeId]);
     }
 
-    public function actions(\App\Models\Employee $row): array
+    #[\Livewire\Attributes\On('show')]
+    public function show($employee_id)
     {
-        return [
-            Button::add('edit')
-                ->slot('Edit: ' . $row->id)
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
-        ];
+        return redirect()->route('employees.show', ['employee_id' => $employee_id]);
     }
+
+    public function actions(Employee $employeeId): array
+    {
+        $actions = [
+            Button::add('edit')
+                ->slot('Evaluate')
+                ->id()
+                ->class('btn btn-block btn-outline-success')
+                ->dispatch('edit', ['employeeId' => $employeeId->id]),
+        ];
+
+        if (Auth::user()->role_id == 1) {
+            $actions[] = Button::add('show')
+                ->slot('Show')
+                ->id()
+                ->class('btn btn-block btn-outline-secondary')
+                ->dispatch('show', ['employee_id' => $employeeId->employee_id]);
+        }
+
+        return $actions;
+    }
+
+
+
+
 
     /*
     public function actionRules($row): array

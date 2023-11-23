@@ -44,8 +44,13 @@ Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evalua
 Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 'review'])->name('evaluations.review');
 //PDF
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
+
+
+//select template
+Route::get('/evaluations/create/{employeeId}/', [EvaluationController::class, 'selectTemplate'])->name('evaluations.select');
+
 //Create evaluation to employee
-Route::get('/evaluations/create/{employee}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
+Route::get('/evaluations/create/{employeeId}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
 
 Route::get('/evaluations/edit/{evaluation}', [EvaluationController::class, 'edit'])->name('evaluations.edit');
 

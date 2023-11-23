@@ -44,6 +44,23 @@ class EvaluationController extends Controller
 
         return view('evaluations.create', compact('employee', 'templateName', 'template'));
     }
+
+
+    public function selectTemplate($employeeId)
+    {
+        // Fetch employee data from the database
+        $employee = Employee::find($employeeId);
+
+        // Fetch evaluation templates from the database
+        $evaluationTemplates = EvaluationTemplate::all();
+
+        // Pass the templates to the view
+        return view('evaluations.select-template', [
+            'employee' => $employee,
+            'employeeId' => $employeeId,
+            'evaluationTemplates' => $evaluationTemplates,
+        ]);
+    }
     public function review(Evaluation $evaluation)
     {
         $evaluation->load('evaluationTemplate');

@@ -8,7 +8,7 @@
         </button>
     @endif
 
-    <table class="table">
+    <table class="table bg-white table-active table-bordered">
         <thead>
             <tr class="text-center">
                 <th>ID</th>

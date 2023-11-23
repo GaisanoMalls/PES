@@ -637,26 +637,18 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
-
             </div>
-
         </div>
-
-        <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
-
-
+        <button wire:click="goBack" class="btn btn-primary btn-left" wire:loading.attr="disabled">Back</button>
         <button wire:click="submitForm" class="btn btn-primary btn-right" id="submitButton"
-            style="margin-left: 10px;">
-            Submit
+            style="margin-left: 10px;" wire:loading.attr="disabled"
+            @if ($loading) disabled @endif>
+            <span wire:loading wire:target="submitForm">Submitting...</span>
+            <span wire:loading.remove wire:target="submitForm">Submit</span>
         </button>
+
         <button wire:click="displayRecommendationSection" class="btn btn-primary btn-right"
-            style="margin-right: 10px;">
+            style="margin-right: 10px;" @if ($showRecommendationSection) hidden @endif wire:loading.attr="disabled">
             Add Recommendation
         </button>
     @endif

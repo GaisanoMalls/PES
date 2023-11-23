@@ -355,6 +355,7 @@ class EditEvaluation extends Component
             // Save the clarification to the database
             $clarification = new Clarification();
             $clarification->evaluation_id = $this->evaluation->id;
+            $clarification->approver_id = $this->evaluation->approver_id;
             $clarification->evaluator_id = $this->evaluation->evaluator_id;
             $clarification->description = $this->clarificationDescription;
             $clarification->commentor_id = $user->employee->id;

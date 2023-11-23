@@ -2,5 +2,6 @@
 
 @section('content')
     {{-- @livewire('employee-index') --}}
+
     <livewire:employees />
 @endsection

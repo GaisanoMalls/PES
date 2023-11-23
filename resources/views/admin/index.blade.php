@@ -2,16 +2,7 @@
 
 @section('content')
     <div class="">
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col">
-                    <div class="mt-5">
-                        <h4 class="card-title float-left mt-2">Users</h4>
-                        <a href="add-user.html" class="btn btn-primary float-right veiwbutton">Add User</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <form action="{{ route('users.index') }}" method="GET">

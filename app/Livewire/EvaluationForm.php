@@ -179,9 +179,11 @@ class EvaluationForm extends Component
 
 
 
-
+    public $loading = false;
     public function submitForm()
     {
+        $this->loading = true; // Set loading to true when the form is being submitted
+
         if ($this->isFormSubmitted) {
             return;
         }
@@ -309,6 +311,8 @@ class EvaluationForm extends Component
         $this->isFormSubmitted = true;
         session()->forget(['recommendationNote', 'rateesComment', 'selectedPoints', 'factorNotes']);
         // return redirect()->route('evaluations.index')->with('success', 'Form submitted successfully.');
+        $this->loading = false; // Set loading back to false after the form submission is complete
+
     }
 
 
