@@ -195,43 +195,49 @@
                     <div class="sidebar-inner slimscroll">
                         <div id="sidebar-menu" class="sidebar-menu">
                             <ul>
-                                <li class="active">
-                                    <a href="{{ route('employees.index') }}"><i class="fas fa-tachometer-alt"></i>
+                                <li class="{{ request()->routeIs('home') ? 'active' : '' }}">
+                                    <a href="{{ route('home') }}"><i class="fas fa-tachometer-alt"></i>
                                         <span>Dashboard</span></a>
                                 </li>
                                 <li class="list-divider"></li>
                                 <li class="submenu">
                                     <a href="#"><i class="fas fa-user"></i> <span> Employees </span>
                                         <span class="menu-arrow"></span></a>
-                                    <ul class="submenu_class" style="display: none">
-                                        <li><a href="{{ route('employees.index') }}">Employees List </a></li>
-                                        <li><a href="{{ route('evaluations.index') }}">Evaluation List </a></li>
-
-
+                                    <ul class="submenu_class"
+                                        style="{{ request()->routeIs('employees.index') || request()->routeIs('evaluations.index') ? 'display:block' : 'display:none' }}">
+                                        <li>
+                                            <a class="{{ request()->routeIs('employees.index') ? 'active' : '' }}"
+                                                href="{{ route('employees.index') }}">Employees List </a>
+                                        </li>
+                                        <li>
+                                            <a class="{{ request()->routeIs('evaluations.index') ? 'active' : '' }}"
+                                                href="{{ route('evaluations.index') }}">Evaluation List </a>
+                                        </li>
                                     </ul>
                                 </li>
+
+
+
                                 @if (Auth::user()->role_id == 1)
-                                    <li>
+                                    <li class="{{ request()->routeIs('users.index') ? 'active' : '' }}">
                                         <a href="{{ route('users.index') }}"><i class="fa fa-user-circle"></i><span>User
                                                 Management</span></a>
                                     </li>
                                 @endif
                                 @if (Auth::user()->role_id == 5)
-                                    <li>
+                                    <li class="{{ request()->routeIs('templates.index') ? 'active' : '' }}">
                                         <a href="{{ route('templates.index') }}"><i
-                                                class="fa fa-user-circle"></i><span>Evaluation Template
-                                            </span></a>
+                                                class="fa fa-user-circle"></i><span>Evaluation Template</span></a>
                                     </li>
                                 @endif
-                                <li>
+                                <li class="{{ request()->routeIs('settings') ? 'active' : '' }}">
                                     <a href="#"><i class="fa fa-cog"></i> <span>Settings</span></a>
                                 </li>
-
-
                             </ul>
                         </div>
                     </div>
                 </div>
+
                 <div class="page-wrapper">
                     <div class="content container-fluid">
                         @yield('content')
