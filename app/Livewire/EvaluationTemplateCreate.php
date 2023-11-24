@@ -11,8 +11,11 @@ use Livewire\Component;
 
 class EvaluationTemplateCreate extends Component
 {
+
+
     public $name;
     public $parts = [];
+    // Add this method to your Livewire component
 
     public function addPart()
     {
@@ -46,6 +49,10 @@ class EvaluationTemplateCreate extends Component
     }
     public function createEvaluationTemplate()
     {
+
+        $this->dispatch('swal:success', [
+            'callback' => 'redirectAfterClose'
+        ]);
         $evaluationTemplate = EvaluationTemplate::create([
             'name' => $this->name
         ]);
@@ -77,10 +84,8 @@ class EvaluationTemplateCreate extends Component
                 }
             }
         }
-
         // Reset form data or add success message
         $this->reset(['name', 'parts']);
-        session()->flash('message', 'Evaluation Template created successfully!');
     }
 
     // Function to find the maximum equivalent points

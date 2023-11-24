@@ -28,7 +28,6 @@
     <!-- Include SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @livewireStyles
-    @livewireScripts
 
 
     <!-- Scripts -->
@@ -251,6 +250,7 @@
 
     <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
 
+    @livewireScripts
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -314,13 +314,100 @@
         });
 
 
+        window.addEventListener('swal:success', event => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Evaluation Template Created Successfully',
+                showCancelButton: false,
+                confirmButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'btn btn-secondary',
+                },
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectAfterCloseEvalautionIndex();
+                }
+            });
+        });
+
+        window.addEventListener('swal:update', event => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Evaluation Template Updated Successfully',
+                showCancelButton: false,
+                confirmButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'btn btn-secondary',
+                },
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectAfterCloseEvalautionIndex();
+                }
+            });
+        });
+
         function redirectAfterClose() {
             window.location.href = '{{ route('evaluations.index') }}';
+        }
+
+        function redirectAfterCloseEvalautionIndex() {
+            window.location.href = '{{ route('templates.index') }}';
+        }
+    </script>
+
+    <script>
+        function deleteTemplate(templateId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this template!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the form
+                    document.getElementById('delete-form-' + templateId).submit();
+                }
+            });
+        }
+    </script>
+    <script>
+        function deleteEvaluation(evaluationId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this evaluation!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, initiate the Livewire action to delete the evaluation
+                    Livewire.emit('confirmDelete', evaluationId);
+                }
+            });
         }
     </script>
 
 
-
+    <script>
+        function submit {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    </script>
 
 
 </body>

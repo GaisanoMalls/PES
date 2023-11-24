@@ -643,8 +643,9 @@
         <button wire:click="submitForm" class="btn btn-primary btn-right" id="submitButton"
             style="margin-left: 10px;" wire:loading.attr="disabled"
             @if ($loading) disabled @endif>
-            <span wire:loading wire:target="submitForm">Submitting...</span>
-            <span wire:loading.remove wire:target="submitForm">Submit</span>
+            <span wire:loading wire:target="submitForm" class="spinner-border spinner-border-sm mr-2"
+                role="status"></span>
+            <span wire:loading.remove wire:target="submitForm"></span>Submit
         </button>
 
         <button wire:click="displayRecommendationSection" class="btn btn-primary btn-right"

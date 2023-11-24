@@ -1,55 +1,94 @@
 <div>
-    <form wire:submit.prevent="createEvaluationTemplate">
-        <div>
-            <label for="name">Evaluation Template Name:</label>
-            <input type="text" id="name" wire:model="name">
-        </div>
-
-        <div>
-            <h3>Parts</h3>
-            @foreach ($parts as $partIndex => $part)
-                <div>
-                    <label for="part_name_{{ $partIndex }}">Part Name:</label>
-                    <input type="text" id="part_name_{{ $partIndex }}" wire:model="parts.{{ $partIndex }}.name">
-
-                    <label for="criteria_allocation_{{ $partIndex }}">Criteria Allocation:</label>
-                    <input type="number" step="0.01" id="criteria_allocation_{{ $partIndex }}"
-                        wire:model="parts.{{ $partIndex }}.criteria_allocation">
-
-                    <button type="button" wire:click="addFactor({{ $partIndex }})">Add Factor</button>
-
-                    @foreach ($part['factors'] as $factorIndex => $factor)
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Create Evaluation Template Form</h4>
+                </div>
+                <div class="card-body">
+                    <form wire:submit.prevent="createEvaluationTemplate">
+                        <div class="form-group">
+                            <label>Evaluation Template Name</label>
+                            <input type="text" wire:model="name" class="form-control">
+                        </div>
                         <div>
-                            <label for="factor_name_{{ $partIndex }}_{{ $factorIndex }}">Factor Name:</label>
-                            <input type="text" id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
-                                wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
-
-                            <label for="factor_desc_{{ $partIndex }}_{{ $factorIndex }}">Factor
-                                Description:</label>
-                            <input type="text" id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
-                                wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description">
-
-                            <label>Rating Scales and Equivalent Points:</label>
-                            @foreach ($ratingScales as $scale)
+                            <div class="rating-scale"></div>
+                            <h5 class="card-title">Parts</h5>
+                            @foreach ($parts as $partIndex => $part)
                                 <div>
-                                    <label>{{ $scale['name'] }}</label>
-                                    <input type="number" step="0.01"
-                                        wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
+                                    <div class="form-group">
+                                        <label for="part_name_{{ $partIndex }}">Part Name:</label>
+                                        <input type="text" class="form-control" id="part_name_{{ $partIndex }}"
+                                            wire:model="parts.{{ $partIndex }}.name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="criteria_allocation_{{ $partIndex }}">Criteria
+                                            Allocation:</label>
+                                        <input class="form-control" type="number" step="0.01"
+                                            id="criteria_allocation_{{ $partIndex }}"
+                                            wire:model="parts.{{ $partIndex }}.criteria_allocation">
+                                    </div>
+                                    <div class="rating-scale"></div>
+                                    <h5 class="card-title">Factors</h5>
+                                    @foreach ($part['factors'] as $factorIndex => $factor)
+                                        <div>
+                                            <div class="form-group">
+                                                <label for="factor_name_{{ $partIndex }}_{{ $factorIndex }}">Factor
+                                                    Name:</label>
+                                                <input class="form-control" type="text"
+                                                    id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
+                                                    wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label
+                                                    for="factor_desc_{{ $partIndex }}_{{ $factorIndex }}">Factor
+                                                    Description:</label>
+                                                <input class="form-control" type="text"
+                                                    id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
+                                                    wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description">
+                                            </div>
+
+
+                                            <div class="rating-scale"></div>
+                                            <h5 class="card-title">Rating Scales and Equivalent Points</h5>
+                                            <div class="row d-flex justify-content-center">
+                                                @foreach ($ratingScales as $scale)
+                                                    <div class="col-md-2">
+                                                        <label>{{ $scale['name'] }}</label>
+                                                        <input class="form-control" type="number" step="0.01"
+                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <div class="text-center m-t-15 m-b-20">
+                                                <button type="button" class="btn btn-outline-danger active"
+                                                    wire:click="removeFactor({{ $partIndex }}, {{ $factorIndex }})">Remove
+                                                    Factor</button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <div class="text-right">
+                                        <button class="btn btn-primary" type="button"
+                                            wire:click="addFactor({{ $partIndex }})">Add
+                                            Factor</button>
+                                    </div>
                                 </div>
                             @endforeach
-                            <button type="button"
-                                wire:click="removeFactor({{ $partIndex }}, {{ $factorIndex }})">Remove
-                                Factor</button>
-
+                            <div class="text-right m-t-15">
+                                <button type="button" class="btn btn-primary" wire:click="addPart">Add Part</button>
+                            </div>
                         </div>
-                    @endforeach
 
+
+
+                        <div class="text-right m-t-15">
+                            <button type="submit" class="btn btn-primary">Create Evaluation Template</button>
+                        </div>
+                    </form>
                 </div>
-            @endforeach
-
-            <button type="button" wire:click="addPart">Add Part</button>
+            </div>
         </div>
 
-        <button type="submit">Create Evaluation Template</button>
-    </form>
+    </div>
 </div>

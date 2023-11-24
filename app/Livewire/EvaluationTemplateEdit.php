@@ -76,6 +76,9 @@ class EvaluationTemplateEdit extends Component
     }
     public function saveEvaluationTemplate()
     {
+        $this->dispatch('swal:update', [
+            'callback' => 'redirectAfterClose'
+        ]);
         // Update the template and related entities based on the form data
         $template = EvaluationTemplate::findOrFail($this->templateId);
         $template->update(['name' => $this->name]);
@@ -142,9 +145,6 @@ class EvaluationTemplateEdit extends Component
         $template->parts->filter(function ($part, $index) {
             return !collect($this->parts)->pluck('name')->contains($part->name);
         })->each->delete();
-
-        session()->flash('message', 'Evaluation Template updated successfully!');
-        return redirect()->route('templates.index'); // Redirect to the index page or wherever you want
     }
 
     private function getMaxEquivalentPoints($ratingScales)

@@ -304,6 +304,11 @@ div.c {
     padding-top: 0 !important
 }
 
+.p-t-10 {
+    padding-top: 10 !important
+}
+
+
 .m-0 {
     margin: 0 !important
 }
@@ -388,6 +393,14 @@ div.c {
     position: relative;
     width: 100%
 }
+
+
+.sortable {
+  cursor: pointer;
+}
+
+
+
 
 .cal-icon:after {
     color: #979797;
@@ -6078,6 +6091,10 @@ h3.page-sub-title {
     margin: 20px 0;
         border-bottom: 2px solid #ddd; /* Add a bottom border with color #ddd */
 
+}
+
+.pointer{
+    cursor: pointer;
 }
 
 .rating-scale-item {

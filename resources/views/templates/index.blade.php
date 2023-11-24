@@ -57,12 +57,14 @@
                                                             @csrf
                                                             Edit
                                                         </a>
-                                                        <a class="dropdown-item"
-                                                            onclick="return confirm('Are you sure you want to delete this template?')"
-                                                            href="{{ route('templates.destroy', $template->id) }}">
+                                                        <form id="delete-form-{{ $template->id }}" method="POST"
+                                                            action="{{ route('templates.destroy', $template->id) }}">
                                                             @csrf
-                                                            Delete
-                                                        </a>
+                                                            @method('DELETE')
+                                                            <a class="dropdown-item" href="#"
+                                                                onclick="deleteTemplate({{ $template->id }})">Delete</a>
+                                                        </form>
+
                                                     </div>
                                                 </div>
                                             </td>

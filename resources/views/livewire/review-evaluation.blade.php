@@ -308,11 +308,7 @@
     <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
         Clarifications</button>
 
-
     @if ($showClarificationSection)
-
-
-
         <div class="m-t-30">
             @if ($clarifications->count() > 0)
                 @foreach ($clarifications as $clarification)
