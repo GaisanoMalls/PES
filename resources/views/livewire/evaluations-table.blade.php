@@ -178,8 +178,7 @@
                                 @endif
 
                                 @if ($evaluation->evaluator_id == Auth::user()->employee_id)
-                                    <a class="dropdown-item" wire:click="deleteEvaluation({{ $evaluation->id }})">
-                                        @csrf
+                                    <a class="dropdown-item" onclick="confirmDeleteEvaluation({{ $evaluation->id }})">
                                         Delete
                                     </a>
                                 @endif

@@ -377,8 +377,9 @@
             });
         }
     </script>
+
     <script>
-        function deleteEvaluation(evaluationId) {
+        function confirmDeleteEvaluation(evaluationId) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'You will not be able to recover this evaluation!',
@@ -389,13 +390,29 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // If confirmed, initiate the Livewire action to delete the evaluation
-                    Livewire.emit('confirmDelete', evaluationId);
+                    // If confirmed, make an AJAX request to delete the evaluation
+                    $.ajax({
+                        url: '/delete-evaluation/' + evaluationId, // Adjust the URL based on your setup
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            // Handle the success response if needed
+                            Swal.fire('Deleted!', 'Your evaluation has been deleted.', 'success');
+                            // Optionally, you can reload the page or perform other actions
+                            location.reload();
+                        },
+                        error: function(error) {
+                            // Handle the error response if needed
+                            Swal.fire('Error!', 'An error occurred while deleting the evaluation.',
+                                'error');
+                        }
+                    });
                 }
             });
         }
     </script>
-
 
     <script>
         function submit {

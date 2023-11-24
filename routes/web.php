@@ -45,6 +45,7 @@ Route::get('/evaluations/{evaluation}/review', [EvaluationController::class, 're
 //PDF
 Route::get('/evaluations/{evaluation}/pdf', [EvaluationController::class, 'generatePDF'])->name('evaluations.pdf');
 
+Route::delete('/delete-evaluation/{id}', [EvaluationController::class, 'deleteEvaluation']);
 
 //select template
 Route::get('/evaluations/create/{employeeId}/', [EvaluationController::class, 'selectTemplate'])->name('evaluations.select');

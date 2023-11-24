@@ -13,6 +13,7 @@ use App\Models\Part;
 use App\Models\RatingScale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 use PDF;
 
@@ -27,7 +28,25 @@ class EvaluationController extends Controller
         return view('evaluations.index');
     }
 
+    public function deleteEvaluation(Request $request, $id)
+    {
+        $evaluation = Evaluation::find($id);
 
+        // Check if the current user is the evaluator
+        if ($evaluation && $evaluation->evaluator_id == Auth::user()->employee_id) {
+            // Delete the evaluation
+            $evaluation->delete();
+
+            // Delete associated EvaluationPoints
+            EvaluationPoint::where('evaluation_id', $evaluation->id)->delete();
+
+            // Optionally, you can return a response if needed
+            return response()->json(['message' => 'Evaluation deleted successfully']);
+        } else {
+            // Optionally, you can add an error message or perform other actions if the user is not authorized to delete
+            return response()->json(['message' => 'You are not authorized to delete this evaluation.'], 403);
+        }
+    }
 
     //create evaluation for employee
     public function create($employee, $template)

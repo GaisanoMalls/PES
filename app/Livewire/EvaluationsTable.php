@@ -46,9 +46,11 @@ class EvaluationsTable extends Component
             $evaluation->update(['status' => $newStatus]);
         }
     }
-    public function deleteEvaluation($evaluationId)
+    protected $listeners = ['deleteEvaluation'];
+
+    public function deleteEvaluation($id)
     {
-        $evaluation = Evaluation::find($evaluationId);
+        $evaluation = Evaluation::find($id);
 
         // Check if the current user is the evaluator
         if ($evaluation && $evaluation->evaluator_id == Auth::user()->employee_id) {
@@ -57,12 +59,16 @@ class EvaluationsTable extends Component
 
             // Delete associated EvaluationPoints
             EvaluationPoint::where('evaluation_id', $evaluation->id)->delete();
+
+            // Optionally, you can return a response if needed
+            return response()->json(['message' => 'Evaluation deleted successfully']);
         } else {
             // Optionally, you can add an error message or perform other actions if the user is not authorized to delete
+            return response()->json(['message' => 'You are not authorized to delete this evaluation.'], 403);
         }
-
-        // You may also want to redirect the user back to the previous page or perform other actions
     }
+
+
     public function toggleShowAllEvaluations()
     {
         $this->showAllEvaluations = !$this->showAllEvaluations;
