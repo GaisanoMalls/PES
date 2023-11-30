@@ -66,7 +66,10 @@ class EvaluationTemplateEdit extends Component
 
     public function removeFactor($partIndex, $factorIndex)
     {
-        $factorModel = $this->parts[$partIndex]['factors'][$factorIndex]['model'];
+        // Check if 'model' key exists, if not, set $factorModel to null
+        $factorModel = isset($this->parts[$partIndex]['factors'][$factorIndex]['model'])
+            ? $this->parts[$partIndex]['factors'][$factorIndex]['model']
+            : null;
 
         if ($factorModel && $factorModel->exists) {
             $factorModel->delete();
@@ -74,17 +77,38 @@ class EvaluationTemplateEdit extends Component
 
         array_splice($this->parts[$partIndex]['factors'], $factorIndex, 1);
     }
+
+    public function removePart($partIndex)
+    {
+        $partModel = isset($this->template->parts[$partIndex]) ? $this->template->parts[$partIndex] : null;
+
+        // Delete the part and its factors only if it exists
+        if ($partModel) {
+            // Delete factors
+            foreach ($partModel->factors as $factor) {
+                $factor->delete();
+            }
+
+            // Delete the part
+            $partModel->delete();
+        }
+
+        array_splice($this->parts, $partIndex, 1);
+    }
+
+
     public function saveEvaluationTemplate()
     {
         $this->dispatch('swal:update', [
             'callback' => 'redirectAfterClose'
         ]);
+
         // Update the template and related entities based on the form data
         $template = EvaluationTemplate::findOrFail($this->templateId);
         $template->update(['name' => $this->name]);
 
         foreach ($this->parts as $partIndex => $part) {
-            $partModel = $template->parts->get($partIndex)->load('factors.factorRatingScales');
+            $partModel = $template->parts->get($partIndex);
 
             if (!$partModel) {
                 // Part doesn't exist, create a new one
@@ -101,8 +125,13 @@ class EvaluationTemplateEdit extends Component
                 ]);
             }
 
+            // Load factors only if the part exists
+            if ($partModel) {
+                $partModel->load('factors.factorRatingScales');
+            }
+
             foreach ($part['factors'] as $factorIndex => $factor) {
-                $factorModel = $partModel->factors->get($factorIndex);
+                $factorModel = $partModel ? $partModel->factors->get($factorIndex) : null;
 
                 if (!$factorModel) {
                     // Factor doesn't exist, create a new one
@@ -135,10 +164,13 @@ class EvaluationTemplateEdit extends Component
                     );
                 }
             }
+
             // Remove any factors that were deleted in the form
-            $partModel->factors->filter(function ($factor, $index) use ($part, $factorModel) {
-                return !collect($part['factors'])->pluck('name')->contains($factor->name);
-            })->each->delete();
+            if ($partModel) {
+                $partModel->factors->filter(function ($factor, $index) use ($part, $factorModel) {
+                    return !collect($part['factors'])->pluck('name')->contains($factor->name);
+                })->each->delete();
+            }
         }
 
         // Remove any parts that were deleted in the form
@@ -146,6 +178,7 @@ class EvaluationTemplateEdit extends Component
             return !collect($this->parts)->pluck('name')->contains($part->name);
         })->each->delete();
     }
+
 
     private function getMaxEquivalentPoints($ratingScales)
     {

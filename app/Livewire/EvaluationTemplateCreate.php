@@ -47,6 +47,23 @@ class EvaluationTemplateCreate extends Component
             'equivalent_points' => 0.0
         ];
     }
+    public function removePart($partIndex)
+    {
+        $partModel = isset($this->template->parts[$partIndex]) ? $this->template->parts[$partIndex] : null;
+
+        // Delete the part and its factors only if it exists
+        if ($partModel) {
+            // Delete factors
+            foreach ($partModel->factors as $factor) {
+                $factor->delete();
+            }
+
+            // Delete the part
+            $partModel->delete();
+        }
+
+        array_splice($this->parts, $partIndex, 1);
+    }
     public function createEvaluationTemplate()
     {
 

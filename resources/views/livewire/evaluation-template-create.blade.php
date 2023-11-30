@@ -7,47 +7,70 @@
                 </div>
                 <div class="card-body">
                     <form wire:submit.prevent="createEvaluationTemplate">
-                        <div class="form-group">
-                            <label>Evaluation Template Name</label>
-                            <input type="text" wire:model="name" class="form-control">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Evaluation Template Name</label>
+                                    <input type="text" wire:model="name" class="form-control">
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <div class="rating-scale"></div>
                             <h5 class="card-title">Parts</h5>
                             @foreach ($parts as $partIndex => $part)
                                 <div>
-                                    <div class="form-group">
-                                        <label for="part_name_{{ $partIndex }}">Part Name:</label>
-                                        <input type="text" class="form-control" id="part_name_{{ $partIndex }}"
-                                            wire:model="parts.{{ $partIndex }}.name">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="part_name_{{ $partIndex }}">Part Name:</label>
+                                                <input type="text" class="form-control"
+                                                    id="part_name_{{ $partIndex }}"
+                                                    wire:model="parts.{{ $partIndex }}.name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="criteria_allocation_{{ $partIndex }}">Criteria
+                                                    Allocation:</label>
+                                                <input class="form-control" type="number" step="0.01"
+                                                    id="criteria_allocation_{{ $partIndex }}"
+                                                    wire:model="parts.{{ $partIndex }}.criteria_allocation">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="criteria_allocation_{{ $partIndex }}">Criteria
-                                            Allocation:</label>
-                                        <input class="form-control" type="number" step="0.01"
-                                            id="criteria_allocation_{{ $partIndex }}"
-                                            wire:model="parts.{{ $partIndex }}.criteria_allocation">
-                                    </div>
+                                    <button class="btn btn-outline-danger"
+                                        wire:click.prevent="removePart({{ $partIndex }})">Remove
+                                        Part</button>
                                     <div class="rating-scale"></div>
                                     <h5 class="card-title">Factors</h5>
                                     @foreach ($part['factors'] as $factorIndex => $factor)
                                         <div>
-                                            <div class="form-group">
-                                                <label for="factor_name_{{ $partIndex }}_{{ $factorIndex }}">Factor
-                                                    Name:</label>
-                                                <input class="form-control" type="text"
-                                                    id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
-                                                    wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label
+                                                            for="factor_name_{{ $partIndex }}_{{ $factorIndex }}">Factor
+                                                            Name:</label>
+                                                        <input class="form-control" type="text"
+                                                            id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
+                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label
-                                                    for="factor_desc_{{ $partIndex }}_{{ $factorIndex }}">Factor
-                                                    Description:</label>
-                                                <input class="form-control" type="text"
-                                                    id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
-                                                    wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label
+                                                            for="factor_desc_{{ $partIndex }}_{{ $factorIndex }}">Factor
+                                                            Description:</label>
+                                                        <textarea class="form-control" type="text" id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
+                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description"></textarea>
+                                                    </div>
+                                                </div>
                                             </div>
+
 
 
                                             <div class="rating-scale"></div>
@@ -68,6 +91,7 @@
                                             </div>
                                         </div>
                                     @endforeach
+
                                     <div class="text-right">
                                         <button class="btn btn-primary" type="button"
                                             wire:click="addFactor({{ $partIndex }})">Add
@@ -75,6 +99,7 @@
                                     </div>
                                 </div>
                             @endforeach
+
                             <div class="text-right m-t-15">
                                 <button type="button" class="btn btn-primary" wire:click="addPart">Add Part</button>
                             </div>

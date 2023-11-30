@@ -28,7 +28,7 @@ final class Employees extends PowerGridComponent
 
         return [
 
-            Header::make()->showSearchInput()->withoutLoading(),
+            Header::make()->showSearchInput()->withoutLoading()->includeViewOnBottom('components.header-bottom'),
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),

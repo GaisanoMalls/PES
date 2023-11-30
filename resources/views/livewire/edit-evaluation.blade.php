@@ -435,9 +435,10 @@
                     <label for="description">Description:</label>
                     <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
                         id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
-
-                    <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
-                        Clarification</button>
+                    <div class="m-t-15">
+                        <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
+                            Clarification</button>
+                    </div>
                 @endif
 
             </div>

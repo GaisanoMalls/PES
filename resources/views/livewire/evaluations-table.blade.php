@@ -147,6 +147,10 @@
                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
                                 aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+
+                                <a class="dropdown-item"
+                                    href="{{ route('evaluations.pdf', ['evaluation' => $evaluation->id]) }}">Generate
+                                    PDF</a>
                                 @if (
                                     (Auth::user()->role_id == 3 && $evaluation->status == 1) ||
                                         (Auth::user()->role_id == 3 && $evaluation->status == 4))
@@ -160,11 +164,6 @@
                                         Edit Review
                                     </a>
                                 @endif
-
-                                <a class="dropdown-item"
-                                    href="{{ route('evaluations.pdf', ['evaluation' => $evaluation->id]) }}">Generate
-                                    PDF</a>
-
                                 @if (Auth::user()->role_id == 3 && ($evaluation->status == 2 || $evaluation->status == 3))
                                     <a class="dropdown-item" wire:click="approveEvaluation({{ $evaluation->id }})">
                                         Mark as pending</a>
