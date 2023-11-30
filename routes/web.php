@@ -53,7 +53,7 @@ Route::get('/evaluations/create/{employeeId}/', [EvaluationController::class, 's
 //Create evaluation to employee
 Route::get('/evaluations/create/{employeeId}/{template}', [EvaluationController::class, 'create'])->name('evaluations.create');
 
-Route::get('/evaluations/edit/{evaluation}', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+Route::get('/evaluations/view/{evaluation}', [EvaluationController::class, 'edit'])->name('evaluations.edit');
 
 
 

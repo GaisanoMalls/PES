@@ -63,6 +63,14 @@ return [
             ]) : [],
         ],
 
+        'spm_tps' => [
+            'driver' => 'odbc',
+            'database' => '',
+            'dsn' => 'SPM_TPS',
+            'username' => '',
+            'password' => '',
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

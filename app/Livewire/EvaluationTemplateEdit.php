@@ -13,9 +13,12 @@ class EvaluationTemplateEdit extends Component
     public $templateId;
     public $name;
     public $parts = [];
+    public $editMode = false; // Add this property
 
     public function mount($templateId)
     {
+        $this->editMode = false; // Set initial state to view mode
+
         $this->templateId = $templateId;
 
         // Fetch the template data and populate the form fields
@@ -45,7 +48,10 @@ class EvaluationTemplateEdit extends Component
     }
 
 
-
+    public function toggleEditMode()
+    {
+        $this->editMode = !$this->editMode;
+    }
     public function addPart()
     {
         $this->parts[] = [

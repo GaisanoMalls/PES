@@ -55,7 +55,7 @@
                                                         <a class="dropdown-item"
                                                             href="{{ route('templates.edit', $template->id) }}">
                                                             @csrf
-                                                            Edit
+                                                            View
                                                         </a>
                                                         <form id="delete-form-{{ $template->id }}" method="POST"
                                                             action="{{ route('templates.destroy', $template->id) }}">

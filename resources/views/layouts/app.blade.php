@@ -357,28 +357,24 @@
         function redirectAfterCloseEvalautionIndex() {
             window.location.href = '{{ route('templates.index') }}';
         }
-    </script>
 
-    <script>
         function deleteTemplate(templateId) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover this template!',
-                icon: 'warning',
+                title: "Are you sure?",
+                text: "You will not be able to recover this template!",
+                icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!",
             }).then((result) => {
                 if (result.isConfirmed) {
                     // If confirmed, submit the form
-                    document.getElementById('delete-form-' + templateId).submit();
+                    document.getElementById("delete-form-" + templateId).submit();
                 }
             });
         }
-    </script>
 
-    <script>
         function confirmDeleteEvaluation(evaluationId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -412,9 +408,7 @@
                 }
             });
         }
-    </script>
 
-    <script>
         function submit {
             Swal.fire({
                 position: "top-end",
@@ -425,6 +419,7 @@
             });
         }
     </script>
+
 
 
 </body>

@@ -39,22 +39,28 @@
                 </select>
             </div>
         </div>
+
         <div class="col-md-2">
             <div class="form-group">
                 <label>Search</label>
                 <!-- Add search button -->
-                <button wire:click="search" class="btn btn-success btn-block mt-0 search_button">
+                <button wire:click="search" class="btn btn-outline-success btn-block mt-0">
                     Search
                 </button>
             </div>
         </div>
+
     </div>
     <!-- Button to toggle between all evaluations and user's evaluations -->
-    @if ($userRoleId == 2)
-        <button wire:click="toggleShowAllEvaluations" class="btn btn-primary mb-3">
-            {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
-        </button>
-    @endif
+    <div class="text-right">
+
+        @if ($userRoleId == 2)
+            <button wire:click="toggleShowAllEvaluations" class="btn btn-success mb-3 mr-2">
+                {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
+            </button>
+        @endif
+
+    </div>
 
     <table class="table bg-white table-active table-bordered">
         <thead>
@@ -172,7 +178,7 @@
                                 @if ($evaluation->evaluator_id == Auth::user()->employee_id)
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}">
-                                        Edit evaluation
+                                        View evaluation
                                     </a>
                                 @endif
 

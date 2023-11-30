@@ -1,16 +1,33 @@
 <div>
-
     <div class="row">
+
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Create Evaluation Template Form</h4>
+                    <div class="text-right">
+                        <button wire:click="toggleEditMode" class="btn btn-outline-secondary">
+                            @if ($editMode)
+                                View
+                            @else
+                                Edit
+                            @endif
+                        </button>
+                        <a href="{{ route('templates.index') }}" class="btn btn-outline-info ml-3" wire:model="editMode"
+                            wire:loading.attr="disabled">
+                            Back
+                        </a>
+
+                    </div>
                 </div>
+
+
                 <div class="card-body">
                     <form wire:submit.prevent="saveEvaluationTemplate">
                         <div class="form-group">
                             <label>Evaluation Template Name</label>
-                            <input type="text" wire:model="name" class="form-control">
+                            <input type="text" wire:model="name" class="form-control"
+                                @if ($editMode) @else readonly @endif>
                         </div>
                         <div>
 
@@ -24,9 +41,11 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="part_name_{{ $partIndex }}">Part Name:</label>
+
                                                 <input type="text" class="form-control"
                                                     id="part_name_{{ $partIndex }}"
-                                                    wire:model="parts.{{ $partIndex }}.name">
+                                                    wire:model="parts.{{ $partIndex }}.name"
+                                                    @if ($editMode) @else readonly @endif>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -35,12 +54,15 @@
                                                     Allocation:</label>
                                                 <input class="form-control" type="number" step="0.01"
                                                     id="criteria_allocation_{{ $partIndex }}"
-                                                    wire:model="parts.{{ $partIndex }}.criteria_allocation">
+                                                    wire:model="parts.{{ $partIndex }}.criteria_allocation"
+                                                    @if ($editMode) @else readonly @endif>
                                             </div>
                                         </div>
                                     </div>
+
                                     <button class="btn btn-outline-danger"
-                                        wire:click.prevent="removePart({{ $partIndex }})">Remove
+                                        wire:click.prevent="removePart({{ $partIndex }})"
+                                        @if (!$editMode) hidden @endif>Remove
                                         Part</button>
                                     @foreach ($part['factors'] as $factorIndex => $factor)
                                         <div class="rating-scale"></div>
@@ -56,7 +78,8 @@
                                                             Name:</label>
                                                         <input class="form-control" type="text"
                                                             id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
-                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
+                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name"
+                                                            @if ($editMode) @else readonly @endif>
                                                     </div>
                                                 </div>
                                             </div>
@@ -67,7 +90,8 @@
                                                             for="factor_desc_{{ $partIndex }}_{{ $factorIndex }}">Factor
                                                             Description:</label>
                                                         <textarea class="form-control" type="text" id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
-                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description"> </textarea>
+                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description"
+                                                            @if ($editMode) @else readonly @endif> </textarea>
                                                     </div>
 
                                                 </div>
@@ -79,32 +103,39 @@
                                                     <div class="col-md-2">
                                                         <label>{{ $scale['name'] }}</label>
                                                         <input class="form-control" type="number" step="0.01"
-                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
+                                                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}"
+                                                            @if ($editMode) @else readonly @endif>
                                                     </div>
                                                 @endforeach
                                             </div>
                                             <div class="text-center m-t-15 m-b-20">
                                                 <button type="button" class="btn btn-outline-danger"
-                                                    wire:click="removeFactor({{ $partIndex }}, {{ $factorIndex }})">Remove
+                                                    wire:click="removeFactor({{ $partIndex }}, {{ $factorIndex }})"
+                                                    @if (!$editMode) hidden @endif>Remove
                                                     Factor</button>
                                             </div>
                                         </div>
                                     @endforeach
                                     <div class="text-right">
                                         <button class="btn btn-outline-success" type="button"
-                                            wire:click="addFactor({{ $partIndex }})">Add
+                                            wire:click="addFactor({{ $partIndex }})"
+                                            @if (!$editMode) hidden @endif>Add
                                             Factor</button>
                                     </div>
                                 </div>
                             @endforeach
                             <div class="text-right m-t-15">
-                                <button type="button" class="btn btn-outline-success" wire:click="addPart">Add
+                                <button type="button" class="btn btn-outline-success" wire:click="addPart"
+                                    @if (!$editMode) hidden @endif>Add
                                     Part</button>
                             </div>
                         </div>
                         <div class="text-right m-t-15">
-                            <button type="submit" class="btn btn-primary">Update Evaluation Template</button>
+                            <button type="submit" class="btn btn-primary"
+                                @if (!$editMode) hidden @endif>Update Evaluation Template</button>
                         </div>
+
+
                     </form>
                 </div>
             </div>
