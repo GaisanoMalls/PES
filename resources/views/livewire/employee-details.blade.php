@@ -8,6 +8,11 @@
     <p><strong>Position:</strong> {{ $employee->position }}</p>
 
     <h3>Evaluations</h3>
+    <!-- Add Evaluate Employee button here -->
+    <a href="{{ route('evaluations.select', ['employeeId' => $employee->id]) }}" class="btn btn-primary mb-3">
+        Evaluate Employee
+    </a>
+
     <table class="table bg-white table-active table-bordered">
         <thead>
             <tr class="text-center">
@@ -34,7 +39,8 @@
                             <span class="btn-sm bg-default-light mr-2" style="cursor: default;">Clarifications</span>
                         @endif
                     </td>
-                    <td>{{ $evaluation->created_at->format('Y-m-d') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($evaluation->created_at)->format('F d, Y') }}</td>
+
                     <th> <a class="btn btn-outline-secondary"
                             onclick="redirectToEvaluation('{{ $evaluation->id }}', '{{ Auth::user()->role_id }}')">Show</a>
                         <script>

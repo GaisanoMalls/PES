@@ -112,7 +112,7 @@
                                                         function redirectToEvaluation(evaluationId, userRoleId) {
                                                             var baseUrl = '/evaluations';
 
-                                                            if (userRoleId == 2) {
+                                                            if (userRoleId == 2 || userRoleId == 5) {
                                                                 window.location.href = baseUrl + '/view/' + evaluationId;
                                                             } else if (userRoleId == 3) {
                                                                 window.location.href = baseUrl + '/' + evaluationId + '/review';
@@ -183,14 +183,16 @@
                                     <a href="#"><i class="fas fa-user"></i> <span> Evaluations </span>
                                         <span class="menu-arrow"></span></a>
                                     <ul class="submenu_class"
-                                        style="{{ request()->routeIs('employees.evaluations') ? 'display:block' : 'display:none' }}">
+                                        style="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'display:block' : 'display:none' }}">
                                         <li>
-                                            <a class="{{ request()->routeIs('employees.evaluations') ? 'active' : '' }}"
+                                            <a class="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'active' : '' }}"
                                                 href="{{ route('employees.evaluations') }}">Employee
                                                 Evaluation List </a>
                                         </li>
                                     </ul>
                                 </li>
+
+
                                 <li class="submenu">
                                     <a href="#"><i class="fas fa-user"></i> <span> Employees </span>
                                         <span class="menu-arrow"></span></a>
