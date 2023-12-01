@@ -115,10 +115,15 @@ class ReviewEvaluation extends Component
         return $totalRates;
     }
 
-
+    public $loading = false;
 
     public function approveEvaluation()
     {
+        $this->loading = true; // Set loading to true when the form is being submitted
+
+        $this->dispatch('swal:success2', [
+            'callback' => 'redirectAfterClose'
+        ]);
         if ($this->isFormSubmitted) {
             return;
         }    // Check if the status is changing from 3 to 2
@@ -152,6 +157,7 @@ class ReviewEvaluation extends Component
             Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
             Notification::create([
                 'employee_id' => $evaluator->employee_id,
+                'evaluation_id' => $this->evaluation->id,
                 'notif_title' => $dataEvaluator['subject'],
                 'notif_desc' => $dataEvaluator['body'],
             ]);
@@ -171,21 +177,24 @@ class ReviewEvaluation extends Component
                     Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
                     Notification::create([
                         'employee_id' => $hrUser->employee_id,
+                        'evaluation_id' => $this->evaluation->id,
                         'notif_title' =>  $dataHR['subject'],
                         'notif_desc' => $dataHR['body'],
                     ]);
                 }
             }
         }
-
-
-
         $this->isFormSubmitted = true;
+        $this->loading = false; // Set loading back to false after the form submission is complete
 
-        return Redirect::to(route('evaluations.index'));
+        //   return Redirect::to(route('evaluations.index'));
     }
     public function disapproveEvaluation()
     {
+        $this->loading = true; // Set loading to true when the form is being submitted
+
+
+
         if ($this->isFormSubmitted) {
             return;
         }
@@ -213,6 +222,7 @@ class ReviewEvaluation extends Component
             Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
             Notification::create([
                 'employee_id' => $evaluator->employee_id,
+                'evaluation_id' => $this->evaluation->id,
                 'notif_title' => $dataEvaluator['subject'],
                 'notif_desc' => $dataEvaluator['body'],
             ]);
@@ -228,6 +238,8 @@ class ReviewEvaluation extends Component
             'status' =>   $this->evaluation->status, // Set the status as needed
         ]);
         $this->isFormSubmitted = true;
+        $this->loading = false; // Set loading back to false after the form submission is complete
+
         return redirect()->to(route('evaluations.index'));
     }
 
@@ -272,6 +284,7 @@ class ReviewEvaluation extends Component
 
             Notification::create([
                 'employee_id' => $this->evaluation->evaluator_id,
+                'evaluation_id' => $this->evaluation->id,
                 'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
                 'notif_desc' => $this->clarificationDescription,
             ]);

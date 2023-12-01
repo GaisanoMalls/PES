@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
+            $table->bigInteger('evaluation_id');
             $table->text('notif_title');
             $table->text('notif_desc');
             $table->timestamps();
-
             // Define foreign key constraint
         });
     }

@@ -26,6 +26,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('dashboard');
 
+
+//Evaluations  / Employee Evaluation List
+Route::get('/employee_evaluations', [EmployeeController::class, 'employeesEvaluation'])->name('employees.evaluations');
+
+
+
 // Employee Routes
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');

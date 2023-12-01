@@ -11,6 +11,7 @@ class Notification extends Model
 
     protected $fillable = [
         'employee_id',
+        'evaluation_id',
         'notif_title',
         'notif_desc',
     ];
@@ -18,5 +19,9 @@ class Notification extends Model
     public function employee()
     {
         return $this->belongsTo(User::class, 'employee_id', 'employee_id');
+    }
+    public function evaluation()
+    {
+        return $this->belongsTo(Evaluation::class, 'evaluation_id');
     }
 }

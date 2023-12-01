@@ -295,8 +295,12 @@
     <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 
-    <button wire:click="approveEvaluation"
-        @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>Approve
+
+    <button wire:click="approveEvaluation" wire:loading.attr="disabled"
+        @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
+        <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
+            role="status"></span>
+        <span wire:loading.remove wire:target="approveEvaluation"></span>Approve
         Evaluation
     </button>
 
@@ -401,9 +405,14 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-                    <button wire:click="disapproveEvaluation"
-                        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>Disapprove
-                        Evaluation</button>
+                    <button wire:click="disapproveEvaluation" wire:loading.attr="disabled"
+                        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>
+                        <span wire:loading wire:target="disapproveEvaluation"
+                            class="spinner-border spinner-border-sm mr-2" role="status"></span>
+                        <span wire:loading.remove wire:target="disapproveEvaluation"></span>Disapprove
+                        Evaluation
+                    </button>
+
                 </div>
             </div>
         </div>

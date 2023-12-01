@@ -26,6 +26,21 @@
             <a data-toggle="modal" data-target="#disapproveModal" class="" style="cursor: pointer;">
                 View Reason of Disapproval
             </a>
+        @elseif ($evaluation->status === 4)
+            <a href="#" class="btn btn-lg bg-warning-light mb-2" style="cursor: default;">Clarifcations
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" x2="12" y1="8" y2="12" />
+                    <line x1="12" x2="12.01" y1="16" y2="16" />
+                </svg>
+
+
+            </a>
+            <button wire:click="toggleEditMode" class="btn btn-outline-success">
+                {{ $this->getModeButtonText() }}
+            </button>
         @else
             <button wire:click="toggleEditMode" class="btn btn-outline-success">
                 {{ $this->getModeButtonText() }}
@@ -87,8 +102,8 @@
                             <div class="form-group">
                                 <label for="covered_period_start">Join Date</label>
                                 <input class="form-control" type="date" id="covered_period_start"
-                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}" required
-                                    readonly>
+                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}"
+                                    required readonly>
                             </div>
                         </div>
 
@@ -345,30 +360,31 @@
             <label for="current_salary">Current Salary:</label>
             <input type="number" class="form-control" wire:model="currentSalary"
                 placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
-                @if ($editMode) readonly @endif>
+                @if (!$editMode) disabled @endif>
+
         </div>
         <div class="form-group">
             <label for="recommended_position">Recommended Position:</label>
             <input type="text" class="form-control" wire:model="recommendedPosition"
                 placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
-                @if ($editMode) readonly @endif>
+                @if (!$editMode) disabled @endif>
         </div>
         <div class="form-group">
             <label for="level">Level:</label>
             <input type="text" class="form-control" wire:model="level"
                 placeholder="{{ $evaluation->recommendation->level ?? '' }}"
-                @if ($editMode) readonly @endif>
+                @if (!$editMode) disabled @endif>
         </div>
         <div class="form-group">
             <label for="recommended_salary">Recommended Salary:</label>
             <input type="number" class="form-control" wire:model="recommendedSalary"
                 placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
-                @if ($editMode) readonly @endif>
+                @if (!$editMode) disabled @endif>
         </div>
         <div class="form-group">
             <label for="remarks">Remarks:</label>
             <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
-                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" @if ($editMode) readonly @endif></textarea>
+                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" @if (!$editMode) disabled @endif></textarea>
         </div>
         <div class="form-group">
             @php
@@ -378,7 +394,7 @@
                 {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
             </label>
             <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                @if ($editMode) readonly @endif>
+                @if (!$editMode) disabled @endif>
         </div>
     </div>
 
@@ -387,7 +403,7 @@
             <div class="form-group">
                 <label for="recommendations">RECOMMENDATION:</label>
                 <textarea class="form-control" wire:model="recommendationNote" placeholder="{{ $evaluation->recommendation_note }}"
-                    @if ($editMode) readonly @endif></textarea>
+                    @if (!$editMode) disabled @endif></textarea>
             </div>
         </div>
 
@@ -395,7 +411,7 @@
             <div class="form-group">
                 <label for="ratee_comments">RATEE’S COMMENTS:</label>
                 <textarea class="form-control" wire:model="rateesComment" placeholder="{{ $evaluation->ratees_comment }}"
-                    @if ($editMode) readonly @endif></textarea>
+                    @if (!$editMode) disabled @endif></textarea>
             </div>
         </div>
     </div>
@@ -403,9 +419,6 @@
 
 
     @if ($showClarificationSection)
-
-
-
         <div class="m-t-30">
             @if ($clarifications->count() > 0)
                 @foreach ($clarifications as $clarification)
@@ -475,7 +488,7 @@
     <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 
-    @if ($evaluation->status === 2)
+    @if ($evaluation->status === 2 || $evaluation->status === 3 || !$editMode)
     @else
         <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
             Evaluation</button>

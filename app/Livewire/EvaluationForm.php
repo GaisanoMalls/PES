@@ -297,6 +297,7 @@ class EvaluationForm extends Component
             // Store notification in the database
             Notification::create([
                 'employee_id' => $user->employee_id,
+                'evaluation_id' => $evaluation->id,
                 'notif_title' => $data['subject'],
                 'notif_desc' => $data['body'],
             ]);

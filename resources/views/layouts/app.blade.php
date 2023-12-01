@@ -90,7 +90,8 @@
                                         @auth
                                             @forelse ($notifications as $notification)
                                                 <li class="notification-message">
-                                                    <a href="#">
+                                                    <a href="#"
+                                                        onclick="redirectToEvaluation('{{ $notification->evaluation_id }}', '{{ Auth::user()->role_id }}')">
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <p class="noti-details">
@@ -106,6 +107,21 @@
                                                             </div>
                                                         </div>
                                                     </a>
+
+                                                    <script>
+                                                        function redirectToEvaluation(evaluationId, userRoleId) {
+                                                            var baseUrl = '/evaluations';
+
+                                                            if (userRoleId == 2) {
+                                                                window.location.href = baseUrl + '/view/' + evaluationId;
+                                                            } else if (userRoleId == 3) {
+                                                                window.location.href = baseUrl + '/' + evaluationId + '/review';
+                                                            }
+                                                        }
+                                                    </script>
+
+
+
                                                 </li>
                                             @empty
                                                 <li class="notification-message">
@@ -166,6 +182,18 @@
                                         <span>Dashboard</span></a>
                                 </li>
                                 <li class="list-divider"></li>
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-user"></i> <span> Evaluations </span>
+                                        <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class"
+                                        style="{{ request()->routeIs('employees.evaluations') ? 'display:block' : 'display:none' }}">
+                                        <li>
+                                            <a class="{{ request()->routeIs('employees.evaluations') ? 'active' : '' }}"
+                                                href="{{ route('employees.evaluations') }}">Employee
+                                                Evaluation List </a>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <li class="submenu">
                                     <a href="#"><i class="fas fa-user"></i> <span> Employees </span>
                                         <span class="menu-arrow"></span></a>
@@ -295,6 +323,41 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     redirectAfterCloseEvalautionIndex();
+                }
+            });
+        });
+
+        window.addEventListener('swal:success2', event => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Evaluation Approved',
+                showCancelButton: false,
+                confirmButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'btn btn-secondary',
+                },
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectAfterClose();
+                }
+            });
+        });
+        window.addEventListener('swal:success2', event => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Evaluation Disapproved',
+                showCancelButton: false,
+                confirmButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'btn btn-secondary',
+                },
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectAfterClose();
                 }
             });
         });

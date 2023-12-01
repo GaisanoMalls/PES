@@ -367,6 +367,7 @@ class EditEvaluation extends Component
             $this->evaluation->save();
             Notification::create([
                 'employee_id' => $this->evaluation->approver_id,
+                'evaluation_id' => $this->evaluation->id,
                 'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
                 'notif_desc' => $this->clarificationDescription,
             ]);

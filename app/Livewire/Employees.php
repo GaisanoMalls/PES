@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Evaluator;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,27 @@ final class Employees extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Employee::query();
+        // Check if the current user is an admin (assuming role_id 1 represents admin)
+        if (auth()->user()->role_id === 1) {
+            // If admin, return all employees without department filtering
+            return Employee::query();
+        }
+
+        // If not admin, proceed with the department-based filtering logic
+
+        // Retrieve the current user's department ID
+        $currentDepartmentId = auth()->user()->department_id;
+
+        // Retrieve the current user's person ID from the Evaluator table
+        $evaluator = Evaluator::where('id', auth()->user()->person_id)->first();
+
+        // If the Evaluator record is found, update the currentDepartmentId
+        if ($evaluator) {
+            $currentDepartmentId = $evaluator->department_id;
+        }
+
+        // Return the Employee query filtered by the current user's department ID
+        return Employee::where('department_id', $currentDepartmentId);
     }
 
     public function relationSearch(): array
