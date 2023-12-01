@@ -340,8 +340,42 @@
                 <h1 class="text-center">{{ $evaluation->evaluationTemplate->name }}</h1>
                 <div class="employee-details">
 
-
-
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="department">Department</label>
+                            <input type="text" class="form-control" id="department" name="department"
+                                placeholder="Enter Department/Section"
+                                value="{{ $evaluation->employee->department->name }}">
+                        </div>
+                        <div class="col-4">
+                            <label for="employee_id">Employee ID</label>
+                            <input type="text" class="form-control" id="employee_id" name="employee_id"
+                                placeholder="Enter Employee ID" value="{{ $evaluation->employee->employee_id }}">
+                        </div>
+                        <div class="col-4">
+                            <label for="first_name">Employee Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name"
+                                placeholder="Enter Employee Name"
+                                value="{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="position">Position</label>
+                            <input type="text" class="form-control" id="position" name="position"
+                                placeholder="Enter Position" value="{{ $evaluation->employee->position }}">
+                        </div>
+                        <div class="col-4">
+                            <label for="covered_period_start">Join Date</label>
+                            <input class="form-control" type="date" id="covered_period_start"
+                                name="covered_period_start" value="{{ $evaluation->employee->date_hired }}">
+                        </div>
+                        <div class="col-4">
+                            <label for="created_at">Date of Evaluation</label>
+                            <input class="form-control" type="text" id="created_at" name="created_at"
+                                value="{{ $evaluation->created_at }}">
+                        </div>
+                    </div>
                 </div>
         </div>
         <div class="bg-white2">
@@ -544,35 +578,60 @@
 
                 <div class="m-t-30">
                     <h4 class="text-center">Recommendation</h4>
-                    <div class="form-group">
-                        <label for="current_salary">Current Salary:</label>
-                        <input type="number" class="form-control" wire:model="currentSalary"
-                            value="{{ $evaluation->recommendation->current_salary }}">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="current_salary">Current Salary:</label>
+                                <input type="number" class="form-control" wire:model="currentSalary"
+                                    value="{{ $evaluation->recommendation->current_salary }}">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_position">Recommended Position:</label>
+                                <input type="text" class="form-control" wire:model="recommendedPosition"
+                                    value="{{ $evaluation->recommendation->recommended_position }}">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="level">Level:</label>
+                                <input type="text" class="form-control" wire:model="level"
+                                    value="{{ $evaluation->recommendation->level }}">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="recommended_position">Recommended Position:</label>
-                        <input type="text" class="form-control" wire:model="recommendedPosition"
-                            value="{{ $evaluation->recommendation->recommended_position }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="level">Level:</label>
-                        <input type="text" class="form-control" wire:model="level"
-                            value="{{ $evaluation->recommendation->level }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="recommended_salary">Recommended Salary:</label>
-                        <input type="number" class="form-control" wire:model="recommendedSalary"
-                            value="{{ $evaluation->recommendation->recommended_salary }}">
-                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_salary">Recommended Salary:</label>
+                                <input type="number" class="form-control" wire:model="recommendedSalary"
+                                    value="{{ $evaluation->recommendation->recommended_salary }}">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_salary">Percentage Increase:</label>
+                                <input type="number" class="form-control" wire:model="recommendedSalary"
+                                    value="{{ $evaluation->recommendation->percentage_increase }}">
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="remarks">Remarks:</label>
-                        <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks">{{ $evaluation->recommendation->remarks }}</textarea>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                                <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                                    value="{{ $evaluation->recommendation->effectivity }}">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                        <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                            value="{{ $evaluation->recommendation->effectivity }}">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="remarks">Remarks:</label>
+                                <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks">{{ $evaluation->recommendation->remarks }}</textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endif
