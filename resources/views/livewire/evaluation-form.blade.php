@@ -11,19 +11,20 @@
                         <div class="col-md-4">
                             <label for="department">Department</label>
                             <input type="text" class="form-control" id="department" name="department"
-                                placeholder="Enter Department/Section" value="{{ $departmentName }}" readonly>
+                                placeholder="Enter Department/Section" value="{{ $departmentName }}" readonly disabled>
                         </div>
 
                         <div class="col-md-4">
                             <label for="employee_id">Employee ID</label>
                             <input type="text" class="form-control" id="employee_id" name="employee_id"
-                                placeholder="Enter Employee ID" value="{{ $this->employeeIdCompany }}" readonly>
+                                placeholder="Enter Employee ID" value="{{ $this->employeeIdCompany }}" readonly
+                                disabled>
                         </div>
 
                         <div class="col-md-4">
                             <label for="first_name">Employee Name</label>
                             <input type="text" class="form-control" id="first_name" name="first_name"
-                                placeholder="Enter Employee Name" value="{{ $name }}" readonly>
+                                placeholder="Enter Employee Name" value="{{ $name }}" readonly disabled>
                         </div>
                     </div>
 
@@ -31,14 +32,14 @@
                         <div class="col-md-4">
                             <label for="position">Position</label>
                             <input type="text" class="form-control" id="position" name="position"
-                                placeholder="Enter Position" value="{{ $position }}" readonly>
+                                placeholder="Enter Position" value="{{ $position }}" readonly disabled>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="covered_period_start">Join Date</label>
                                 <input class="form-control" type="date" id="covered_period_start"
-                                    name="covered_period_start" value="{{ $date_hired }}" required readonly>
+                                    name="covered_period_start" value="{{ $date_hired }}" required readonly disabled>
                             </div>
                         </div>
 
@@ -46,7 +47,7 @@
                             <div class="form-group">
                                 <label for="date_of_evaluation">Date of Evaluation</label>
                                 <input class="form-control" type="date" wire:model="date_of_evaluation"
-                                    id="date_of_evaluation" name="date_of_evaluation" required readonly>
+                                    id="date_of_evaluation" name="date_of_evaluation" required readonly disabled>
                             </div>
                         </div>
                     </div>

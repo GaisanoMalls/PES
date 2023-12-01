@@ -37,41 +37,6 @@
 <body>
     <div id="app">
         @guest
-            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav me-auto">
-
-                        </ul>
-
-                        <!-- Right Side Of Navbar -->
-                        <ul class="navbar-nav ms-auto">
-                            <!-- Authentication Links -->
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-            </nav>
             <main class="py-4">
                 @yield('content')
             </main>
@@ -89,7 +54,9 @@
                             <img src="{{ asset('assets/img/profiles/avatar.png') }}" alt="Logo" width="30"
                                 height="30">
                         </a>
+                        <br>
                     </div>
+
                     <a href="javascript:void(0);" id="toggle_btn">
                         <i class="fe fe-text-align-left"></i>
                     </a>
@@ -357,24 +324,28 @@
         function redirectAfterCloseEvalautionIndex() {
             window.location.href = '{{ route('templates.index') }}';
         }
+    </script>
 
+    <script>
         function deleteTemplate(templateId) {
             Swal.fire({
-                title: "Are you sure?",
-                text: "You will not be able to recover this template!",
-                icon: "warning",
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this template!',
+                icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Yes, delete it!",
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // If confirmed, submit the form
-                    document.getElementById("delete-form-" + templateId).submit();
+                    document.getElementById('delete-form-' + templateId).submit();
                 }
             });
         }
+    </script>
 
+    <script>
         function confirmDeleteEvaluation(evaluationId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -408,7 +379,9 @@
                 }
             });
         }
+    </script>
 
+    <script>
         function submit {
             Swal.fire({
                 position: "top-end",
@@ -419,7 +392,6 @@
             });
         }
     </script>
-
 
 
 </body>

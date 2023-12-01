@@ -1,24 +1,49 @@
 <div>
 
     <div class="container22">
-        <button wire:click="toggleEditMode" class="btn btn-outline-success">
-            {{ $this->getModeButtonText() }}
-        </button>
-        @if ($evaluation->status === 3)
-            <button data-toggle="modal" data-target="#disapproveModal" class="btn btn-outline-danger"
-                style="margin-left: 10px;">
+
+        @if ($evaluation->status === 2)
+            <a href="#" class="btn btn-lg bg-success-light mb-2" style="cursor: default;">Approved
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+
+            </a>
+        @elseif ($evaluation->status === 3)
+            <a href="#" class="btn btn-lg bg-danger-light mb-2" style="cursor: default;">Disapproved
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" x2="9" y1="9" y2="15" />
+                    <line x1="9" x2="15" y1="9" y2="15" />
+                </svg>
+
+            </a>
+            <a data-toggle="modal" data-target="#disapproveModal" class="" style="cursor: pointer;">
                 View Reason of Disapproval
+            </a>
+        @else
+            <button wire:click="toggleEditMode" class="btn btn-outline-success">
+                {{ $this->getModeButtonText() }}
             </button>
         @endif
 
+
     </div>
 
-    <br>
+
     @if ($currentStep === 1)
 
 
         <span>Non-Supervisory (Support & Non-Sales)</span>
         <h1>{{ $evaluation->evaluationTemplate->name }}</h1>
+
+
+
         {{-- <span>Template ID: {{ $templateId }}</span>
         <span>Employee ID: {{ $employeeId }} </span> --}}
 
@@ -450,9 +475,11 @@
     <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
 
-
-    <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
-        Evaluation</button>
+    @if ($evaluation->status === 2)
+    @else
+        <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
+            Evaluation</button>
+    @endif
 
     <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
         Clarifications</button>

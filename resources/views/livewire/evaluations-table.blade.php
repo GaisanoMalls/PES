@@ -1,12 +1,6 @@
 <!-- resources/views/livewire/evaluations-table.blade.php -->
 <div class="m-t-30 p-t-10">
-
-
-
-
-
     <div class="row formtype">
-
         <div class="col-md-3 m-t-15">
             <h1>Evaluations</h1>
         </div>
@@ -121,29 +115,33 @@
                     </td>
                     <td>
                         @if (\App\Models\Recommendation::where('evaluation_id', $evaluation->id)->exists())
-                            <a href="#" class="btn btn-sm bg-success-light mr-2">
+                            <a href="#" class="btn btn-sm bg-success-light mr-2" style="cursor: default;">
                                 Yes</a>
                         @else
-                            <a href="#" class="btn btn-sm bg-danger-light mr-2">
+                            <a href="#" class="btn btn-sm bg-danger-light mr-2" style="cursor: default;">
                                 No</a>
                         @endif
                     </td>
                     <td>
                         @if ($evaluation->status == 1)
                             <div class="actions">
-                                <a href="#" class="btn btn-sm bg-default-light mr-2">Pending</a>
+                                <a href="#" class="btn-sm bg-default-light mr-2"
+                                    style="cursor: default;">Pending</a>
                             </div>
                         @elseif($evaluation->status == 2)
                             <div class="actions">
-                                <a href="#" class="btn btn-sm bg-success-light mr-2">Approved</a>
+                                <a href="#" class="btn btn-sm bg-success-light mr-2"
+                                    style="cursor: default;">Approved</a>
                             </div>
                         @elseif($evaluation->status == 3)
                             <div class="actions">
-                                <a href="#" class="btn btn-sm bg-danger-light mr-2">Disapproved</a>
+                                <a href="#" class="btn btn-sm bg-danger-light mr-2"
+                                    style="cursor: default;">Disapproved</a>
                             </div>
                         @elseif($evaluation->status == 4)
                             <div class="actions">
-                                <a href="#" class="btn btn-sm bg-default-light mr-2">Clarifications</a>
+                                <a href="#" class="btn btn-sm bg-default-light mr-2"
+                                    style="cursor: default;">Clarifications</a>
                             </div>
                         @endif
                     </td>
@@ -183,9 +181,12 @@
                                 @endif
 
                                 @if ($evaluation->evaluator_id == Auth::user()->employee_id)
-                                    <a class="dropdown-item" onclick="confirmDeleteEvaluation({{ $evaluation->id }})">
-                                        Delete
-                                    </a>
+                                    @if ($evaluation->status === 1)
+                                        <a class="dropdown-item"
+                                            onclick="confirmDeleteEvaluation({{ $evaluation->id }})">
+                                            Delete
+                                        </a>
+                                    @endif
                                 @endif
                             </div>
                         </div>

@@ -2356,6 +2356,7 @@ html.menu-opened body {
     width: 100%
 }
 
+
 .login_pswd {
     max-width: 385px !important;
     max-height: 460px !important
@@ -2388,10 +2389,7 @@ html.menu-opened body {
 
 .login-wrapper .loginbox .login-left {
     align-items: center;
-    background: #1A8DF8;
-    background: -moz-linear-gradient(-45deg, rgba(0, 150, 136, 1) 0%, rgba(6, 198, 180, 1) 52%, rgba(0, 150, 136, 1) 100%, rgba(6, 198, 180, 1) 100%);
-    background: -webkit-linear-gradient(-45deg, rgba(0, 150, 136, 1) 0%, rgba(6, 198, 180, 1) 52%, rgba(0, 150, 136, 1) 100%, rgba(6, 198, 180, 1) 100%);
-    background: linear-gradient(135deg, rgba(0, 150, 136, 1) 0%, rgba(6, 198, 180, 1) 52%, rgba(0, 150, 136, 1) 100%, rgba(6, 198, 180, 1) 100%);
+
     border-radius: 6px 0 0 6px;
     flex-direction: column;
     justify-content: center;
@@ -4653,8 +4651,10 @@ h3.page-sub-title {
 }
 
 .container22 {
-    display: flex;
+ display: flex;
     justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end; /* Align items to the right side */
 }
 
 .new-comment input.form-control {

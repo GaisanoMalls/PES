@@ -676,7 +676,22 @@
 
         <div class="bg-white2">
             <div>
+                <div class="rating-scale"></div>
+
                 <ul style="list-style: none;">
+                    <span>Direction: Rate the following factors by checking the appropriate box which
+                        indicates the most accurate appraisal of the ratee’s performance on the job.
+                        The rating scale are outlined below:
+                    </span>
+
+                    @foreach ($ratingScales as $scale)
+                        <div class="rating-scale-item">
+
+                            <strong> <span class="rating-scale-acronym">{{ $scale->acronym }}=</span>
+                                <span class="rating-scale-name"> {{ $scale->name }}:</span></strong>
+                            <span class="rating-scale-description">{{ $scale->description }}</span>
+                        </div>
+                    @endforeach
                     @foreach ($partsWithFactors as $partWithFactors)
                         <div class="rating-scale"></div>
                         <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>

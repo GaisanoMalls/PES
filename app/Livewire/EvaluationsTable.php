@@ -13,7 +13,7 @@ class EvaluationsTable extends Component
 {
 
     public $evaluationId; // Add this property
-    public $showAllEvaluations = false; // Add this property
+    public $showAllEvaluations = true; // Add this property
 
     public $searchTerm;
     public $recommendationFilter;
