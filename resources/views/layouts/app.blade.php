@@ -119,12 +119,9 @@
                                                             }
                                                         }
                                                     </script>
-
-
-
                                                 </li>
                                             @empty
-                                                <li class="notification-message">
+                                                <li class="notification-message ml-3 mt-3">
                                                     <p>No notifications</p>
                                                 </li>
                                             @endforelse

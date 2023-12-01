@@ -179,12 +179,16 @@ class EvaluationController extends Controller
                 $this->selectedScale[$factor->id] = $selectedScaleForFactor;
                 $this->factorNotes[$factor->id] = $noteForFactor;
 
+                // Include the rating_scale_id for the factor
+                $ratingScaleIdForFactor = $selectedScaleForFactor;
+
                 $totalRateForPart += $pointsForFactor;
 
                 // Add the points for the factor to the $factorData array
                 $factorData['points'] = $pointsForFactor;
                 $factorData['note'] = $noteForFactor;
                 $factorData['selectedScale'] = $selectedScaleForFactor;
+                $factorData['ratingScaleId'] = $ratingScaleIdForFactor; // Include rating_scale_id
 
                 $factorsData[] = $factorData;
             }
@@ -212,7 +216,7 @@ class EvaluationController extends Controller
             'partsWithFactors' => $partsWithFactors, // Include the partsWithFactors array
             'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
             'selectedScale' => $this->selectedScale,
-
+            'factorsData' => $factorsData, // Include the factorsData array
             // Add other data as needed...
         ];
     }

@@ -24,11 +24,13 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('dashboard');
+})->name('dashboard')->middleware('auth');
 
 
 //Evaluations  / Employee Evaluation List
 Route::get('/employee_evaluations', [EmployeeController::class, 'employeesEvaluation'])->name('employees.evaluations');
+// Example route definition
+Route::get('/employee_evaluations/{employee_id}', [EmployeeController::class, 'employeesEvaluationsView'])->name('employees.evaluations-view');
 
 
 

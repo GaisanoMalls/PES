@@ -69,7 +69,6 @@
 
                         @foreach ($ratingScales as $scale)
                             <div class="rating-scale-item">
-
                                 <strong> <span class="rating-scale-acronym">{{ $scale->acronym }}=</span>
                                     <span class="rating-scale-name"> {{ $scale->name }}:</span></strong>
                                 <span class="rating-scale-description">{{ $scale->description }}</span>

@@ -38,13 +38,17 @@
 
 
             </a>
-            <button wire:click="toggleEditMode" class="btn btn-outline-success">
-                {{ $this->getModeButtonText() }}
-            </button>
+            @if ($evaluation->evaluator_id == Auth::user()->employee_id)
+                <button wire:click="toggleEditMode" class="btn btn-outline-success">
+                    {{ $this->getModeButtonText() }}
+                </button>
+            @endif
         @else
-            <button wire:click="toggleEditMode" class="btn btn-outline-success">
-                {{ $this->getModeButtonText() }}
-            </button>
+            @if ($evaluation->evaluator_id == Auth::user()->employee_id)
+                <button wire:click="toggleEditMode" class="btn btn-outline-success">
+                    {{ $this->getModeButtonText() }}
+                </button>
+            @endif
         @endif
 
 

@@ -1,39 +1,7 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 <style>
-    html {
-        height: 100%
-    }
-
-    body {
-        color: #2a2a2a;
-        font-size: 1rem;
-        height: 100%;
-        line-height: 1.5;
-        overflow-x: hidden
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-family: rubik, sans-serif;
-        margin-top: 0
-    }
-
-    s a:hover,
-    a:active,
-    a:focus {
-        outline: none;
-        text-decoration: none
-    }
-
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus {
-        -webkit-box-shadow: 0 0 0 1000px #fff inset !important
-    }
-
     .form-control {
         color: #333;
         font-size: 15px;
@@ -41,7 +9,6 @@
     }
 
     .form-control:focus {
-        border-color: #6675e9;
         box-shadow: none;
         outline: 0
     }
@@ -54,43 +21,6 @@
         height: calc(1.5em + 1rem + 2px)
     }
 
-    a {
-        color: #009ce7
-    }
-
-    input,
-    button,
-    a {
-        transition: all .4s ease;
-        -moz-transition: all .4s ease;
-        -o-transition: all .4s ease;
-        -ms-transition: all .4s ease;
-        -webkit-transition: all .4s ease
-    }
-
-    input,
-    input:focus,
-    button,
-    button:focus {
-        outline: none
-    }
-
-    input[type=file] {
-        height: auto;
-        min-height: calc(1.5em + .75rem + 2px)
-    }
-
-    input[type=text],
-    input[type=password] {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none
-    }
-
-    textarea.form-control {
-        resize: vertical
-    }
-
 
 
     .form-group {
@@ -101,12 +31,7 @@
         height: 40px
     }
 
-    .nav .open>a,
-    .nav .open>a:focus,
-    .nav .open>a:hover {
-        background-color: rgba(0, 0, 0, .1);
-        border-color: rgba(0, 0, 0, .1)
-    }
+
 
     .material-icons {
         font-family: material icons;
@@ -130,152 +55,9 @@
         font-weight: 600
     }
 
-    .table {
-        color: #555;
-        max-width: 100%;
-        margin-bottom: 0;
-        width: 100%;
-        font-size: 15px
-    }
 
-    .table-striped>tbody>tr:nth-of-type(2n+1) {
-        background-color: #f8f9fa
-    }
 
-    .table.no-border>tbody>tr>td,
-    .table>tbody>tr>th,
-    .table.no-border>tfoot>tr>td,
-    .table.no-border>tfoot>tr>th,
-    .table.no-border>thead>tr>td,
-    .table.no-border>thead>tr>th {
-        border-top: 0;
-        padding: 10px 8px
-    }
 
-    .table-nowrap td,
-    .table-nowrap th {
-        white-space: nowrap
-    }
-
-    .table.dataTable {
-        border-collapse: collapse !important
-    }
-
-    table.table td h2 {
-        display: inline-block;
-        font-size: inherit;
-        font-weight: 400;
-        margin: 0;
-        padding: 0;
-        vertical-align: middle
-    }
-
-    table.table td h2.table-avatar {
-        align-items: center;
-        display: inline-flex;
-        font-size: inherit;
-        font-weight: 400;
-        margin: 0;
-        padding: 0;
-        vertical-align: middle;
-        white-space: nowrap
-    }
-
-    table.table td h2 a {
-        color: #333
-    }
-
-    table.table td h2 a:hover {
-        color: #2962ff
-    }
-
-    table.table td h2 span {
-        color: #888;
-        display: block;
-        font-size: 12px;
-        margin-top: 3px
-    }
-
-    .table thead {
-        background-color: #f9fbfd;
-        border-bottom: 1px solid rgba(0, 0, 0, .03)
-    }
-
-    .table thead tr th {
-        font-weight: 700;
-        border: 0
-    }
-
-    .table tbody tr {
-        border-bottom: 1px solid rgba(0, 0, 0, .05)
-    }
-
-    .table tbody tr:last-child {
-        border-color: transparent
-    }
-
-    .table.table-center td,
-    .table.table-center th {
-        vertical-align: middle
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f7f7f7
-    }
-
-    .table-hover tbody tr:hover td {
-        color: #474648
-    }
-
-    .table-striped thead tr {
-        border-color: transparent
-    }
-
-    .table-striped tbody tr {
-        border-color: transparent
-    }
-
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: rgba(255, 255, 255, .3)
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(235, 235, 235, .4)
-    }
-
-    .table-bordered {
-        border: 1px solid rgba(0, 0, 0, .05) !important
-    }
-
-    .table-bordered th,
-    .table-bordered td {
-        border-color: rgba(0, 0, 0, .05)
-    }
-
-    .card-table .card-body {
-        padding: 0
-    }
-
-    .card-table .card-body .table>thead>tr>th {
-        border-top: 0
-    }
-
-    .card-table .card-body .table tr td:first-child,
-    .card-table .card-body .table tr th:first-child {
-        padding-left: 1.5rem
-    }
-
-    .card-table .card-body .table tr td:last-child,
-    .card-table .card-body .table tr th:last-child {
-        padding-right: 1.5rem
-    }
-
-    .card-table .table td,
-    .card-table .table th {
-        border-top: 1px solid #e2e5e8;
-        padding: 1rem .75rem;
-        white-space: nowrap
-    }
 
     div.c {
         text-align: right;
@@ -386,54 +168,6 @@
     }
 
 
-    .card-body {
-        padding: 1.5rem
-    }
-
-    .card-header {
-        border-bottom: 1px solid #e6e6e6;
-        padding: 1rem 1.5rem
-    }
-
-    .card-footer {
-        background-color: #fff;
-        border-top: 1px solid #e6e6e6;
-        padding: 1rem 1.5rem
-    }
-
-    .card .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #eaeaea
-    }
-
-    .card .card-header .card-title {
-        margin-bottom: 0;
-        font-size: 18px
-    }
-
-    .modal-footer.text-left {
-        text-align: left
-    }
-
-    .modal-footer.text-center {
-        text-align: center
-    }
-
-    .btn-light {
-        border-color: #1A8DF8;
-        color: #fff;
-        background-color: #1A8DF8
-    }
-
-    .bootstrap-datetimepicker-widget table td.active,
-    .bootstrap-datetimepicker-widget table td.active:hover {
-        background-color: #2962ff;
-        text-shadow: unset
-    }
-
-    .bootstrap-datetimepicker-widget table td.today:before {
-        border-bottom-color: #2962ff
-    }
 
     .bg-info-light {
         background-color: #1363ad(2, 182, 179, .12) !important;
@@ -573,7 +307,7 @@
 
     textarea {
 
-        width: 100%;
+        width: 70%;
         /* Ensures the textarea takes the full width within the container */
     }
 
@@ -583,14 +317,10 @@
 
     /* Bootstrap-like styling for textarea */
     .form-control {
-
-
         padding: 0.375rem 0.75rem;
         font-size: 1rem;
         line-height: 1.5;
-
-
-        border-radius: 0.25rem;
+        border-color: #6c757d;
 
     }
 
@@ -601,83 +331,22 @@
     .text-center {
         text-align: center;
     }
-
-    .row {
-        display: flex;
-        margin-right: -15px;
-        margin-left: -15px;
-    }
-
-    .col-md-4 {
-        flex: 0 0 33.333333%;
-        max-width: 33.333333%;
-        padding-right: 15px;
-        padding-left: 15px;
-    }
 </style>
 <div class="m-t-30">
     <div>
         <div class="bg-white2">
             <h3 class="text-center">DSG Sons Group Inc.</h4>
-                <h4 class="text-center">J.P Laurel Ave., Davao City</h5>
-                    <h1 class="text-center">{{ $evaluation->evaluationTemplate->name }}</h1>
+                <h4 class="text-center">J.P Laurel Ave., Davao City</h4>
+                <h1 class="text-center">{{ $evaluation->evaluationTemplate->name }}</h1>
+                <div class="employee-details">
 
-                    <div class="employee-details">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="department">Department</label>
-                                <input type="text" class="form-control" id="department" name="department"
-                                    placeholder="Enter Department/Section"
-                                    value="{{ $evaluation->employee->department->name }}" readonly>
-                            </div>
 
-                            <div class="col-md-4">
-                                <label for="employee_id">Employee ID</label>
-                                <input type="text" class="form-control" id="employee_id" name="employee_id"
-                                    placeholder="Enter Employee ID" value="{{ $evaluation->employee->employee_id }}"
-                                    readonly>
-                            </div>
 
-                            <div class="col-md-4">
-                                <label for="first_name">Employee Name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name"
-                                    placeholder="Enter Employee Name"
-                                    value="{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}"
-                                    readonly>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="position">Position</label>
-                                <input type="text" class="form-control" id="position" name="position"
-                                    placeholder="Enter Position" value="{{ $evaluation->employee->position }}" readonly>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="covered_period_start">Join Date</label>
-                                    <input class="form-control" type="date" id="covered_period_start"
-                                        name="covered_period_start" value="{{ $evaluation->employee->date_hired }}"
-                                        required readonly>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="created_at">Date of Evaluation</label>
-                                    <input class="form-control" type="text" id="created_at" name="created_at"
-                                        value="{{ $evaluation->created_at }}" required readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
         </div>
-
         <div class="bg-white2">
             <div>
                 <div class="rating-scale"></div>
-
                 <ul style="list-style: none;">
                     <span>Direction: Rate the following factors by checking the appropriate box which
                         indicates the most accurate appraisal of the ratee’s performance on the job.
@@ -698,47 +367,50 @@
 
                         @foreach ($partWithFactors['factors'] as $factorData)
                             <div class="row">
-                                <div class="col-12 text-left">
+                                <div class="col-6 text-left">
                                     <h5>{{ $factorData['factor']->name }}</h5>
                                     <p>{{ $factorData['factor']->description }}</p>
                                 </div>
 
-                                <div class="col-12 text-center">
-
-                                    <label class="radio-inline">
-                                        @if ($loop->first)
-                                            <span>Allotted%<br><br></span>
-                                        @endif
-                                        <span
-                                            class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                    </label>
-                                    @foreach ($factorData['rating_scales'] as $ratingScale)
+                                <div class="col-6 text-center">
+                                    <div class="">
                                         <label class="radio-inline">
-                                            {{ $ratingScale->acronym }}<br>
-                                            {{ $ratingScale->equivalent_points }}<br>
-
+                                            @if ($loop->first)
+                                                <span>Allotted%<br><br></span>
+                                            @endif
+                                            <span
+                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
                                         </label>
-                                    @endforeach
-                                    <label class="radio-inline">
-                                        @if ($loop->parent->first && $loop->first)
-                                            <span>POINTS<br><br>
-                                        @endif
-                                        <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                            {{ $factorData['points'] }}
-                                        </span>
+                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
+                                            <label class="radio-inline">
+                                                {{ $ratingScale->acronym }}<br>
+                                                {{ $ratingScale->equivalent_points }}
 
-                                    </label>
-
+                                                <br>
+                                                <input disabled class="custom-radio" type="radio"
+                                                    name="rating_{{ $ratingScale->factor_id }}"
+                                                    value="{{ $ratingScale->equivalent_points }}"
+                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
+                                            </label>
+                                        @endforeach
+                                        <label class="radio-inline">
+                                            @if ($loop->parent->first && $loop->first)
+                                                <span>POINTS<br><br>
+                                            @endif
+                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
+                                                {{ $factorData['points'] }}
+                                            </span>
+                                        </label>
+                                    </div>
                                     <div class="comment m-t-10">
                                         <div class="form-group">
                                             <label for="">Specific
-                                                situations/incidents to support
-                                                rating:</label>
-                                            <textarea class="form-control" readonly>{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
+                                                situations/incidents
+                                                to support rating:</label>
+                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="m-t-30"></div>
                             @if ($loop->last)
@@ -775,7 +447,8 @@
                             <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
                             <td>{{ $partWithFactors['totalRate'] }}</td>
                             @if ($loop->first)
-                                <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
+                                <td style="text-align: center; vertical-align: middle" rowspan="4">80%
+                                </td>
                                 <td rowspan="5">
                                     <ul>
                                         @foreach ($ratingScales as $scale)
@@ -853,14 +526,14 @@
                 <div class="comment">
                     <div class="form-group">
                         <label for="recommendations">RECOMMENDATION:</label>
-                        <textarea name="recommendations" id="recommendations" class="form-control" readonly>{{ $evaluation->recommendation_note }}</textarea>
+                        <textarea name="recommendations" id="recommendations" class="form-control">{{ $evaluation->recommendation_note }}</textarea>
                     </div>
                 </div>
 
                 <div class="comment m-t-10">
                     <div class="form-group">
                         <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                        <textarea name="ratee_comments" id="ratee_comments" class="form-control" readonly>{{ $evaluation->ratees_comment }}</textarea>
+                        <textarea name="ratee_comments" id="ratee_comments" class="form-control">{{ $evaluation->ratees_comment }}</textarea>
                     </div>
                 </div>
 
@@ -873,33 +546,33 @@
                     <h4 class="text-center">Recommendation</h4>
                     <div class="form-group">
                         <label for="current_salary">Current Salary:</label>
-                        <input type="number" class="form-control" wire:model="currentSalary" readonly
+                        <input type="number" class="form-control" wire:model="currentSalary"
                             value="{{ $evaluation->recommendation->current_salary }}">
                     </div>
                     <div class="form-group">
                         <label for="recommended_position">Recommended Position:</label>
-                        <input type="text" class="form-control" wire:model="recommendedPosition" readonly
+                        <input type="text" class="form-control" wire:model="recommendedPosition"
                             value="{{ $evaluation->recommendation->recommended_position }}">
                     </div>
                     <div class="form-group">
                         <label for="level">Level:</label>
-                        <input type="text" class="form-control" wire:model="level" readonly
+                        <input type="text" class="form-control" wire:model="level"
                             value="{{ $evaluation->recommendation->level }}">
                     </div>
                     <div class="form-group">
                         <label for="recommended_salary">Recommended Salary:</label>
-                        <input type="number" class="form-control" wire:model="recommendedSalary" readonly
+                        <input type="number" class="form-control" wire:model="recommendedSalary"
                             value="{{ $evaluation->recommendation->recommended_salary }}">
                     </div>
 
                     <div class="form-group">
                         <label for="remarks">Remarks:</label>
-                        <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks" readonly>{{ $evaluation->recommendation->remarks }}</textarea>
+                        <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks">{{ $evaluation->recommendation->remarks }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="effectivity_timestamp">Effectivity Timestamp:</label>
                         <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                            value="{{ $evaluation->recommendation->effectivity }}" readonly>
+                            value="{{ $evaluation->recommendation->effectivity }}">
                     </div>
                 </div>
             @endif

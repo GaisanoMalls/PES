@@ -25,6 +25,10 @@ class EmployeeController extends Controller
     }
 
 
+    public function employeesEvaluationsView($employee_id)
+    {
+        return view('employees.evaluations-view', ['selectedEmployeeId' => $employee_id]);
+    }
     public function create($employeeId)
     {
         $employee = Employee::where('employee_id', $employeeId)->first();

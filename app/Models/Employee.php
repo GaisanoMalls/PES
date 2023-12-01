@@ -37,4 +37,8 @@ class Employee extends Model
     {
         return $this->hasMany(Recommendation::class, 'employee_id', 'id');
     }
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
+    }
 }

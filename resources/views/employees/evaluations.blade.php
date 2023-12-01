@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- @livewire('employee-index') --}}
-
-
-    <div class="m-t-30">employee evaluations list</div>
+    <div class="m-t-30">
+        <livewire:employee-evaluation-table />
+    </div>
 @endsection
