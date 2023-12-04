@@ -503,31 +503,53 @@
     @elseif($currentStep === 0)
         @if ($showRecommendationSection)
             <div class="m-t-30">
-                <div class="form-group">
-                    <label for="current_salary">Current Salary:</label>
-                    <input type="number" class="form-control" wire:model="currentSalary">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="current_salary">Current Salary:</label>
+                            <input type="number" class="form-control" wire:model="currentSalary"
+                                wire:change="calculatePercentageIncrease">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="recommended_position">Recommended Position:</label>
+                            <input type="text" class="form-control" wire:model="recommendedPosition">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="level">Level:</label>
+                            <input type="text" class="form-control" wire:model="level">
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="recommended_position">Recommended Position:</label>
-                    <input type="text" class="form-control" wire:model="recommendedPosition">
-                </div>
-                <div class="form-group">
-                    <label for="level">Level:</label>
-                    <input type="text" class="form-control" wire:model="level">
-                </div>
-                <div class="form-group">
-                    <label for="recommended_salary">Recommended Salary:</label>
-                    <input type="number" class="form-control" wire:model="recommendedSalary">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="recommended_salary">Recommended Salary:</label>
+                            <input type="number" class="form-control" wire:model="recommendedSalary"
+                                wire:change="calculatePercentageIncrease">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="percentage_increase">Percentage Increase:</label>
+                            <input type="number" class="form-control" wire:model="percentageIncrease" disabled
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="remarks">Remarks:</label>
                     <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                    <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp">
-                </div>
-
             </div>
         @endif
 
@@ -549,7 +571,7 @@
                             <tr>
                                 <td>{{ $partWithFactors['part']->name }}</td>
                                 <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                                <td>{{ $partWithFactors['totalRate'] }}</td>
+                                <td class="text-center">{{ $partWithFactors['totalRate'] }}</td>
                                 @if ($loop->first)
                                     <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
                                     <td rowspan="5">
@@ -597,13 +619,13 @@
                                 <td>
                                     @if ($loop->iteration == 1)
                                         @if ($totalRateForAllParts >= 80)
-                                            <a class="btn btn-sm bg-success-light mr-2">Passed</a>
+                                            <a class="btn btn-sm bg-success-light mr-2"><strong>Passed</strong></a>
                                         @else
                                             Passed
                                         @endif
                                     @elseif ($loop->iteration == 2)
                                         @if ($totalRateForAllParts < 80)
-                                            <a class="btn btn-sm bg-danger-light mr-2">Failed</a>
+                                            <a class="btn btn-sm bg-danger-light mr-2"><strong>Failed</strong></a>
                                         @else
                                             Failed
                                         @endif
@@ -614,7 +636,7 @@
                         <tr>
                             <td>Total</td>
                             <td>100%</td>
-                            <td>{{ $totalRateForAllParts }}</td>
+                            <td><strong>{{ $totalRateForAllParts }}</strong></td>
                             <td></td>
                             <td></td>
                         </tr>

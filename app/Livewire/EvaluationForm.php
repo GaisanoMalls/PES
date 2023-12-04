@@ -57,6 +57,7 @@ class EvaluationForm extends Component
     public $recommendedSalary;
     public $remarks;
     public $effectivityTimestamp;
+    public $percentageIncrease;
 
 
 
@@ -69,6 +70,8 @@ class EvaluationForm extends Component
         $this->employeeId = $employee;
         $this->date_of_evaluation = now()->toDateString();
     }
+
+
 
     public function updateNote($factorId, $note)
     {
@@ -317,7 +320,7 @@ class EvaluationForm extends Component
                 'level' => $this->level,
                 'employment_status' => 'active',
                 'recommended_salary' => $this->recommendedSalary,
-                'percentage_increase' => (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100,
+                'percentage_increase' => round((($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100, 2),
                 'remarks' => $this->remarks,
                 'effectivity' => $this->effectivityTimestamp,
             ]);
@@ -344,6 +347,18 @@ class EvaluationForm extends Component
         dd($evaluation);
     }
 
+
+    public function calculatePercentageIncrease()
+    {
+        if ($this->currentSalary > 0 && $this->recommendedSalary > 0) {
+            $percentageIncrease = (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100;
+            $this->percentageIncrease = round($percentageIncrease, 2);
+        } else {
+            $this->percentageIncrease = null;
+        }
+    }
+
+    // Livewire lifecycle hook to watch for changes in salary fields
 
 
     public function render()

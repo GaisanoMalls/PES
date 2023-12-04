@@ -331,12 +331,16 @@
     .text-center {
         text-align: center;
     }
+
+    .page-break {
+        page-break-before: always;
+    }
 </style>
 <div class="m-t-30">
     <div>
         <div class="bg-white2">
             <h3 class="text-center">DSG Sons Group Inc.</h4>
-                <h4 class="text-center">J.P Laurel Ave., Davao City</h4>
+                <h5 class="text-center">J.P Laurel Ave., Davao City</h5>
                 <h1 class="text-center">{{ $evaluation->evaluationTemplate->name }}</h1>
                 <div class="employee-details">
 
@@ -462,7 +466,10 @@
                     @endforeach
                 </ul>
             </div>
-
+            <div class="page-break"></div>
+            <div class="text-center">
+                <h3>RATING SUMMARY</h3>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -479,7 +486,7 @@
                         <tr>
                             <td>{{ $partWithFactors['part']->name }}</td>
                             <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                            <td>{{ $partWithFactors['totalRate'] }}</td>
+                            <td class="text-center">{{ $partWithFactors['totalRate'] }}</td>
                             @if ($loop->first)
                                 <td style="text-align: center; vertical-align: middle" rowspan="4">80%
                                 </td>
@@ -529,7 +536,7 @@
                     <td>
                         @if ($loop->iteration == 1)
                             @if ($totalRateForAllParts >= 80)
-                                <a class="btn btn-sm bg-success-light mr-2">Passed</a>
+                                <a class="btn btn-sm bg-success-light mr-2"> <strong>Passed</strong></a>
                             @else
                                 Passed
                             @endif
@@ -550,7 +557,7 @@
                     <tr>
                         <td>Total</td>
                         <td>100%</td>
-                        <td>{{ $totalRateForAllParts }}</td>
+                        <td class="text-center"> <strong>{{ $totalRateForAllParts }}</strong></td>
                         <td></td>
                         <td></td>
                     </tr>

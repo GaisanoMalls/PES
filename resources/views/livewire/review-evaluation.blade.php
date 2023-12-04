@@ -12,14 +12,14 @@
                             <label for="department">Department</label>
                             <input type="text" class="form-control" id="department" name="department"
                                 placeholder="Enter Department/Section"
-                                value="{{ $evaluation->employee->department->name }}" readonly>
+                                value="{{ $evaluation->employee->department->name }}" readonly disabled>
                         </div>
 
                         <div class="col-md-4">
                             <label for="employee_id">Employee ID</label>
                             <input type="text" class="form-control" id="employee_id" name="employee_id"
                                 placeholder="Enter Employee ID" value="{{ $evaluation->employee->employee_id }}"
-                                readonly>
+                                readonly disabled>
                         </div>
 
                         <div class="col-md-4">
@@ -27,7 +27,7 @@
                             <input type="text" class="form-control" id="first_name" name="first_name"
                                 placeholder="Enter Employee Name"
                                 value="{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}"
-                                readonly>
+                                readonly disabled>
                         </div>
                     </div>
 
@@ -35,14 +35,15 @@
                         <div class="col-md-4">
                             <label for="position">Position</label>
                             <input type="text" class="form-control" id="position" name="position"
-                                placeholder="Enter Position" value="{{ $evaluation->employee->position }}" readonly>
+                                placeholder="Enter Position" value="{{ $evaluation->employee->position }}" readonly
+                                disabled>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="covered_period_start">Join Date</label>
                                 <input class="form-control" type="date" id="covered_period_start"
-                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}" required
+                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}" disabled
                                     readonly>
                             </div>
                         </div>
@@ -51,7 +52,7 @@
                             <div class="form-group">
                                 <label for="created_at">Date of Evaluation</label>
                                 <input class="form-control" type="text" id="created_at" name="created_at"
-                                    value="{{ $evaluation->created_at }}" required readonly>
+                                    value="{{ $evaluation->created_at }}" readonly disabled>
                             </div>
                         </div>
 
@@ -119,7 +120,7 @@
                                                     <label for="">Specific
                                                         situations/incidents
                                                         to support rating:</label>
-                                                    <textarea class="form-control" readonly>{{ $factorNotes[$factorData['factor']->id] ?? '' }}</textarea> {{-- Display the factor note --}}
+                                                    <textarea class="form-control" readonly disabled>{{ $factorNotes[$factorData['factor']->id] ?? '' }}</textarea> {{-- Display the factor note --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -163,7 +164,7 @@
                             <tr>
                                 <td>{{ $partWithFactors['part']->name }}</td>
                                 <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                                <td>{{ $partWithFactors['totalRate'] }}</td>
+                                <td class="text-center">{{ $partWithFactors['totalRate'] }}</td>
                                 @if ($loop->first)
                                     <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
                                     <td rowspan="5">
@@ -212,13 +213,13 @@
     <td>
         @if ($loop->iteration == 1)
             @if ($totalRateForAllParts >= 80)
-                <a class="btn btn-sm bg-success-light mr-2">Passed</a>
+                <a class="btn btn-sm bg-success-light mr-2"><strong>Passed</strong></a>
             @else
                 Passed
             @endif
         @elseif ($loop->iteration == 2)
             @if ($totalRateForAllParts < 80)
-                <a class="btn btn-sm bg-danger-light mr-2">Failed</a>
+                <a class="btn btn-sm bg-danger-light mr-2"><strong>Failed</strong></a>
             @else
                 Failed
             @endif
@@ -233,7 +234,7 @@
     <tr>
         <td>Total</td>
         <td>100%</td>
-        <td>{{ $totalRateForAllParts }}</td>
+        <td class="text-center"><strong>{{ $totalRateForAllParts }}</strong></td>
         <td></td>
         <td></td>
     </tr>
@@ -243,14 +244,16 @@
         <div class="comment">
             <div class="form-group">
                 <label for="recommendations">RECOMMENDATION:</label>
-                <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control" readonly>{{ $evaluation->recommendation_note }}</textarea>
+                <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control" readonly
+                    disabled>{{ $evaluation->recommendation_note }}</textarea>
             </div>
         </div>
 
         <div class="comment m-t-10">
             <div class="form-group">
                 <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control" readonly>{{ $evaluation->ratees_comment }}</textarea>
+                <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control" readonly
+                    disabled>{{ $evaluation->ratees_comment }}</textarea>
             </div>
         </div>
 
@@ -258,36 +261,58 @@
     @if ($evaluation->recommendation)
         <div class="m-t-30">
             <h4 class="text-center">Recommendation</h4>
-            <div class="form-group">
-                <label for="current_salary">Current Salary:</label>
-                <input type="number" class="form-control" wire:model="currentSalary" readonly
-                    value="{{ $evaluation->recommendation->current_salary }}">
-            </div>
-            <div class="form-group">
-                <label for="recommended_position">Recommended Position:</label>
-                <input type="text" class="form-control" wire:model="recommendedPosition" readonly
-                    value="{{ $evaluation->recommendation->recommended_position }}">
-            </div>
-            <div class="form-group">
-                <label for="level">Level:</label>
-                <input type="text" class="form-control" wire:model="level" readonly
-                    value="{{ $evaluation->recommendation->level }}">
-            </div>
-            <div class="form-group">
-                <label for="recommended_salary">Recommended Salary:</label>
-                <input type="number" class="form-control" wire:model="recommendedSalary" readonly
-                    value="{{ $evaluation->recommendation->recommended_salary }}">
-            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="current_salary">Current Salary:</label>
+                        <input type="number" class="form-control" wire:model="currentSalary" readonly disabled
+                            value="{{ $evaluation->recommendation->current_salary }}">
+                    </div>
+                </div>
+                <div class="col-4">
 
+                    <div class="form-group">
+                        <label for="recommended_position">Recommended Position:</label>
+                        <input type="text" class="form-control" wire:model="recommendedPosition" readonly disabled
+                            value="{{ $evaluation->recommendation->recommended_position }}">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="level">Level:</label>
+                        <input type="text" class="form-control" wire:model="level" readonly disabled
+                            value="{{ $evaluation->recommendation->level }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="recommended_salary">Recommended Salary:</label>
+                        <input type="number" class="form-control" wire:model="recommendedSalary" readonly disabled
+                            value="{{ $evaluation->recommendation->recommended_salary }}">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="recommended_salary">Percentage Increase:</label>
+                        <input type="number" class="form-control"
+                            value="{{ $evaluation->recommendation->percentage_increase }}" readonly disabled>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                        <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                            value="{{ $evaluation->recommendation->effectivity }}" readonly disabled>
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="remarks">Remarks:</label>
                 <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks" readonly>{{ $evaluation->recommendation->remarks }}</textarea>
             </div>
-            <div class="form-group">
-                <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                    value="{{ $evaluation->recommendation->effectivity }}" readonly>
-            </div>
+
         </div>
     @endif
 

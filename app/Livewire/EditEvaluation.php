@@ -54,6 +54,7 @@ class EditEvaluation extends Component
     public $recommendedSalary;
     public $remarks;
     public $effectivityTimestamp;
+    public $percentageIncrease;
 
     public $showClarificationSection = false;
     public $clarificationDescription;
@@ -140,6 +141,15 @@ class EditEvaluation extends Component
     {
         // Trigger Livewire update when selectedValues change
         $this->selectedScale = array_merge($this->selectedScale, [$factorId => $value]);
+    }
+    public function calculatePercentageIncrease()
+    {
+        if ($this->currentSalary > 0 && $this->recommendedSalary > 0) {
+            $percentageIncrease = (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100;
+            $this->percentageIncrease = round($percentageIncrease, 2);
+        } else {
+            $this->percentageIncrease = null;
+        }
     }
 
     public function updateEvaluation()

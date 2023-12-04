@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Department;
 use App\Models\DisapprovalReason;
 use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
@@ -18,17 +19,15 @@ class EvaluationsTable extends Component
     public $searchTerm;
     public $recommendationFilter;
     public $statusFilter;
+    public $departmentFilter = ''; // Add this property
 
     // Total Rate sorting
-    public $sortFieldTotalRate = 'totalRate'; // Default sorting field for Total Rate
-    public $sortAscTotalRate = true; // Default sorting order for Total Rate
+    public $sortFieldDate = 'created_at';
+    public $sortAscDate = true;
 
-    // Date of Evaluation sorting
-    public $sortFieldDate = 'created_at'; // Default sorting field for Date of Evaluation
-    public $sortAscDate = false; // Default sorting order for Date of Evaluation
-
+    public $sortFieldTotalRate = 'totalRate';
+    public $sortAscTotalRate = true;
     public $sortField;
-
 
 
 
@@ -112,6 +111,14 @@ class EvaluationsTable extends Component
             }
         }
 
+        $departments = Department::all();
+        // Search evaluations based on Department
+        if ($this->departmentFilter && $this->departmentFilter !== 'All') {
+            $evaluationsQuery->whereHas('employee.department', function ($query) {
+                $query->where('id', $this->departmentFilter);
+            });
+        }
+
 
         $evaluations = $evaluationsQuery->get();
 
@@ -122,28 +129,18 @@ class EvaluationsTable extends Component
             $evaluationTotals[$evaluation->id] = $totalRate;
         }
 
-        // Sort evaluations based on the calculated total rate
-        $evaluations = collect($evaluations)->sortBy(function ($evaluation) {
-            return EvaluationPoint::where('evaluation_id', $evaluation->id)->sum('points');
-        })->values();
 
-        // Sort by total rate if the sort field is 'totalRate'
+
         if ($this->sortFieldTotalRate === 'totalRate') {
-            $evaluations = collect($evaluations)->sortBy(function ($evaluation) {
-                return EvaluationPoint::where('evaluation_id', $evaluation->id)->sum('points');
-            })->values();
+            $evaluations = $evaluations->sortBy(function ($evaluation) use ($evaluationTotals) {
+                return $evaluationTotals[$evaluation->id];
+            }, SORT_REGULAR, !$this->sortAscTotalRate);
         }
 
-        // Sort by date if the sort field is 'created_at'
         if ($this->sortFieldDate === 'created_at') {
-            $evaluations = $evaluations->sortBy($this->sortFieldDate, SORT_REGULAR, !$this->sortAscDate)->values();
+            $evaluations = $evaluations->sortBy('created_at', SORT_REGULAR, !$this->sortAscDate);
         }
-
-        // Reverse the order if sorting in descending order
-        if (!$this->sortAscTotalRate) {
-            $evaluations = $evaluations->reverse();
-        }
-        return view('livewire.evaluations-table', compact('evaluations', 'evaluationTotals', 'userRoleId'));
+        return view('livewire.evaluations-table', compact('evaluations', 'evaluationTotals', 'userRoleId', 'departments'));
     }
 
     public function search()
@@ -151,9 +148,10 @@ class EvaluationsTable extends Component
     }
 
 
+
     public function sortByTotalRate($field)
     {
-        if ($field === $this->sortFieldTotalRate) {
+        if ($this->sortFieldTotalRate === $field) {
             $this->sortAscTotalRate = !$this->sortAscTotalRate;
         } else {
             $this->sortAscTotalRate = true;

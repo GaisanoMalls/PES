@@ -39,13 +39,13 @@
 
             </a>
             @if ($evaluation->evaluator_id == Auth::user()->employee_id)
-                <button wire:click="toggleEditMode" class="btn btn-outline-success">
+                <button wire:click="toggleEditMode" class="btn btn-outline-success mb-2">
                     {{ $this->getModeButtonText() }}
                 </button>
             @endif
         @else
             @if ($evaluation->evaluator_id == Auth::user()->employee_id)
-                <button wire:click="toggleEditMode" class="btn btn-outline-success">
+                <button wire:click="toggleEditMode" class="btn btn-outline-success mb-2">
                     {{ $this->getModeButtonText() }}
                 </button>
             @endif
@@ -359,49 +359,6 @@
     </tr>
     </tbody>
     </table>
-    <div class="m-t-30">
-        <div class="form-group">
-            <label for="current_salary">Current Salary:</label>
-            <input type="number" class="form-control" wire:model="currentSalary"
-                placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
-                @if (!$editMode) disabled @endif>
-
-        </div>
-        <div class="form-group">
-            <label for="recommended_position">Recommended Position:</label>
-            <input type="text" class="form-control" wire:model="recommendedPosition"
-                placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
-                @if (!$editMode) disabled @endif>
-        </div>
-        <div class="form-group">
-            <label for="level">Level:</label>
-            <input type="text" class="form-control" wire:model="level"
-                placeholder="{{ $evaluation->recommendation->level ?? '' }}"
-                @if (!$editMode) disabled @endif>
-        </div>
-        <div class="form-group">
-            <label for="recommended_salary">Recommended Salary:</label>
-            <input type="number" class="form-control" wire:model="recommendedSalary"
-                placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
-                @if (!$editMode) disabled @endif>
-        </div>
-        <div class="form-group">
-            <label for="remarks">Remarks:</label>
-            <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
-                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" @if (!$editMode) disabled @endif></textarea>
-        </div>
-        <div class="form-group">
-            @php
-                $effectivity = optional($evaluation->recommendation)->effectivity;
-            @endphp
-            <label for="effectivityTimestamp">Effectivity Timestamp:
-                {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
-            </label>
-            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                @if (!$editMode) disabled @endif>
-        </div>
-    </div>
-
     <div class="m-t-50">
         <div class="comment">
             <div class="form-group">
@@ -419,116 +376,187 @@
             </div>
         </div>
     </div>
+    <div class="m-t-30">
+        <h4 class="text-center">Recommendation</h4>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="current_salary">Current Salary:</label>
+                    <input type="number" class="form-control" wire:model="currentSalary"
+                        wire:change="calculatePercentageIncrease"
+                        placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
+                        @if (!$editMode) disabled @endif>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="recommended_position">Recommended Position:</label>
+                    <input type="text" class="form-control" wire:model="recommendedPosition"
+                        placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
+                        @if (!$editMode) disabled @endif>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="level">Level:</label>
+                    <input type="text" class="form-control" wire:model="level"
+                        placeholder="{{ $evaluation->recommendation->level ?? '' }}"
+                        @if (!$editMode) disabled @endif>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="recommended_salary">Recommended Salary:</label>
+                    <input type="number" class="form-control" wire:model="recommendedSalary"
+                        wire:change="calculatePercentageIncrease"
+                        placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
+                        @if (!$editMode) disabled @endif>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="recommended_salary">Percentage Increase:</label>
+                    <input type="number" class="form-control"
+                        placeholder="{{ $evaluation->recommendation->percentage_increase }}" readonly disabled
+                        wire:model="percentageIncrease">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    @php
+                        $effectivity = optional($evaluation->recommendation)->effectivity;
+                    @endphp
+                    <label for="effectivityTimestamp">Effectivity Timestamp:
+                        {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
+                    </label>
+                    <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                        @if (!$editMode) disabled @endif>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="remarks">Remarks:</label>
+                    <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
+                        placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" @if (!$editMode) disabled @endif></textarea>
+                </div>
+            </div>
+        </div>
 
 
 
-    @if ($showClarificationSection)
-        <div class="m-t-30">
-            @if ($clarifications->count() > 0)
-                @foreach ($clarifications as $clarification)
-                    <div class="widget author-widget">
-                        <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
-                            {{ $clarification->commentorName->last_name }} -
-                            {{ $clarification->commentor->role->name }}</span>
-                        <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
-                        <div class="about-author">
-                            <div class="author-details">
-                                {{-- Editing mode --}}
-                                @if ($editingClarificationId === $clarification->id)
-                                    <textarea wire:model="clarificationDescription" class="form-control" placeholder="Write your clarifications.."></textarea>
-                                    <a href="#"
-                                        wire:click.prevent="submitClarification({{ $clarification->id }})">Update</a>
-                                    <a href="#" wire:click.prevent="cancelEdit">Cancel</a>
-                                @else
-                                    {{-- Display mode --}}
-                                    <p>
-                                        {{ $clarification->description }}</p>
-                                    {{-- Check if authenticated user's employee_id is equal to clarification's commentor_id --}}
-                                    @auth
-                                        @if (auth()->user()->employee_id == $clarification->commentor_id)
-                                            {{-- Add your delete button here --}}
-                                            <a href="#"
-                                                wire:click.prevent="deleteClarification({{ $clarification->id }})"
-                                                class="span-ED">Delete</a>
-                                            {{-- Change the link based on whether in editing mode or not --}}
-                                            @if ($editingClarificationId === $clarification->id)
-                                                <a href="#" wire:click.prevent="cancelEdit"
-                                                    class="span-ED">Cancel</a>
-                                            @else
+
+
+        @if ($showClarificationSection)
+            <div class="m-t-30">
+                @if ($clarifications->count() > 0)
+                    @foreach ($clarifications as $clarification)
+                        <div class="widget author-widget">
+                            <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
+                                {{ $clarification->commentorName->last_name }} -
+                                {{ $clarification->commentor->role->name }}</span>
+                            <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
+                            <div class="about-author">
+                                <div class="author-details">
+                                    {{-- Editing mode --}}
+                                    @if ($editingClarificationId === $clarification->id)
+                                        <textarea wire:model="clarificationDescription" class="form-control" placeholder="Write your clarifications.."></textarea>
+                                        <a href="#"
+                                            wire:click.prevent="submitClarification({{ $clarification->id }})">Update</a>
+                                        <a href="#" wire:click.prevent="cancelEdit">Cancel</a>
+                                    @else
+                                        {{-- Display mode --}}
+                                        <p>
+                                            {{ $clarification->description }}</p>
+                                        {{-- Check if authenticated user's employee_id is equal to clarification's commentor_id --}}
+                                        @auth
+                                            @if (auth()->user()->employee_id == $clarification->commentor_id)
+                                                {{-- Add your delete button here --}}
                                                 <a href="#"
-                                                    wire:click.prevent="editClarification({{ $clarification->id }})"
-                                                    class="span-ED">Update</a>
+                                                    wire:click.prevent="deleteClarification({{ $clarification->id }})"
+                                                    class="span-ED">Delete</a>
+                                                {{-- Change the link based on whether in editing mode or not --}}
+                                                @if ($editingClarificationId === $clarification->id)
+                                                    <a href="#" wire:click.prevent="cancelEdit"
+                                                        class="span-ED">Cancel</a>
+                                                @else
+                                                    <a href="#"
+                                                        wire:click.prevent="editClarification({{ $clarification->id }})"
+                                                        class="span-ED">Update</a>
+                                                @endif
                                             @endif
-                                        @endif
-                                    @endauth
-                                @endif
+                                        @endauth
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            @else
-                <p>No clarifications available.</p>
-            @endif
-
-
-            <div class="form-group">
-                @if ($editingClarificationId)
+                    @endforeach
                 @else
-                    <label for="description">Description:</label>
-                    <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
-                        id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
-                    <div class="m-t-15">
-                        <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
-                            Clarification</button>
-                    </div>
+                    <p>No clarifications available.</p>
                 @endif
 
-            </div>
 
-    @endif
+                <div class="form-group">
+                    @if ($editingClarificationId)
+                    @else
+                        <label for="description">Description:</label>
+                        <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
+                            id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
+                        <div class="m-t-15">
+                            <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
+                                Clarification</button>
+                        </div>
+                    @endif
 
-
-
-    <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
-            class="btn btn-outline-success">Back</button></a>
-
-    @if ($evaluation->status === 2 || $evaluation->status === 3 || !$editMode)
-    @else
-        <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
-            Evaluation</button>
-    @endif
-
-    <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
-        Clarifications</button>
-
-
-
-
-
-    @endif
-
-    <!-- Add any additional content or buttons for the review page -->
-    <!-- Modal -->
-    <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
-        aria-labelledby="disapproveModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <span>Disapproved by {{ $approverFirstName }}:</span>
-                        <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
+
+        @endif
+
+
+
+        <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
+                class="btn btn-outline-success">Back</button></a>
+
+        @if ($evaluation->status === 2 || $evaluation->status === 3 || !$editMode)
+        @else
+            <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
+                Evaluation</button>
+        @endif
+
+        <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
+            Clarifications</button>
+
+
+
+
+
+        @endif
+
+        <!-- Add any additional content or buttons for the review page -->
+        <!-- Modal -->
+        <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
+            aria-labelledby="disapproveModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <span>Disapproved by {{ $approverFirstName }}:</span>
+                            <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

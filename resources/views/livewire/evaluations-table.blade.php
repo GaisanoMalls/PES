@@ -1,14 +1,26 @@
 <!-- resources/views/livewire/evaluations-table.blade.php -->
 <div class="m-t-30 p-t-10">
+    <div class="col-md-3 m-t-15">
+        <h1>Evaluations</h1>
+    </div>
     <div class="row formtype">
-        <div class="col-md-3 m-t-15">
-            <h1>Evaluations</h1>
-        </div>
+
         <div class="col-md-3">
             <div class="form-group">
                 <label>Employee ID - Name</label>
                 <input wire:model="searchTerm" type="text" class="form-control mb-3"
                     placeholder="Search by Employee ID/Name">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Department</label>
+                <select wire:model="departmentFilter" class="form-control">
+                    <option value="">All</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="col-md-2">
@@ -34,7 +46,7 @@
             </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="form-group">
                 <label>Search</label>
                 <!-- Add search button -->
@@ -47,21 +59,21 @@
     </div>
     <!-- Button to toggle between all evaluations and user's evaluations -->
     <div class="text-right">
-
         @if ($userRoleId == 2)
-            <button wire:click="toggleShowAllEvaluations" class="btn btn-success mb-3 mr-2">
-                {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
-            </button>
+            <div class="form-group">
+                <button wire:click="toggleShowAllEvaluations" class="btn btn-success mb-3 mr-2">
+                    {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
+                </button>
+            </div>
         @endif
-
     </div>
 
     <table class="table bg-white table-active table-bordered">
         <thead>
             <tr class="text-center">
-                <th>ID</th>
                 <th>Employee ID</th>
                 <th>Employee Name</th>
+                <th>Department</th>
                 <!-- Date of Evaluation sorting -->
                 <th class="pointer" wire:click="sortByDate('created_at')">Date of Evaluation
                     @if ($sortFieldDate === 'created_at')
@@ -74,19 +86,8 @@
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     @endif
                 </th>
-                <th class="pointer" wire:click="sortByTotalRate('totalRate')">Total Rate
-                    @if ($sortFieldTotalRate === 'totalRate')
-                        @if ($sortAscTotalRate)
-                            <i class="fas fa-caret-up"></i>
-                        @else
-                            <i class="fas fa-caret-down"></i>
-                        @endif
-                    @else
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    @endif
-                </th>
 
-
+                <th>Total Rate</th>
                 <th>Recommendation Note</th>
                 <th>Ratees comment</th>
                 <th>Evaluated By</th>
@@ -103,9 +104,9 @@
                 @endif
 
                 <tr class="text-center">
-                    <td>{{ $evaluation->id }}</td>
                     <td>{{ $evaluation->employee->employee_id }}</td>
                     <td>{{ $evaluation->employee->last_name . ', ' . $evaluation->employee->first_name }}</td>
+                    <td>{{ $evaluation->employee->department->name }}</td>
                     <td>{{ \Carbon\Carbon::parse($evaluation->created_at)->format('F d, Y') }}</td>
                     <td>{{ $evaluationTotals[$evaluation->id] }}</td>
                     <td>{{ $evaluation->recommendation_note }}</td>
@@ -194,6 +195,8 @@
                 </tr>
             @endforeach
         </tbody>
+
     </table>
+
 
 </div>
