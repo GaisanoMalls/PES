@@ -23,7 +23,7 @@ class EvaluationsTable extends Component
 
     // Total Rate sorting
     public $sortFieldDate = 'created_at';
-    public $sortAscDate = true;
+    public $sortAscDate = false;
 
     public $sortFieldTotalRate = 'totalRate';
     public $sortAscTotalRate = true;
@@ -138,8 +138,13 @@ class EvaluationsTable extends Component
         }
 
         if ($this->sortFieldDate === 'created_at') {
-            $evaluations = $evaluations->sortBy('created_at', SORT_REGULAR, !$this->sortAscDate);
+            $evaluations = $evaluations->sortByDesc('created_at'); // Change this line
+            if ($this->sortAscDate) {
+                $evaluations = $evaluations->reverse();
+            }
         }
+
+
         return view('livewire.evaluations-table', compact('evaluations', 'evaluationTotals', 'userRoleId', 'departments'));
     }
 

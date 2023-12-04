@@ -8,14 +8,14 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label>Employee ID - Name</label>
-                <input wire:model="searchTerm" type="text" class="form-control mb-3"
+                <input wire:model.debounce.300ms="searchName" type="text" class="form-control mb-3"
                     placeholder="Search by Employee ID/Name">
             </div>
         </div>
         <div class="col-md-2">
             <div class="form-group">
                 <label>Department</label>
-                <select wire:model="departmentFilter" class="form-control">
+                <select wire:model.debounce.300ms="departmentFilter" class="form-control">
                     <option value="">All</option>
                     @foreach ($departments as $department)
                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -26,7 +26,7 @@
         <div class="col-md-2">
             <div class="form-group">
                 <label>Recommendations</label>
-                <select wire:model="recommendationFilter" class="form-control">
+                <select wire:model.debounce.300ms="recommendationFilter" class="form-control">
                     <option value="All">All</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
@@ -36,7 +36,7 @@
         <div class="col-md-2">
             <div class="form-group">
                 <label>Status</label>
-                <select wire:model="statusFilter" class="form-control">
+                <select wire:model.debounce.300ms="statusFilter" class="form-control">
                     <option value="All">All</option>
                     <option value="1">Pending</option>
                     <option value="2">Approved</option>
@@ -57,16 +57,6 @@
         </div>
 
     </div>
-    <!-- Button to toggle between all evaluations and user's evaluations -->
-    <div class="text-right">
-        @if ($userRoleId == 2)
-            <div class="form-group">
-                <button wire:click="toggleShowAllEvaluations" class="btn btn-success mb-3 mr-2">
-                    {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
-                </button>
-            </div>
-        @endif
-    </div>
 
     <table class="table bg-white table-active table-bordered">
         <thead>
@@ -74,19 +64,7 @@
                 <th>Employee ID</th>
                 <th>Employee Name</th>
                 <th>Department</th>
-                <!-- Date of Evaluation sorting -->
-                <th class="pointer" wire:click="sortByDate('created_at')">Date of Evaluation
-                    @if ($sortFieldDate === 'created_at')
-                        @if ($sortAscDate)
-                            <i class="fas fa-caret-up"></i>
-                        @else
-                            <i class="fas fa-caret-down"></i>
-                        @endif
-                    @else
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    @endif
-                </th>
-
+                <th>Date of Evaluation</th>
                 <th>Total Rate</th>
                 <th>Recommendation Note</th>
                 <th>Ratees comment</th>
@@ -196,5 +174,10 @@
             @endforeach
         </tbody>
     </table>
+
+    {{ $evaluations->links() }}
+
+    {{-- {{ $evaluations->links('pagination::bootstrap-4') }} --}}
+
 
 </div>

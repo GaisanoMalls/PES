@@ -636,7 +636,7 @@
                         <tr>
                             <td>Total</td>
                             <td>100%</td>
-                            <td><strong>{{ $totalRateForAllParts }}</strong></td>
+                            <td class="text-center"><strong>{{ $totalRateForAllParts }}</strong></td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -662,7 +662,9 @@
                 </div>
             </div>
         </div>
-        <button wire:click="goBack" class="btn btn-primary btn-left" wire:loading.attr="disabled">Back</button>
+
+        <button wire:click="goBack1" class="btn btn-primary btn-left">Back</button>
+
         <button wire:click="submitForm" class="btn btn-primary btn-right" id="submitButton"
             style="margin-left: 10px;" wire:loading.attr="disabled"
             @if ($loading) disabled @endif>

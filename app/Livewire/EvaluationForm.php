@@ -146,15 +146,9 @@ class EvaluationForm extends Component
         }
     }
 
-    public function goBack2()
+    public function goBack1()
     {
-        if ($this->currentStep == 0) {
-            $this->currentStep == 3;
-        }
-
-        // Re-initialize the component if going back to step 1
-        if ($this->currentStep === 1) {
-        }
+        $this->currentStep = 1;
     }
 
 

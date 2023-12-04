@@ -166,6 +166,7 @@ final class Employees extends PowerGridComponent
                 ->id()
                 ->class('btn btn-block btn-outline-success')
                 ->dispatch('edit', ['employeeId' => $employeeId->id]),
+
         ];
 
         if (Auth::user()->role_id == 1) {
