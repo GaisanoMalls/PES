@@ -82,8 +82,13 @@ Route::get('/templates/{evaluation}/pdf', [HRController::class, 'generatePDFTemp
 
 
 //REPORTS
-//index view
+//list of recommended employees
 Route::get('/reports/recommended-employees', [ReportsController::class, 'recommended'])->name('reports.reco-employees');
+//list of evaluated employees
+Route::get('/reports/evaluated-employees', [ReportsController::class, 'evaluated'])->name('reports.list-evaluated');
+//list of evaluations employees
+Route::get('/reports/evaluation-employees', [ReportsController::class, 'evaluationList'])->name('reports.list-evaluation');
+
 
 
 

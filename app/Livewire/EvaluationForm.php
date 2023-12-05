@@ -98,7 +98,7 @@ class EvaluationForm extends Component
 
         // Loop through each part and calculate the total rate for each part
         foreach ($this->partsWithFactors as $partWithFactors) {
-            $partTotal = 0;
+            $partTotal = 0.0; // Change the data type to float
 
             // Loop through factors within each part and calculate their total rate
             foreach ($partWithFactors['factors'] as $factorData) {
@@ -109,7 +109,7 @@ class EvaluationForm extends Component
                 if (is_array($selectedValue)) {
                     $partTotal += array_sum($selectedValue);
                 } else {
-                    $partTotal += (int) $selectedValue; // Convert to integer if not already
+                    $partTotal += (float) $selectedValue; // Convert to float if not already
                 }
             }
 
@@ -391,7 +391,7 @@ class EvaluationForm extends Component
                 ];
 
 
-                $totalRateForPart += ($this->selectedValues[$factor->id] ?? 0);
+                $totalRateForPart += (float) ($this->selectedValues[$factor->id] ?? 0); // Convert to float if not already
                 $factorsData[] = $factorData;
             }
 

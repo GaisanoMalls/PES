@@ -243,3 +243,41 @@ document.getElementById("disapproveBtn").addEventListener("click", function () {
     $("#disapprovalModal").modal("show");
 });
 // Add an event listener to the clickable footer link
+// Function to set date values based on the selected option
+function setDates() {
+    var dateRangeSelector = document.getElementById("dateRangeSelector");
+    var fromDateInput = document.getElementById("fromDate");
+    var toDateInput = document.getElementById("toDate");
+
+    var today = new Date();
+    var fromDate = new Date();
+
+    if (dateRangeSelector.value === "7") {
+        // Last 7 Days
+        fromDate.setDate(today.getDate() - 7);
+    } else if (dateRangeSelector.value === "30") {
+        // Last 30 Days
+        fromDate.setDate(today.getDate() - 30);
+    } else if (dateRangeSelector.value === "60") {
+        // Last 60 Days
+        fromDate.setDate(today.getDate() - 60);
+    }
+
+    // Set the values of the date inputs
+    fromDateInput.valueAsDate = fromDate;
+    toDateInput.valueAsDate = today;
+}
+
+// Function to be called when the search button is clicked
+function searchData() {
+    // Perform your search logic here
+    // You may want to add an AJAX call to send the selected date range to the server
+}
+
+// Set initial dates on page load
+setDates();
+
+// Attach the setDates function to the change event of the date range selector
+document
+    .getElementById("dateRangeSelector")
+    .addEventListener("change", setDates);

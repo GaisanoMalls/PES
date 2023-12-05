@@ -227,16 +227,23 @@
                                             </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
-                                            style="{{ request()->routeIs('reports.reco-employees') || request()->routeIs('reports.reco-employees') ? 'display:block' : 'display:none' }}">
+                                            style="{{ request()->routeIs('reports.reco-employees') || request()->routeIs('reports.list-evaluated') || request()->routeIs('reports.list-evaluation') ? 'display:block' : 'display:none' }}">
                                             <li>
                                                 <a class="{{ request()->routeIs('reports.reco-employees') ? 'active' : '' }}"
                                                     href="{{ route('reports.reco-employees') }}">List of Recommended
                                                     Employees
                                                 </a>
                                             </li>
-                                            <li><a href="">List of Evaluated Employees
+                                            <li><a class="{{ request()->routeIs('reports.list-evaluated') ? 'active' : '' }}"
+                                                    href="{{ route('reports.list-evaluated') }}">List of Evaluated
+                                                    Employees
                                                 </a></li>
-                                            <li><a href="">List of Evaluations
+
+
+
+
+                                            <li><a class="{{ request()->routeIs('reports.list-evaluation') ? 'active' : '' }}"
+                                                    href="{{ route('reports.list-evaluation') }}">List of Evaluations
                                                 </a></li>
                                         </ul>
                                     </li>
