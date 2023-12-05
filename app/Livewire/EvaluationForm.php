@@ -22,6 +22,8 @@ use App\Models\Recommendation;
 class EvaluationForm extends Component
 {
     public $currentStep = 1;
+    public $lastStep = 0;
+
     public $employee;
     // public $employee_id;
 
@@ -135,21 +137,42 @@ class EvaluationForm extends Component
         // Store the updated data in the session.
         session(['selectedPoints' => $this->selectedValues]);
     }
-    public function goBack()
+
+
+    // public function goBack()
+    // {
+    //     if ($this->currentStep > 1) {
+    //         $this->currentStep--;
+    //     }
+
+    //     // Re-initialize the component if going back to step 1
+    //     if ($this->currentStep === 1) {
+    //     }
+    // }
+    public function goBackToStep($step)
     {
-        if ($this->currentStep > 1) {
-            $this->currentStep--;
+        if ($step >= 1 && $step < $this->currentStep) {
+            $this->currentStep = $step;
         }
 
-        // Re-initialize the component if going back to step 1
-        if ($this->currentStep === 1) {
-        }
+
+        // Store the updated currentStep value in the session
     }
-
     public function goBack1()
     {
         $this->currentStep = 1;
     }
+
+    // public function goBack2()
+    // {
+    //     $this->currentStep = 2;
+    // }
+
+    // public function goBack3()
+    // {
+    //     $this->currentStep = 3;
+    // }
+
 
 
 
@@ -162,8 +185,10 @@ class EvaluationForm extends Component
         $count = $parts->count();
         if ($count < 4) {
             $this->currentStep = 2;
+            $this->lastStep = 1;
         } else if ($count == 1) {
-            $this->currentStep = 0;
+            $this->lastStep = 1;
+            $this->currentStep = "LAST";
         }
     }
 
@@ -173,8 +198,10 @@ class EvaluationForm extends Component
         $count = $parts->count();
         if ($count == 3) {
             $this->currentStep = 3;
+            $this->lastStep = 2;
         } else if ($count == 2) {
-            $this->currentStep = 0;
+            $this->lastStep = 2;
+            $this->currentStep = "LAST";
         }
     }
 
@@ -184,7 +211,8 @@ class EvaluationForm extends Component
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $count = $parts->count();
         if ($count == 3) {
-            $this->currentStep = 0;
+            $this->lastStep = 3;
+            $this->currentStep = "LAST";
         }
     }
 

@@ -70,9 +70,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
                                             <div class="rating-scale"></div>
                                             <h5 class="card-title">Rating Scales and Equivalent Points</h5>
                                             <div class="row d-flex justify-content-center">

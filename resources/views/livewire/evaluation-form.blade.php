@@ -328,7 +328,7 @@
         </div>
         {{-- DISPLAY THE OTHER PARTS AND FACTORS --}}
         <button wire:click="submitStep2" class="btn btn-primary btn-right">Next</button>
-        <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
+        <button wire:click="goBackToStep({{ $currentStep - 1 }})" class="btn btn-primary btn-left">Back</button>
     @elseif ($currentStep === 3)
         <div class="bg-white">
             @foreach ($partsWithFactors as $partWithFactors)
@@ -497,10 +497,10 @@
         </div>
         {{-- DISPLAY THE OTHER PARTS AND FACTORS --}}
         <button wire:click="submitStep3" class="btn btn-primary btn-right">Next</button>
-        <button wire:click="goBack" class="btn btn-primary btn-left">Back</button>
+        <button wire:click="goBackToStep({{ $currentStep - 1 }})" class="btn btn-primary btn-left">Back</button>
     @elseif($currentStep === 4)
         <div>page 3</div>
-    @elseif($currentStep === 0)
+    @elseif($currentStep === 'LAST')
         @if ($showRecommendationSection)
             <div class="m-t-30">
                 <div class="row">
@@ -663,7 +663,7 @@
             </div>
         </div>
 
-        <button wire:click="goBack1" class="btn btn-primary btn-left">Back</button>
+        <button wire:click="goBackToStep({{ $lastStep }})" class="btn btn-primary btn-left">Back</button>
 
         <button wire:click="submitForm" class="btn btn-primary btn-right" id="submitButton"
             style="margin-left: 10px;" wire:loading.attr="disabled"
