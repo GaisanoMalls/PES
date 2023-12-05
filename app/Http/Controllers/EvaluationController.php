@@ -23,7 +23,7 @@ class EvaluationController extends Controller
     public function index()
     {
 
-        Livewire::component('evaluations-table', EvaluationsTable::class);
+        //    Livewire::component('evaluations-table', EvaluationsTable::class);
 
         return view('evaluations.index');
     }

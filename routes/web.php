@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
@@ -76,6 +77,15 @@ Route::get('/templates/{template}/edit', [HRController::class, 'edit'])->name('t
 Route::delete('/templates/{template}', [HRController::class, 'destroy'])->name('templates.destroy');
 
 Route::get('/templates/{evaluation}/pdf', [HRController::class, 'generatePDFTemplate'])->name('templates.generatePDFTemplate');
+
+
+
+
+//REPORTS
+//index view
+Route::get('/reports/recommended-employees', [ReportsController::class, 'recommended'])->name('reports.reco-employees');
+
+
 
 //LARAVEL-UI
 Auth::routes();

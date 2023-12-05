@@ -331,6 +331,11 @@
     .text-center {
         text-align: center;
     }
+
+
+    .page-break {
+        page-break-before: always;
+    }
 </style>
 <div class="m-t-30">
     <div class="container">
@@ -391,7 +396,8 @@
                                                 @if ($loop->first)
                                                     <span>Allotted%<br><br></span>
                                                 @endif
-                                                <span class="box">%</span>
+                                                <span
+                                                    class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
                                             </label>
                                             @foreach ($factorData['rating_scales'] as $key => $ratingScale)
                                                 <label class="radio-inline">
@@ -438,7 +444,10 @@
                         @endforeach
                     </ul>
                 </div>
-
+                <div class="page-break"></div>
+                <div class="text-center">
+                    <h3>RATING SUMMARY</h3>
+                </div>
                 <table class="table">
                     <thead>
                         <tr>

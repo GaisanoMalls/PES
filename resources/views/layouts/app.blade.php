@@ -204,7 +204,7 @@
                                         </li>
                                         <li>
                                             <a class="{{ request()->routeIs('evaluations.index') ? 'active' : '' }}"
-                                                href="{{ route('evaluations.index') }}">Evaluation List </a>
+                                                href="{{ route('evaluations.index') }}">Evaluation Status </a>
                                         </li>
                                     </ul>
                                 </li>
@@ -221,6 +221,24 @@
                                     <li class="{{ request()->routeIs('templates.index') ? 'active' : '' }}">
                                         <a href="{{ route('templates.index') }}"><i
                                                 class="fa fa-user-circle"></i><span>Evaluation Template</span></a>
+                                    </li>
+                                    <li>
+                                        <a><i class="fe fe-table"></i> <span> Reports
+                                            </span>
+                                            <span class="menu-arrow"></span></a>
+                                        <ul class="submenu_class"
+                                            style="{{ request()->routeIs('reports.reco-employees') || request()->routeIs('reports.reco-employees') ? 'display:block' : 'display:none' }}">
+                                            <li>
+                                                <a class="{{ request()->routeIs('reports.reco-employees') ? 'active' : '' }}"
+                                                    href="{{ route('reports.reco-employees') }}">List of Recommended
+                                                    Employees
+                                                </a>
+                                            </li>
+                                            <li><a href="">List of Evaluated Employees
+                                                </a></li>
+                                            <li><a href="">List of Evaluations
+                                                </a></li>
+                                        </ul>
                                     </li>
                                 @endif
                                 <li class="{{ request()->routeIs('settings') ? 'active' : '' }}">

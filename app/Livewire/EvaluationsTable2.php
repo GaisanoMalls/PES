@@ -65,6 +65,7 @@ class EvaluationsTable2 extends Component
             });
         }
 
+        $evaluationsQuery->orderBy('created_at', 'desc'); // Add this line to sort by the latest
 
         $evaluations = $evaluationsQuery->paginate($perPage);
 
