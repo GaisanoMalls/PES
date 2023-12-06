@@ -776,6 +776,160 @@
                 @endif
             @endforeach
         </div>
+
+
+
+
+        {{-- part 4 --}}
+
+        <div class="">
+            @foreach ($partsWithFactors as $partWithFactors)
+                @if ($loop->index === 3)
+                    <div class="page-break"></div>
+                    @if (!$loop->first)
+                        <div class="rating-scale">
+                        </div>
+                        <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
+                    @endif
+                    @foreach ($partWithFactors['factors'] as $factorData)
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                <h5>{{ $factorData['factor']->name }}</h5>
+                                <p>{{ $factorData['factor']->description }}</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <div class="">
+                                    <label class="radio-inline">
+                                        @if ($loop->first)
+                                            <span>Allotted<br><br></span>
+                                        @endif
+                                        <span
+                                            class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                                    </label>
+
+                                    @foreach ($factorData['rating_scales'] as $key => $ratingScale)
+                                        <label class="radio-inline">
+                                            {{ $ratingScale->acronym }}<br>
+                                            {{ $ratingScale->equivalent_points }}
+
+                                            <br>
+                                            <input disabled class="custom-radio" type="radio"
+                                                name="rating_{{ $ratingScale->factor_id }}"
+                                                value="{{ $ratingScale->equivalent_points }}"
+                                                @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
+                                        </label>
+                                    @endforeach
+
+                                    <label class="radio-inline">
+                                        @if ($loop->parent->first && $loop->first)
+                                            <span>POINTS<br><br>
+                                        @endif
+                                        <span id="points-{{ $factorData['factor']->id }}" class="box">
+                                            {{ $factorData['points'] }}
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="comment m-t-3">
+                                    <div class="form-group">
+                                        <label for="">Specific
+                                            situations/incidents
+                                            to support rating:</label>
+                                        <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if ($loop->last)
+                            <div class="c m-t-10 m-r-15">
+                                <strong>
+                                    <span>Total Actual Points/Rate =
+                                        {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
+                                        <span class="box">
+                                            {{ $partWithFactors['totalRate'] }}</span>
+                                    </span>
+                                </strong>
+                            </div>
+                        @endif
+                    @endforeach
+                    <div class="page-break"></div>
+                @elseif($loop->index === 4)
+                    @if (!$loop->first)
+                        <div class="rating-scale">
+                        </div>
+                        <li style="list-style: none;">
+                            <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
+                    @endif
+                    <ul style="list-style: none;">
+                        @foreach ($partWithFactors['factors'] as $factorData)
+                            @if ($loop->index < 5)
+                                <!-- Display only the first two factors -->
+                                <li style="list-style: none;">
+                                    <div class="row">
+                                        <div class="col-6 text-left">
+                                            <h5>{{ $factorData['factor']->name }}</h5>
+                                            <p>{{ $factorData['factor']->description }}</p>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <div class="">
+                                                <label class="radio-inline">
+                                                    @if ($loop->first)
+                                                        <span>Allotted<br><br></span>
+                                                    @endif
+                                                    <span
+                                                        class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                                                </label>
+                                                @foreach ($factorData['rating_scales'] as $key => $ratingScale)
+                                                    <label class="radio-inline">
+                                                        {{ $ratingScale->acronym }}<br>
+                                                        {{ $ratingScale->equivalent_points }}
+
+                                                        <br>
+                                                        <input disabled class="custom-radio" type="radio"
+                                                            name="rating_{{ $ratingScale->factor_id }}"
+                                                            value="{{ $ratingScale->equivalent_points }}"
+                                                            @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
+                                                    </label>
+                                                @endforeach
+
+                                                <label class="radio-inline">
+                                                    @if ($loop->parent->first && $loop->first)
+                                                        <span>POINTS<br><br>
+                                                    @endif
+                                                    <span id="points-{{ $factorData['factor']->id }}" class="box">
+                                                        {{ $factorData['points'] }}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="comment m-t-3">
+                                                <div class="form-group">
+                                                    <label for="">Specific
+                                                        situations/incidents
+                                                        to support rating:</label>
+                                                    <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($loop->last)
+                                    <div class="c m-t-5 m-r-15">
+                                        <strong>
+                                            <span>Total Actual Points/Rate =
+                                                {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
+                                                <span class="box">
+                                                    {{ $partWithFactors['totalRate'] }}</span>
+                                            </span>
+                                        </strong>
+                                    </div>
+                                @endif
+                            @endif
+                        @endforeach
+                    </ul>
+
+                    </li>
+                @endif
+            @endforeach
+        </div>
         <div class="page-break"></div>
 
         <div class="text-center">
