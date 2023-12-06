@@ -111,6 +111,10 @@ class EvaluationController extends Controller
         // Load the evaluation data into the PDF view
         $pdf = PDF::loadView('evaluations.evaluation-pdf', $evaluationData);
         $pdf->setPaper('A4', 'portrait');
+
+
+
+
         // Add a page break in the PDF
 
 

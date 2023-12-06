@@ -17,12 +17,14 @@
                 <h5 class="text-muted mt-1">Position: <strong>{{ $employee->position }}</strong></h5>
 
             </div>
-            <div class="col-auto profile-btn"> <a
-                    href="{{ route('evaluations.select', ['employeeId' => $employee->id]) }}"
-                    class="btn btn-primary mb-3">
-                    Evaluate Employee
-                </a>
-            </div>
+            @if (Auth::user()->role_id != 4)
+                <div class="col-auto profile-btn"> <a
+                        href="{{ route('evaluations.select', ['employeeId' => $employee->id]) }}"
+                        class="btn btn-primary mb-3">
+                        Evaluate Employee
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -77,7 +79,7 @@
 
                                     if (userRoleId == 2 || userRoleId == 5) {
                                         window.location.href = baseUrl + '/view/' + evaluationId;
-                                    } else if (userRoleId == 3) {
+                                    } else if (userRoleId == 3 || userRoleId == 4) {
                                         window.location.href = baseUrl + '/' + evaluationId + '/review';
                                     }
                                 }

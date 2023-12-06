@@ -178,38 +178,44 @@
                                     <a href="{{ route('home') }}"><i class="fas fa-tachometer-alt"></i>
                                         <span>Dashboard</span></a>
                                 </li>
-                                <li class="list-divider"></li>
-                                <li class="submenu">
-                                    <a href="#"><i class="fas fa-user"></i> <span> Evaluations </span>
-                                        <span class="menu-arrow"></span></a>
-                                    <ul class="submenu_class"
-                                        style="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'display:block' : 'display:none' }}">
-                                        <li>
-                                            <a class="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'active' : '' }}"
-                                                href="{{ route('employees.evaluations') }}">Employee
-                                                Evaluation List </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                @if (Auth::user()->role_id != 4)
+                                    <li class="list-divider"></li>
+                                    <li class="submenu">
+                                        <a href="#"><i class="fas fa-user"></i> <span> Evaluations </span>
+                                            <span class="menu-arrow"></span></a>
+                                        <ul class="submenu_class"
+                                            style="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'display:block' : 'display:none' }}">
+                                            <li>
+                                                <a class="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'active' : '' }}"
+                                                    href="{{ route('employees.evaluations') }}">Employee
+                                                    Evaluation List </a>
+                                            </li>
+                                        </ul>
+                                    </li>
 
 
-                                <li class="submenu">
-                                    <a href="#"><i class="fas fa-user"></i> <span> Employees </span>
-                                        <span class="menu-arrow"></span></a>
-                                    <ul class="submenu_class"
-                                        style="{{ request()->routeIs('employees.index') || request()->routeIs('evaluations.index') ? 'display:block' : 'display:none' }}">
-                                        <li>
-                                            <a class="{{ request()->routeIs('employees.index') ? 'active' : '' }}"
-                                                href="{{ route('employees.index') }}">Employees List </a>
-                                        </li>
-                                        <li>
-                                            <a class="{{ request()->routeIs('evaluations.index') ? 'active' : '' }}"
-                                                href="{{ route('evaluations.index') }}">Evaluation Status </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
+                                    <li class="submenu">
+                                        <a href="#"><i class="fas fa-user"></i> <span> Employees </span>
+                                            <span class="menu-arrow"></span></a>
+                                        <ul class="submenu_class"
+                                            style="{{ request()->routeIs('employees.index') || request()->routeIs('evaluations.index') ? 'display:block' : 'display:none' }}">
+                                            <li>
+                                                <a class="{{ request()->routeIs('employees.index') ? 'active' : '' }}"
+                                                    href="{{ route('employees.index') }}">Employees List </a>
+                                            </li>
+                                            <li>
+                                                <a class="{{ request()->routeIs('evaluations.index') ? 'active' : '' }}"
+                                                    href="{{ route('evaluations.index') }}">Evaluation Status </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @else
+                                    <li class="{{ request()->routeIs('employee.myevaluations') ? 'active' : '' }}">
+                                        <a href="{{ route('employee.myevaluations') }}"><i
+                                                class="fa fa-user-circle"></i><span>My
+                                                Evaluations</span></a>
+                                    </li>
+                                @endif
 
                                 @if (Auth::user()->role_id == 1)
                                     <li class="{{ request()->routeIs('users.index') ? 'active' : '' }}">

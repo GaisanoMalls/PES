@@ -47,6 +47,12 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 
 
 
+
+//Employee, view employee evaluations
+Route::get('/myevalautions', [EmployeeController::class, 'myevaluations'])->name('employee.myevaluations');
+
+
+
 // Evaluation ALL view
 Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
 //review evaluation

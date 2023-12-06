@@ -318,20 +318,21 @@
 
     <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
+    @if (Auth::user()->role_id != 4)
+        <button wire:click="approveEvaluation" wire:loading.attr="disabled"
+            @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
+            <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
+                role="status"></span>
+            <span wire:loading.remove wire:target="approveEvaluation"></span>Approve
+            Evaluation
+        </button>
 
+        <button data-toggle="modal" data-target="#disapproveModal"
+            @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
+            Evaluation
+        </button>
+    @endif
 
-    <button wire:click="approveEvaluation" wire:loading.attr="disabled"
-        @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
-        <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
-            role="status"></span>
-        <span wire:loading.remove wire:target="approveEvaluation"></span>Approve
-        Evaluation
-    </button>
-
-    <button data-toggle="modal" data-target="#disapproveModal"
-        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
-        Evaluation
-    </button>
 
     <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
         Clarifications</button>

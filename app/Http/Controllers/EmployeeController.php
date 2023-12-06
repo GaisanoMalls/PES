@@ -18,6 +18,11 @@ class EmployeeController extends Controller
         return view('employees.index');
     }
 
+    public function myevaluations()
+    {
+        return view('employees.myevaluations');
+    }
+
     public function employeesEvaluation()
     {
 

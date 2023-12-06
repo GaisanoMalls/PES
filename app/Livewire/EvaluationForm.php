@@ -183,7 +183,7 @@ class EvaluationForm extends Component
     {
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $count = $parts->count();
-        if ($count < 4) {
+        if ($count > 1) {
             $this->currentStep = 2;
             $this->lastStep = 1;
         } else if ($count == 1) {
@@ -196,7 +196,7 @@ class EvaluationForm extends Component
     {
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $count = $parts->count();
-        if ($count == 3) {
+        if ($count > 2) {
             $this->currentStep = 3;
             $this->lastStep = 2;
         } else if ($count == 2) {
@@ -210,11 +210,29 @@ class EvaluationForm extends Component
     {
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $count = $parts->count();
-        if ($count == 3) {
+        if ($count > 3) {
+            $this->currentStep = 4;
+            $this->lastStep = 3;
+        } else if ($count == $parts->count()) {
             $this->lastStep = 3;
             $this->currentStep = "LAST";
         }
     }
+
+
+    public function submitStep4()
+    {
+        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
+        $count = $parts->count();
+        if ($count < 10) {
+            $this->currentStep = 5;
+            $this->lastStep = 4;
+        } else if ($count == 4) {
+            $this->lastStep = 4;
+            $this->currentStep = "LAST";
+        }
+    }
+
 
 
 

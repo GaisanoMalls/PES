@@ -1,53 +1,102 @@
-<form wire:submit.prevent="saveEvaluationTemplate">
-    <div>
-        <label for="name">Evaluation Template Name:</label>
-        <input type="text" id="name" wire:model="name">
-    </div>
+  <div>
+      <ul style="list-style: none;">
+          <span>Direction: Rate the following factors by checking the appropriate box which
+              indicates the most accurate appraisal of the ratee’s performance on the job.
+              The rating scale are outlined below:
+          </span>
 
-    <div>
-        <h3>Parts</h3>
-        @foreach ($parts as $partIndex => $part)
-            <div>
-                <label for="part_name_{{ $partIndex }}">Part Name:</label>
-                <input type="text" id="part_name_{{ $partIndex }}" wire:model="parts.{{ $partIndex }}.name">
+          @foreach ($ratingScales as $scale)
+              <div class="rating-scale-item">
 
-                <label for="criteria_allocation_{{ $partIndex }}">Criteria Allocation:</label>
-                <input type="number" step="0.01" id="criteria_allocation_{{ $partIndex }}"
-                    wire:model="parts.{{ $partIndex }}.criteria_allocation">
+                  <strong> <span class="rating-scale-acronym">{{ $scale->acronym }}=</span>
+                      <span class="rating-scale-name"> {{ $scale->name }}:</span></strong>
+                  <span class="rating-scale-description">{{ $scale->description }}</span>
+              </div>
+          @endforeach
+          @foreach ($partsWithFactors as $partWithFactors)
+              @if ($loop->first)
+                  <li style="list-style: none;">
+                      @if ($loop->first)
+                          <div class="rating-scale"></div>
+                          <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
+                      @endif
+                      <ul style="list-style: none;">
+                          @foreach ($partWithFactors['factors'] as $factorData)
+                              @if ($loop->index < 2)
+                                  <!-- Display only the first two factors -->
+                                  <li style="list-style: none;">
+                                      <div class="row">
+                                          <div class="col-6 text-left">
+                                              @if ($loop->first)
+                                                  <h5 class="m-l-90 m-b-30">
+                                                      Factors</h5>
+                                              @endif
+                                              <h5>{{ $factorData['factor']->name }}</h5>
+                                              <p>{{ $factorData['factor']->description }}</p>
+                                          </div>
+                                          <div class="col-6 text-center">
+                                              <div class="">
+                                                  <label class="radio-inline">
+                                                      @if ($loop->first)
+                                                          <span>Allotted<br><br></span>
+                                                      @endif
+                                                      <span
+                                                          class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                                                  </label>
 
-                <button type="button" wire:click="addFactor({{ $partIndex }})">Add Factor</button>
+                                                  @foreach ($factorData['rating_scales'] as $ratingScale)
+                                                      <label class="radio-inline">
+                                                          <!-- Display rating scale and its equivalent points -->
+                                                          {{ $ratingScale->acronym }}<br>
+                                                          {{ $ratingScale->equivalent_points }}<br>
 
-                @foreach ($part['factors'] as $factorIndex => $factor)
-                    <div>
-                        <label for="factor_name_{{ $partIndex }}_{{ $factorIndex }}">Factor Name:</label>
-                        <input type="text" id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
-                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
+                                                          <!-- Radio button for each rating scale -->
+                                                          <input class="custom-radio" type="radio"
+                                                              name="rating_scale_id_{{ $factorData['factor']->id }}"
+                                                              value="{{ $ratingScale->equivalent_points }}"
+                                                              wire:model="selectedValues.{{ $factorData['factor']->id }}"
+                                                              wire:click="updateSelectedValue({{ $factorData['factor']->id }}, {{ $ratingScale->equivalent_points }})">
 
-                        <label for="factor_desc_{{ $partIndex }}_{{ $factorIndex }}">Factor
-                            Description:</label>
-                        <input type="text" id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
-                            wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description">
+                                                      </label>
+                                                  @endforeach
 
-                        <label>Rating Scales and Equivalent Points:</label>
-                        @foreach ($ratingScales as $scale)
-                            <div>
-                                <label>{{ $scale['name'] }}</label>
-                                <input type="number" step="0.01"
-                                    wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
-                            </div>
-                        @endforeach
-                        <button type="button"
-                            wire:click="removeFactor({{ $partIndex }}, {{ $factorIndex }})">Remove
-                            Factor</button>
-
-                    </div>
-                @endforeach
-
-            </div>
-        @endforeach
-
-        <button type="button" wire:click="addPart">Add Part</button>
-    </div>
-
-    <button type="submit">Create Evaluation Template</button>
-</form>
+                                                  <label class="radio-inline">
+                                                      @if ($loop->parent->first && $loop->first)
+                                                          <span>POINTS<br><br>
+                                                      @endif
+                                                      <span id="points-{{ $factorData['factor']->id }}" class="box">
+                                                          {{ $selectedValues[$factorData['factor']->id] ?? 0 }}
+                                                      </span>
+                                                  </label>
+                                              </div>
+                                              <div class="comment m-t-10">
+                                                  <div class="form-group">
+                                                      <label for="">Specific situations/incidents
+                                                          to
+                                                          support rating:</label>
+                                                      <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
+                                                          wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </li>
+                              @endif
+                          @endforeach
+                      </ul>
+                      @if ($loop->last)
+                          <div class="c m-t-20 m-r-15">
+                              <strong>
+                                  <span>Total Actual Points/Rate =
+                                      <span class="box">
+                                          {{ $totalRates[$partWithFactors['part']->id] }}</span>
+                                  </span>
+                              </strong>
+                          </div>
+                      @endif
+                      <div class="m-b-30 p-20"></div>
+                  </li>
+              @endif
+          @endforeach
+      </ul>
+  </div>
