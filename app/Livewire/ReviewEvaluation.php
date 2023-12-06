@@ -201,10 +201,12 @@ class ReviewEvaluation extends Component
         $this->validate([
             'disapprovalDescription' => 'required|string', // Add validation rules if necessary
         ]);
-
-        $this->evaluation->status = 3;
-        $this->evaluation->save();
         $userEmployeeId = Auth::user()->employee_id;
+        $this->evaluation->status = 3;
+        $this->evaluation->approver_id = $userEmployeeId;
+        $this->evaluation->save();
+
+
 
 
 

@@ -1,4 +1,54 @@
 <div>
+    <div class="container22">
+        @if ($evaluation->status === 2)
+            <a href="#" class="btn btn-lg bg-success-light mb-2" style="cursor: default;">Approved
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+
+            </a>
+        @elseif ($evaluation->status === 3)
+            <a href="#" class="btn btn-lg bg-danger-light mb-2" style="cursor: default;">Disapproved
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" x2="9" y1="9" y2="15" />
+                    <line x1="9" x2="15" y1="9" y2="15" />
+                </svg>
+
+            </a>
+            <a data-toggle="modal" data-target="#disapproveModal" class="" style="cursor: pointer;">
+                View Reason of Disapproval
+            </a>
+        @elseif ($evaluation->status === 4)
+            <a href="#" class="btn btn-lg bg-warning-light mb-2" style="cursor: default;">Clarifcations
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" x2="12" y1="8" y2="12" />
+                    <line x1="12" x2="12.01" y1="16" y2="16" />
+                </svg>
+            </a>
+            @if ($evaluation->evaluator_id == Auth::user()->employee_id)
+                <button wire:click="toggleEditMode" class="btn btn-outline-success mb-2">
+                    {{ $this->getModeButtonText() }}
+                </button>
+            @endif
+        @else
+            @if ($evaluation->evaluator_id == Auth::user()->employee_id)
+                <button wire:click="toggleEditMode" class="btn btn-outline-success mb-2">
+                    {{ $this->getModeButtonText() }}
+                </button>
+            @endif
+        @endif
+
+    </div>
+
     @if ($currentStep === 1)
         <span>Non-Supervisory (Support & Non-Sales)</span>
         <h1>{{ $evaluation->evaluationTemplate->name }}</h1>
@@ -43,8 +93,8 @@
                             <div class="form-group">
                                 <label for="covered_period_start">Join Date</label>
                                 <input class="form-control" type="date" id="covered_period_start"
-                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}" disabled
-                                    readonly>
+                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}"
+                                    disabled readonly>
                             </div>
                         </div>
 
@@ -131,7 +181,6 @@
                                         <div class="c m-t-20 m-r-15">
                                             <strong>
                                                 <span>Total Actual Points/Rate =
-                                                    {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
                                                     <span class="box">
                                                         {{ $partWithFactors['totalRate'] }}</span>
                                                 </span>
@@ -318,7 +367,7 @@
 
     <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
             class="btn btn-outline-success">Back</button></a>
-    @if (Auth::user()->role_id != 4)
+    @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
         <button wire:click="approveEvaluation" wire:loading.attr="disabled"
             @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
             <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"

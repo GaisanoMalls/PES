@@ -21,9 +21,27 @@ class EvaluationsTable2 extends Component
     public $recommendationFilter;
     public $departmentFilter = ''; // Add this property
     protected $paginationTheme = 'bootstrap';
+    public $showAllEvaluations = true; // Add this property
 
-    // ... existing code ...
+    public function toggleShowAllEvaluations()
+    {
+        $this->showAllEvaluations = !$this->showAllEvaluations;
+    }
 
+    public function approveEvaluation($evaluationId)
+    {
+        $evaluation = Evaluation::find($evaluationId);
+
+        if ($evaluation->status === 3) {
+            // Delete existing entry in DisapprovalReason
+            DisapprovalReason::where('evaluation_id', $evaluation->id)->delete();
+        }
+        if ($evaluation) {
+            // Toggle the status between 1 and 2
+            $newStatus = 1;
+            $evaluation->update(['status' => $newStatus]);
+        }
+    }
     public function render()
     {
         $userEmployeeId = Auth::user()->employee_id;
@@ -31,6 +49,10 @@ class EvaluationsTable2 extends Component
         $perPage = 10; // Replace with desired number of items per page
 
         $evaluationsQuery = Evaluation::with('employee', 'evaluatorEmployee');
+        // Show only the user's evaluations if the property is set
+        if (!$this->showAllEvaluations) {
+            $evaluationsQuery->where('evaluator_id', $userEmployeeId);
+        }
 
         // Additional condition for user role 5
         if ($userRoleId == 5) {

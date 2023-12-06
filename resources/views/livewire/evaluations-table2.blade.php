@@ -3,6 +3,15 @@
     <div class="col-md-3 m-t-15">
         <h4>Employees Evaluation</h4>
     </div>
+    <div class="text-right">
+
+        @if ($userRoleId == 2)
+            <button wire:click="toggleShowAllEvaluations" class="btn btn-success mb-3 mr-2">
+                {{ $showAllEvaluations ? 'View My Evaluations' : 'View All Evaluations' }}
+            </button>
+        @endif
+
+    </div>
     <div class="row formtype">
 
         <div class="col-md-3">
@@ -136,7 +145,8 @@
                                     PDF</a>
                                 @if (
                                     (Auth::user()->role_id == 3 && $evaluation->status == 1) ||
-                                        (Auth::user()->role_id == 3 && $evaluation->status == 4))
+                                        (Auth::user()->role_id == 3 && $evaluation->status == 4) ||
+                                        (Auth::user()->role_id == 5 && $evaluation->status == 2))
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
                                         Review

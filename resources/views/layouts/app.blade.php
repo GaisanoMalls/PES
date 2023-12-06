@@ -374,7 +374,7 @@
                 }
             });
         });
-        window.addEventListener('swal:success2', event => {
+        window.addEventListener('swal:success3', event => {
             Swal.fire({
                 icon: 'success',
                 title: 'Evaluation Disapproved',

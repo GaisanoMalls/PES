@@ -35,8 +35,6 @@
                     <line x1="12" x2="12" y1="8" y2="12" />
                     <line x1="12" x2="12.01" y1="16" y2="16" />
                 </svg>
-
-
             </a>
             @if ($evaluation->evaluator_id == Auth::user()->employee_id)
                 <button wire:click="toggleEditMode" class="btn btn-outline-success mb-2">
@@ -138,9 +136,9 @@
                         @endforeach
                         @foreach ($partsWithFactors as $partWithFactors)
                             <li style="list-style: none;">
-                                @if ($loop->first)
-                                    <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                                @endif
+                                <div class="rating-scale"></div>
+                                <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
+
                                 <ul style="list-style: none;">
                                     @foreach ($partWithFactors['factors'] as $factorData)
                                         <li style="list-style: none">
@@ -233,23 +231,19 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="row">
-                                                        @if ($loop->last)
-                                                            <div class="col-6 text-left">
-                                                                <div class="btn-right"></div>
-                                                                <h5 hidden>Total Actual Points Rate (Part
-                                                                    {{ $partWithFactors['part']->id }})
-                                                                </h5>
-                                                            </div>
-                                                            <div class="col-12 text-center m-t-20">
-                                                                <span>Total Rate (Part
-                                                                    {{ $partWithFactors['part']->id }})<br>
-                                                                    <span
-                                                                        class="box">{{ $partWithFactors['totalRate'] }}</span>
+
+                                                    @if ($loop->last)
+                                                        <div class="c m-t-5 m-r-15">
+                                                            <strong>
+                                                                <span>Total Actual Points/Rate =
+                                                                    {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
+                                                                    <span class="box">
+                                                                        {{ $partWithFactors['totalRate'] }}</span>
                                                                 </span>
-                                                            </div>
-                                                        @endif
-                                                    </div>
+                                                            </strong>
+                                                        </div>
+                                                    @endif
+
                                                 </li>
                                             </ul>
                                         </li>
