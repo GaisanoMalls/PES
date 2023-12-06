@@ -189,14 +189,17 @@ class EditEvaluation extends Component
                 // Update or create EvaluationPoint
                 $evaluationPoint = EvaluationPoint::updateOrCreate(
                     [
+                        'employee_id' => $this->evaluation->employee_id,
+                        'evaluator_id' => $this->evaluation->evaluator_id,
+                        'evaluation_template_id' => $this->evaluation->evaluation_template_id,
                         'evaluation_id' => $this->evaluation->id,
                         'part_id' => $partWithFactors['part']->id,
                         'factor_id' => $factorId,
                     ],
                     [
                         'points' => $selectedValue,
-                        'rating_scale_id' => $ratingScaleId,
-                        'factor_rating_scale_id' => $factorRatingScaleId,
+                        'rating_scale_id' => $ratingScaleId ?? 0, // Set to 'none' if $ratingScaleId is null
+                        'factor_rating_scale_id' => $factorRatingScaleId ?? 0,
                         'note' => $note, // Pass the fetched note
                     ]
                 );

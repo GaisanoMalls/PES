@@ -96,8 +96,8 @@
                     <td>{{ $evaluation->employee->department->name }}</td>
                     <td>{{ \Carbon\Carbon::parse($evaluation->created_at)->format('F d, Y') }}</td>
                     <td>{{ $evaluationTotals[$evaluation->id] }}</td>
-                    <td>{{ $evaluation->recommendation_note }}</td>
-                    <td>{{ $evaluation->ratees_comment }}</td>
+                    <td>{{ substr($evaluation->recommendation_note, 0, 50) }}</td>
+                    <td>{{ substr($evaluation->ratees_comment, 0, 50) }}</td>
                     <td>{{ $evaluation->evaluatorEmployee->first_name }}
                         {{ $evaluation->evaluatorEmployee->last_name }}
                     </td>

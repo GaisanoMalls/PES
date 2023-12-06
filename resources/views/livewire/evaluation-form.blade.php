@@ -132,7 +132,7 @@
                                                                         to
                                                                         support rating:</label>
                                                                     <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="700"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -220,7 +220,7 @@
                                                             to
                                                             support rating:</label>
                                                         <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                            wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                            wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="700"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -249,7 +249,7 @@
                         <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
                         <ul style="list-style: none;">
                             @foreach ($partWithFactors['factors'] as $factorData)
-                                @if ($loop->index <= 3)
+                                @if ($loop->index <= 2)
                                     <!-- Display only the first two factors -->
                                     <li style="list-style: none;">
                                         <div class="row">
@@ -299,7 +299,7 @@
                                                             to
                                                             support rating:</label>
                                                         <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                            wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                            wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="700"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -388,7 +388,7 @@
                                                         to
                                                         support rating:</label>
                                                     <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="700"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -468,7 +468,7 @@
                                                         to
                                                         support rating:</label>
                                                     <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="700"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -560,7 +560,7 @@
                                                         to
                                                         support rating:</label>
                                                     <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
+                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="700"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -634,7 +634,7 @@
                 </div>
                 <div class="form-group">
                     <label for="remarks">Remarks:</label>
-                    <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"></textarea>
+                    <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks" maxlength="1000"></textarea>
                 </div>
             </div>
         @endif
@@ -735,14 +735,14 @@
                         <div class="form-group">
                             <label for="recommendations">RECOMMENDATION:</label>
                             <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control"
-                                wire:model="recommendationNote" wire:change="updateComment('recommendations')"></textarea>
+                                wire:model="recommendationNote" wire:change="updateComment('recommendations')" maxlength="1000"></textarea>
                         </div>
                     </div>
                     <div class="comment m-t-10">
                         <div class="form-group">
                             <label for="ratee_comments">RATEE’S COMMENTS:</label>
                             <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control"
-                                wire:model="rateesComment" wire:change="updateComment('ratee_comments')"></textarea>
+                                wire:model="rateesComment" wire:change="updateComment('ratee_comments')" maxlength="1000"></textarea>
                         </div>
                     </div>
                 </div>

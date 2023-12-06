@@ -381,9 +381,9 @@ class ReviewEvaluation extends Component
                 ])->first();
 
 
-                $this->selectedValues[$factor->id] = $evaluationPoint->points;
-                $this->selectedScale[$factor->id] = $evaluationPoint->rating_scale_id;
-                $this->factorNotes[$factor->id] = $evaluationPoint->note;
+                $this->selectedValues[$factor->id] = $evaluationPoint->points ?? 0;
+                $this->selectedScale[$factor->id] = $evaluationPoint->rating_scale_id ?? 0;
+                $this->factorNotes[$factor->id] = $evaluationPoint->note ?? '';
 
                 $totalRateForPart += ($this->selectedValues[$factor->id] ?? 0);
                 $factorsData[] = $factorData;
