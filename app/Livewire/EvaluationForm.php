@@ -224,11 +224,13 @@ class EvaluationForm extends Component
     {
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $count = $parts->count();
-        if ($count < 10) {
+        if ($count < 4) {
             $this->currentStep = 5;
             $this->lastStep = 4;
         } else if ($count == 4) {
             $this->lastStep = 4;
+            $this->currentStep = "LAST";
+        } else {
             $this->currentStep = "LAST";
         }
     }
@@ -336,7 +338,7 @@ class EvaluationForm extends Component
 
         // Send email to each user
         foreach ($userss as $user) {
-            Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
+            //  Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
             // Store notification in the database
             Notification::create([
                 'employee_id' => $user->employee_id,

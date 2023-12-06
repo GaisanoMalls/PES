@@ -154,7 +154,7 @@ class ReviewEvaluation extends Component
             ];
 
             // Send email to the evaluator
-            Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+            // Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
             Notification::create([
                 'employee_id' => $evaluator->employee_id,
                 'evaluation_id' => $this->evaluation->id,
@@ -174,7 +174,7 @@ class ReviewEvaluation extends Component
             // Send email to each HR user
             foreach ($hrUsers as $hrUser) {
                 if ($hrUser->email) {
-                    Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
+                    //     Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
                     Notification::create([
                         'employee_id' => $hrUser->employee_id,
                         'evaluation_id' => $this->evaluation->id,
@@ -219,7 +219,7 @@ class ReviewEvaluation extends Component
                 // Add any additional data you want to pass to the email view
             ];
             // Send email to the evaluator
-            Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+            //  Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
             Notification::create([
                 'employee_id' => $evaluator->employee_id,
                 'evaluation_id' => $this->evaluation->id,
