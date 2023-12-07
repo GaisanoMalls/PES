@@ -177,6 +177,11 @@
         color: #1A8DF8 !important
     }
 
+    .bg-warning-pending {
+        background-color: rgba(255, 152, 0, .12) !important;
+        color: #228AA6 !important
+    }
+
     .bg-primary-light {
         background-color: rgba(17, 148, 247, .12) !important;
         color: #2196f3 !important
@@ -338,9 +343,62 @@
     .page-break {
         page-break-before: always;
     }
+
+    .container22 {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        /* Align items to the right side */
+    }
 </style>
 <div class="m-t-30">
     <div>
+        <div class="container22 text-right">
+            @if ($evaluation->status === 2)
+                <a href="#" class="btn btn-lg bg-success-light mb-2" style="cursor: default;">Approved
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                        class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+
+                </a>
+            @elseif ($evaluation->status === 3)
+                <a href="#" class="btn btn-lg bg-danger-light mb-2" style="cursor: default;">Disapproved
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                        class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" x2="9" y1="9" y2="15" />
+                        <line x1="9" x2="15" y1="9" y2="15" />
+                    </svg>
+
+                </a>
+            @elseif ($evaluation->status === 4)
+                <a href="#" class="btn btn-lg bg-warning-light mb-2" style="cursor: default;">Clarifcations
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                        class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" x2="12" y1="8" y2="12" />
+                        <line x1="12" x2="12.01" y1="16" y2="16" />
+                    </svg>
+                </a>
+            @elseif ($evaluation->status === 1)
+                <a href="#" class="btn btn-lg bg-warning-pending  mb-2" style="cursor: default;">Pending
+                    <!-- https://feathericons.dev/?search=clock&iconset=feather -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                        class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+
+                </a>
+            @else
+            @endif
+        </div>
         <div class="bg-white2sdsd">
             <h3 class="text-center">DSG Sons Group Inc.</h4>
                 <h5 class="text-center">J.P Laurel Ave., Davao City</h5>
