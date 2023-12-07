@@ -39,7 +39,7 @@ final class Employees extends PowerGridComponent
     public function datasource(): Builder
     {
         // Check if the current user is an admin (assuming role_id 1 represents admin)
-        if (auth()->user()->role_id === 1) {
+        if (auth()->user()->role_id === 1 || auth()->user()->role_id === 5) {
             // If admin, return all employees without department filtering
             return Employee::query();
         }
@@ -158,16 +158,22 @@ final class Employees extends PowerGridComponent
         return redirect()->route('employees.show', ['employee_id' => $employee_id]);
     }
 
+    #[\Livewire\Attributes\On('showEmployee')]
+    public function showEmployee($employee_id)
+    {
+        return redirect()->route('employees.evaluations-view', ['employee_id' => $employee_id]);
+    }
+
+
     public function actions(Employee $employeeId): array
     {
-        $actions = [
-            Button::add('edit')
+        if (Auth::user()->role_id != 5) {
+            $actions[] = Button::add('edit')
                 ->slot('Evaluate')
                 ->id()
                 ->class('btn btn-block btn-outline-success')
-                ->dispatch('edit', ['employeeId' => $employeeId->id]),
-
-        ];
+                ->dispatch('edit', ['employeeId' => $employeeId->id]);
+        }
 
         if (Auth::user()->role_id == 1) {
             $actions[] = Button::add('show')
@@ -175,6 +181,14 @@ final class Employees extends PowerGridComponent
                 ->id()
                 ->class('btn btn-block btn-outline-secondary')
                 ->dispatch('show', ['employee_id' => $employeeId->employee_id]);
+        }
+
+        if (Auth::user()->role_id == 5) {
+            $actions[] = Button::add('showEmployee')
+                ->slot('Show')
+                ->id()
+                ->class('btn btn-block btn-outline-secondary')
+                ->dispatch('showEmployee', ['employee_id' => $employeeId->id]);
         }
 
         return $actions;

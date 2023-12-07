@@ -184,9 +184,9 @@
                                         <a href="#"><i class="fas fa-user"></i> <span> Evaluations </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
-                                            style="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'display:block' : 'display:none' }}">
+                                            style="{{ request()->routeIs('employees.evaluations') ? 'display:block' : 'display:none' }}">
                                             <li>
-                                                <a class="{{ request()->routeIs('employees.evaluations') || request()->routeIs('employees.evaluations-view') ? 'active' : '' }}"
+                                                <a class="{{ request()->routeIs('employees.evaluations') ? 'active' : '' }}"
                                                     href="{{ route('employees.evaluations') }}">Employee
                                                     Evaluation List </a>
                                             </li>

@@ -42,6 +42,8 @@
                 <th>Employee Name</th>
                 <th>Department</th>
                 <th>Position</th>
+                <th>Latest Evaluation Date</th>
+
                 <th>Evaluations (Total)</th>
                 <th>Action</th>
             </tr>
@@ -53,6 +55,7 @@
                     <td>{{ $employee->last_name . ', ' . $employee->first_name }}</td>
                     <td>{{ $employee->department->name }}</td>
                     <td>{{ $employee->position }}</td>
+                    <td>{{ $latestEvaluationDates[$employee->id] }}</td>
                     <td>{{ $employee->evaluations->count() }}</td>
                     <td>
                         <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->id]) }}"

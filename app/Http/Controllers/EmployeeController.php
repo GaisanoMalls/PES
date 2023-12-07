@@ -82,36 +82,27 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = Employee::find($id);
-        return view('employees.edit', compact('employee'));
+        $departments = Department::all(); // Assuming your model is named 'Department'
+
+        return view('employees.edit', compact('employee', 'departments'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validate and update employee details
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'employee_id' => 'required|string|unique:employees|max:255',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:employees',
-            'phone_number' => 'required|string|max:255',
-            'role' => 'required|string|max:255',
-            'join_date' => 'required|date',
-        ]);
+
 
         $employee = Employee::find($id);
         $employee->update([
-            'name' => $request->name,
             'employee_id' => $request->employee_id,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'role' => $request->role,
-            'join_date' => $request->join_date,
+            'department_id' => $request->department_id,
+            'position' => $request->position,
+            'employment_status' => $request->employment_status,
+            'date_hired' => $request->date_hired,
         ]);
 
-        return redirect()->route('employees.index')->with('success', 'Employee updated successfully');
+        return redirect()->route('employees.evaluations-view', $employee->id)->with('success', 'Employee updated successfully');
     }
 
     public function destroy($id)
