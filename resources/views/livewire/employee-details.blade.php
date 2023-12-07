@@ -26,7 +26,7 @@
                     </a>
                 </div>
             @endif
-            @if (Auth::user()->role_id != 4)
+            @if (Auth::user()->role_id == 5 || Auth::user()->role_id == 1)
                 <div class="col-auto profile-btn"> <a href="{{ route('employees.edit', $employee->id) }}"
                         class="btn btn-primary mb-3">
                         Edit Employee

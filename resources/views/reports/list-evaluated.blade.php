@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="m-t-30">
-        lsit of evaluated employees
+        list of evaluated employees
     </div>
 @endsection
