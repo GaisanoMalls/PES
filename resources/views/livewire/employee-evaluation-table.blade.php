@@ -11,17 +11,19 @@
                     placeholder="Search by Employee ID/Name">
             </div>
         </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <label>Department</label>
-                <select wire:model.debounce.300ms="departmentFilter" class="form-control">
-                    <option value="">All</option>
-                    @foreach ($departments as $department)
-                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                    @endforeach
-                </select>
+        @if (Auth::user()->role_id != 2)
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Department</label>
+                    <select wire:model.debounce.300ms="departmentFilter" class="form-control">
+                        <option value="">All</option>
+                        @foreach ($departments as $department)
+                            <option value="{{ $department->id }}">{{ $department->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
+        @endif
 
 
         <div class="col-md-3">
