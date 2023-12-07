@@ -34,6 +34,14 @@ class EmployeeEvaluationTable extends Component
         if (auth()->user()->role_id === 2) {
             $query->where('department_id', $currentDepartmentId);
         }
+        // Add orderBy clause to sort by the latest evaluation date
+        $query->orderBy(function ($query) {
+            $query->select('updated_at')
+                ->from('evaluations')
+                ->whereColumn('employee_id', 'employees.id')
+                ->latest()
+                ->limit(1);
+        }, 'desc');
 
         $departments = Department::all();
         $perPage = 10; // Replace with the desired number of items per page
@@ -57,12 +65,14 @@ class EmployeeEvaluationTable extends Component
         }
         $employees = $query->paginate($perPage);
 
+
         // Retrieve the latest evaluation date for each employee
         $latestEvaluationDates = [];
         foreach ($employees as $employee) {
-            $latestEvaluation = $employee->evaluations->sortBy('updated_at')->last(); // Sort evaluations by updated_at
-            $latestEvaluationDates[$employee->id] = $latestEvaluation ? $latestEvaluation->updated_at->format('Y-m-d H:i:s') : 'N/A';
+            $latestEvaluation = $employee->evaluations->sortByDesc('updated_at')->first(); // Sort evaluations by updated_at in descending order
+            $latestEvaluationDates[$employee->id] = $latestEvaluation ? $latestEvaluation->updated_at->format('Y-m-d H:i:s A') : 'N/A';
         }
+
 
         return view('livewire.employee-evaluation-table', [
             'employees' => $employees,
