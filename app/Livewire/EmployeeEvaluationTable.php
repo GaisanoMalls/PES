@@ -21,7 +21,6 @@ class EmployeeEvaluationTable extends Component
         // Retrieve the current user's person ID from the Evaluator table
         $evaluator = Evaluator::where('id', auth()->user()->person_id)->first();
 
-        // If the Evaluator record is found, update the currentDepartmentId
         if ($evaluator) {
             $currentDepartmentId = $evaluator->department_id;
         }
@@ -29,8 +28,6 @@ class EmployeeEvaluationTable extends Component
         // Fetch employees with evaluations
         $query = Employee::whereHas('evaluations');
 
-        // If the current user's role is not admin (role_id 1 or 5) and is a manager (role_id 2),
-        // filter by the current user's department
         if (auth()->user()->role_id === 2) {
             $query->where('department_id', $currentDepartmentId);
         }

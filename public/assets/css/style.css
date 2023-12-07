@@ -494,6 +494,7 @@ button.bg-danger:hover {
     background-color: #fff;
     padding-top: 20px;
     padding-right: 70px;
+    padding-bottom: 5px;
 }
 
 .bg-white2 {
@@ -662,7 +663,8 @@ button.bg-danger:hover {
 }
 .btn-right {
   float: right;
-
+    margin-top: 1rem;
+        width: 8rem;
 }
 .btn-left {
   float: left;

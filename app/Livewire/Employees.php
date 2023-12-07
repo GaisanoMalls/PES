@@ -79,6 +79,7 @@ final class Employees extends PowerGridComponent
             ->addColumn('first_name')
             ->addColumn('last_name')
             ->addColumn('date_hired')
+            ->addColumn('employment_status')
             ->addColumn('position')
             // ->addColumn('employment_status')
             // ->addColumn('is_active', fn (Employee $model) => $model->is_active ? 'Active' : 'Inactive')
@@ -103,22 +104,13 @@ final class Employees extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-
-
             Column::make('Position', 'position')
                 ->sortable()
                 ->searchable(),
 
-            // Column::make('Employment status', 'employment_status')
-            //     ->sortable()
-            //     ->searchable(),
-
-            // Column::make('Is active', 'is_active')
-            //     ->toggleable(),
-
-
-            // Column::make('Created at', 'created_at_formatted', 'created_at')
-            //     ->sortable(),
+            Column::make('Employment Status', 'employment_status')
+                ->sortable()
+                ->searchable(),
 
             Column::make('Date hired', 'date_hired')
                 ->sortable()
@@ -137,6 +129,7 @@ final class Employees extends PowerGridComponent
             Filter::inputText('last_name')->operators(['contains']),
             Filter::inputText('date_hired')->operators(['contains']),
             Filter::inputText('position')->operators(['contains']),
+            Filter::inputText('employment_status')->operators(['contains']),
             // Filter::inputText('employment_status')->operators(['contains']),
             Filter::select('department_name', 'department_id')
                 ->dataSource(Department::all())
@@ -193,20 +186,4 @@ final class Employees extends PowerGridComponent
 
         return $actions;
     }
-
-
-
-
-
-    /*
-    public function actionRules($row): array
-    {
-       return [
-            // Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($row) => $row->id === 1)
-                ->hide(),
-        ];
-    }
-    */
 }

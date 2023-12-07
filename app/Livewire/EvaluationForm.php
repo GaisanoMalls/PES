@@ -21,7 +21,10 @@ use App\Models\Recommendation;
 
 class EvaluationForm extends Component
 {
+
+
     public $currentStep = 1;
+    public $currentPart = 1; // Add this line
     public $lastStep = 0;
 
     public $employee;
@@ -46,8 +49,6 @@ class EvaluationForm extends Component
     public $selectedEquivalentPoints = [];
     public $recommendationNote = '';
     public $rateesComment = '';
-    public $factorsPerPage = 6; // Number of factors per page
-    public $currentPage = 1; // Make sure $currentPage is declared in your Livewire component
     public $isFormSubmitted = false; // Add this property
 
     public $evaluationID; // Add this property
@@ -63,6 +64,7 @@ class EvaluationForm extends Component
 
 
 
+    //load data from session
     public function mount($employee)
     {
         $this->selectedValues = session('selectedPoints', []);
@@ -71,6 +73,7 @@ class EvaluationForm extends Component
         $this->rateesComment = session('rateesComment', '');
         $this->employeeId = $employee;
         $this->date_of_evaluation = now()->toDateString();
+        $this->currentPart = 1;
     }
 
 
@@ -83,7 +86,6 @@ class EvaluationForm extends Component
         session(['factorNotes' => $this->factorNotes]);
     }
 
-
     public function updateComment($commentType)
     {
         // Determine which comment is being updated and update the session data accordingly.
@@ -94,6 +96,7 @@ class EvaluationForm extends Component
         }
     }
 
+    //Calculate total rates of each part
     public function calculateTotalRate()
     {
         $totalRates = [];
@@ -124,12 +127,13 @@ class EvaluationForm extends Component
 
 
 
-    // Other properties and methods...
-
+    //Add Recommendation
     public function displayRecommendationSection()
     {
         $this->showRecommendationSection = true;
     }
+
+    //Wire click to display the selected value on the box
     public function updateSelectedValue($factorId, $value)
     {
         $this->selectedValues[$factorId] = $value;
@@ -139,106 +143,56 @@ class EvaluationForm extends Component
     }
 
 
-    // public function goBack()
-    // {
-    //     if ($this->currentStep > 1) {
-    //         $this->currentStep--;
-    //     }
 
-    //     // Re-initialize the component if going back to step 1
-    //     if ($this->currentStep === 1) {
-    //     }
-    // }
+    //GO BACK FUNCTION
     public function goBackToStep($step)
     {
         if ($step >= 1 && $step < $this->currentStep) {
             $this->currentStep = $step;
         }
-
-
-        // Store the updated currentStep value in the session
     }
-    public function goBack1()
+    public function goBack()
     {
-        $this->currentStep = 1;
+        // Move to the previous part logic
+        if ($this->currentPart > 1) {
+            $this->currentPart--;
+        }
     }
 
-    // public function goBack2()
-    // {
-    //     $this->currentStep = 2;
-    // }
 
-    // public function goBack3()
-    // {
-    //     $this->currentStep = 3;
-    // }
-
-
-
-
-
-
-
-    public function submitStep1()
+    public function submitStep1($nextStep)
     {
-        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
-        $count = $parts->count();
-        if ($count > 1) {
-            $this->currentStep = 2;
+        $totalNumberOfParts = $this->getTotalNumberOfPartsForTemplate($this->templateId);
+
+        if ($nextStep <= $totalNumberOfParts) {
+            $this->currentPart = $nextStep;
+            $this->lastStep = $this->currentPart;
+        } else if ($this->currentPart == $totalNumberOfParts) {
+            $this->currentStep = 'LAST';
             $this->lastStep = 1;
-        } else if ($count == 1) {
-            $this->lastStep = 1;
-            $this->currentStep = "LAST";
         }
     }
 
-    public function submitStep2()
+    private function getTotalNumberOfPartsForTemplate($templateId)
     {
-        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
-        $count = $parts->count();
-        if ($count > 2) {
-            $this->currentStep = 3;
-            $this->lastStep = 2;
-        } else if ($count == 2) {
-            $this->lastStep = 2;
-            $this->currentStep = "LAST";
-        }
+        // Use your database query logic here to get the count
+        // This is just an example, you should replace it with your actual logic
+        return Part::where('evaluation_template_id', $templateId)->count();
     }
 
-
-    public function submitStep3()
+    public function calculatePercentageIncrease()
     {
-        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
-        $count = $parts->count();
-        if ($count > 3) {
-            $this->currentStep = 4;
-            $this->lastStep = 3;
-        } else if ($count == $parts->count()) {
-            $this->lastStep = 3;
-            $this->currentStep = "LAST";
-        }
-    }
-
-
-    public function submitStep4()
-    {
-        $parts = Part::where('evaluation_template_id', $this->templateId)->get();
-        $count = $parts->count();
-        if ($count < 4) {
-            $this->currentStep = 5;
-            $this->lastStep = 4;
-        } else if ($count == 4) {
-            $this->lastStep = 4;
-            $this->currentStep = "LAST";
+        if ($this->currentSalary > 0 && $this->recommendedSalary > 0) {
+            $percentageIncrease = (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100;
+            $this->percentageIncrease = round($percentageIncrease, 2);
         } else {
-            $this->currentStep = "LAST";
+            $this->percentageIncrease = null;
         }
     }
 
 
 
-
-    public $loading = false;
+    public $loading = false; // spinner
     public function submitForm()
     {
         $this->loading = true; // Set loading to true when the form is being submitted
@@ -246,7 +200,8 @@ class EvaluationForm extends Component
         if ($this->isFormSubmitted) {
             return;
         }
-        // Retrieve data from the session
+
+        // retrieve data from the session
         $recommendationNote = session('recommendationNote', '');
         $rateesComment = session('rateesComment', '');
         $selectedPoints = session('selectedPoints', []);
@@ -257,15 +212,16 @@ class EvaluationForm extends Component
         $this->dispatch('swal:modal', [
             'callback' => 'redirectAfterClose'
         ]);
+
         // Create a new evaluation record
         $evaluation =  Evaluation::create([
-            'approver_id' => 0, // Change to the appropriate value
-            'evaluator_id' => $user->employee->id, // Change to the appropriate value
-            'employee_id' => $this->employeeId, // Change to the appropriate value
-            'evaluation_template_id' => $this->templateId, // Use the template ID from your Livewire component
+            'approver_id' => 0,
+            'evaluator_id' => $user->employee->id,
+            'employee_id' => $this->employeeId,
+            'evaluation_template_id' => $this->templateId,
             'recommendation_note' => $recommendationNote,
             'ratees_comment' => $rateesComment,
-            'status' => 1, // Set the default status
+            'status' => 1, //default status | pending
         ]);
 
 
@@ -296,7 +252,6 @@ class EvaluationForm extends Component
                         if ($equivalentPoints == $frsData['equivalent_points']) {
                             $ratingScaleId = $frsData['rating_scale_id'];
                             $factorRatingScaleId = $frsData['id'];
-
                             break; // Exit the loop once a match is found
                         }
                     }
@@ -318,26 +273,25 @@ class EvaluationForm extends Component
                         'note' => $note,
                     ]);
                 } else {
-                    // Handle the case when rating_scale_id or factor_rating_scale_id is null
-                    // This might involve setting default values or skipping the insertion
-                    // Or generating an error message for investigation
+                    // handle when rating_scale_id or factor_rating_scale_id is null
+
                 }
             }
         }
 
-        // Get all users with role_id 3
-        $userss = User::where('role_id', 3)->get();
 
+
+        // EMAIL NOTIF AND SYSTEM NOTIF
+        // Get all users with role_id 3
+        $approverUsers = User::where('role_id', 3)->get();
         // Prepare the data for the email
         $data = [
             'subject' => 'New evaluation ' . 'ID: ' . $evaluation->id,
             'body' => 'Evaluation for ' . $evaluation->employee->first_name . ' ' .   $evaluation->employee->last_name,
-
-            // Add any additional data you want to pass to the email view
         ];
 
-        // Send email to each user
-        foreach ($userss as $user) {
+        // Send email to each approver
+        foreach ($approverUsers as $user) {
             //  Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
             // Store notification in the database
             Notification::create([
@@ -349,6 +303,7 @@ class EvaluationForm extends Component
         }
 
 
+        //ADD RECOMMENDATION
         if (
             $this->currentSalary || $this->recommendedPosition || $this->level ||
             $this->recommendedSalary || $this->remarks || $this->effectivityTimestamp
@@ -368,39 +323,17 @@ class EvaluationForm extends Component
             ]);
         }
 
+
+        //prevent duplicates
         $this->isFormSubmitted = true;
+        //spinner
+        $this->loading = false;
+
+        //clear session
         session()->forget(['recommendationNote', 'rateesComment', 'selectedPoints', 'factorNotes']);
-        // return redirect()->route('evaluations.index')->with('success', 'Form submitted successfully.');
-        $this->loading = false; // Set loading back to false after the form submission is complete
-
     }
 
 
-    public function submitReco()
-    {
-
-        $user = auth()->user();
-
-        $this->dispatch('swal:modal2', [
-            'callback' => 'redirectAfterClose'
-        ]);
-
-        $evaluation = $this->evaluationID;
-        dd($evaluation);
-    }
-
-
-    public function calculatePercentageIncrease()
-    {
-        if ($this->currentSalary > 0 && $this->recommendedSalary > 0) {
-            $percentageIncrease = (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100;
-            $this->percentageIncrease = round($percentageIncrease, 2);
-        } else {
-            $this->percentageIncrease = null;
-        }
-    }
-
-    // Livewire lifecycle hook to watch for changes in salary fields
 
 
     public function render()
@@ -417,13 +350,14 @@ class EvaluationForm extends Component
 
         $parts = Part::where('evaluation_template_id', $this->templateId)->get();
         $this->partsWithFactors = [];
-        $totalRateForAllParts = 0; // Initialize the total rate for all parts
-
+        $totalRateForAllParts = 0;
+        $totalNumberOfParts = 0;
         foreach ($parts as $part) {
+            $totalNumberOfParts++;
+
             $factors = Factor::where('part_id', $part->id)->get();
             $factorsData = [];
-            $totalRateForPart = 0; // Initialize the total rate for the part
-
+            $totalRateForPart = 0;
             foreach ($factors as $factor) {
                 $factorData = [
                     'factor' => $factor,
@@ -438,15 +372,14 @@ class EvaluationForm extends Component
                     }),
                 ];
 
-
-                $totalRateForPart += (float) ($this->selectedValues[$factor->id] ?? 0); // Convert to float if not already
+                $totalRateForPart += (float) ($this->selectedValues[$factor->id] ?? 0);
                 $factorsData[] = $factorData;
             }
 
             $this->partsWithFactors[] = [
                 'part' => $part,
                 'factors' => $factorsData,
-                'totalRate' => $totalRateForPart, // Include the total rate in the array
+                'totalRate' => $totalRateForPart,
             ];
             $totalRateForAllParts += $totalRateForPart;
         }
@@ -461,9 +394,8 @@ class EvaluationForm extends Component
             'ratingScales' => $this->ratingScales,
             'currentStep' => $this->currentStep,
             'totalRates' => $totalRates,
-            'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
-
-
+            'totalRateForAllParts' => $totalRateForAllParts,
+            'totalNumberOfParts' => $totalNumberOfParts, // Pass the total number of parts to the view
 
         ]);
     }

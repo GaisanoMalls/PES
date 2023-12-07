@@ -4,31 +4,21 @@
 <style>
     .form-control {
         color: #333;
-        font-size: 15px;
-        height: 40px
-    }
-
-    .form-control:focus {
-        box-shadow: none;
-        outline: 0
-    }
-
-    .form-control.form-control-sm {
-        height: calc(1.5em + .5rem + 2px)
-    }
-
-    .form-control.form-control-lg {
-        height: calc(1.5em + 1rem + 2px)
+        font-size: 5px;
+        height: 85px;
+        resize: none;
+        /* Prevent resizing of the textarea */
     }
 
 
 
-    .form-group {
-        margin-bottom: 10px;
-    }
+
+
+
+
 
     .input-group .form-control {
-        height: 40px
+        height: 65px
     }
 
 
@@ -327,7 +317,7 @@
     .form-control {
         padding: 0.375rem 0.75rem;
         font-size: 1rem;
-        line-height: 1.5;
+        line-height: 1;
         border-color: #6c757d;
 
     }
@@ -410,35 +400,39 @@
                             <label for="department">Department</label>
                             <input type="text" class="form-control" id="department" name="department"
                                 placeholder="Enter Department/Section"
-                                value="{{ $evaluation->employee->department->name }}">
+                                value="{{ $evaluation->employee->department->name }}" style="height: 45px !important;">
                         </div>
                         <div class="col-4">
                             <label for="employee_id">Employee ID</label>
                             <input type="text" class="form-control" id="employee_id" name="employee_id"
-                                placeholder="Enter Employee ID" value="{{ $evaluation->employee->employee_id }}">
+                                placeholder="Enter Employee ID" value="{{ $evaluation->employee->employee_id }}"
+                                style="height: 45px !important;">
                         </div>
                         <div class="col-4">
                             <label for="first_name">Employee Name</label>
                             <input type="text" class="form-control" id="first_name" name="first_name"
                                 placeholder="Enter Employee Name"
-                                value="{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}">
+                                value="{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}"
+                                style="height: 45px !important;">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-4">
                             <label for="position">Position</label>
                             <input type="text" class="form-control" id="position" name="position"
-                                placeholder="Enter Position" value="{{ $evaluation->employee->position }}">
+                                placeholder="Enter Position" value="{{ $evaluation->employee->position }}"
+                                style="height: 45px !important;">
                         </div>
                         <div class="col-4">
                             <label for="covered_period_start">Join Date</label>
                             <input class="form-control" type="date" id="covered_period_start"
-                                name="covered_period_start" value="{{ $evaluation->employee->date_hired }}">
+                                name="covered_period_start" value="{{ $evaluation->employee->date_hired }}"
+                                style="height: 45px !important;">
                         </div>
                         <div class="col-4">
                             <label for="created_at">Date of Evaluation</label>
                             <input class="form-control" type="text" id="created_at" name="created_at"
-                                value="{{ $evaluation->created_at }}">
+                                value="{{ $evaluation->created_at }}" style="height: 45px !important;">
                         </div>
                     </div>
                 </div>
@@ -459,698 +453,266 @@
                     <span class="rating-scale-description">{{ $scale->description }}</span>
                 </div>
             @endforeach
-            @foreach ($partsWithFactors as $partWithFactors)
-                @if ($loop->first)
-                    <div class="rating-scale"></div>
-                    <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                    @foreach ($partWithFactors['factors'] as $factorData)
-                        @if ($loop->index < 2)
-                            <div class="row">
-                                <div class="col-6 text-left">
-                                    <h5>{{ $factorData['factor']->name }}</h5>
-                                    <p>{{ $factorData['factor']->description }}</p>
-                                </div>
+            <div class="page-break"></div>
 
-                                <div class="col-6 text-center">
-                                    <div class="">
-                                        <label class="radio-inline">
-                                            @if ($loop->first)
-                                                <span>Allotted%<br><br></span>
-                                            @endif
-                                            <span
-                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                        </label>
-                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                            <label class="radio-inline">
-                                                {{ $ratingScale->acronym }}<br>
-                                                {{ $ratingScale->equivalent_points }}
-
-                                                <br>
-                                                <input disabled class="custom-radio" type="radio"
-                                                    name="rating_{{ $ratingScale->factor_id }}"
-                                                    value="{{ $ratingScale->equivalent_points }}"
-                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                            </label>
-                                        @endforeach
-                                        <label class="radio-inline">
-                                            @if ($loop->parent->first && $loop->first)
-                                                <span>POINTS<br><br>
-                                            @endif
-                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                                {{ $factorData['points'] }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="comment m-t-3">
-                                        <div class="form-group">
-                                            <label for="">Specific
-                                                situations/incidents
-                                                to support rating:</label>
-                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m-t-5"></div>
-                            @if ($loop->last)
-                                <div class="c m-t-20 m-r-15">
-                                    <strong>
-                                        <span>Total Actual Points/Rate =
-                                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                            <span class="box">
-                                                {{ $partWithFactors['totalRate'] }}</span>
-                                        </span>
-                                    </strong>
-                                </div>
-                            @endif
-                        @endif
-                    @endforeach
-                @endif
-            @endforeach
-        </div>
-
-        {{-- PAGE 2 --}}
-        <div class="page-break"></div>
-        <div class="">
-            @foreach ($partsWithFactors as $partWithFactors)
-                @if ($loop->first)
-                    @if (!$loop->first)
-                        <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                    @endif
-
-                    @foreach ($partWithFactors['factors'] as $factorData)
-                        @if ($loop->index >= 2)
-                            <!-- Display only the first two factors -->
-
-                            <div class="row">
-                                <div class="col-6 text-left">
-                                    <h5>{{ $factorData['factor']->name }}</h5>
-                                    <p>{{ $factorData['factor']->description }}</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="">
-                                        <label class="radio-inline">
-                                            @if ($loop->first)
-                                                <span>Allotted<br><br></span>
-                                            @endif
-                                            <span
-                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                        </label>
-                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                            <label class="radio-inline">
-                                                {{ $ratingScale->acronym }}<br>
-                                                {{ $ratingScale->equivalent_points }}
-
-                                                <br>
-                                                <input disabled class="custom-radio" type="radio"
-                                                    name="rating_{{ $ratingScale->factor_id }}"
-                                                    value="{{ $ratingScale->equivalent_points }}"
-                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                            </label>
-                                        @endforeach
-
-                                        <label class="radio-inline">
-                                            @if ($loop->parent->first && $loop->first)
-                                                <span>POINTS<br><br>
-                                            @endif
-                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                                {{ $factorData['points'] }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="comment m-t-3">
-                                        <div class="form-group">
-                                            <label for="">Specific
-                                                situations/incidents
-                                                to support rating:</label>
-                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if ($loop->last)
-                                <div class="c m-t-10 m-r-15">
-                                    <strong>
-                                        <span>Total Actual Points/Rate =
-                                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                            <span class="box">
-                                                {{ $partWithFactors['totalRate'] }}</span>
-                                        </span>
-                                        </span>
-                                    </strong>
-                                </div>
-                            @endif
-                        @endif
-                    @endforeach
-                @elseif ($loop->index === 1)
-                    <div class="rating-scale">
-                    </div>
-
-                    <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-
-                    @foreach ($partWithFactors['factors'] as $factorData)
-                        @if ($loop->index <= 3)
-                            <!-- Display only the first two factors -->
-
-                            <div class="row">
-                                <div class="col-6 text-left">
-                                    <h5>{{ $factorData['factor']->name }}</h5>
-                                    <p>{{ $factorData['factor']->description }}</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="">
-                                        <label class="radio-inline">
-                                            @if ($loop->first)
-                                                <span>Allotted<br><br></span>
-                                            @endif
-                                            <span
-                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                        </label>
-
-                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                            <label class="radio-inline">
-                                                {{ $ratingScale->acronym }}<br>
-                                                {{ $ratingScale->equivalent_points }}
-
-                                                <br>
-                                                <input disabled class="custom-radio" type="radio"
-                                                    name="rating_{{ $ratingScale->factor_id }}"
-                                                    value="{{ $ratingScale->equivalent_points }}"
-                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                            </label>
-                                        @endforeach
-                                        <label class="radio-inline">
-                                            @if ($loop->parent->first && $loop->first)
-                                                <span>POINTS<br><br>
-                                            @endif
-                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                                {{ $factorData['points'] }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="comment m-t-3">
-                                        <div class="form-group">
-                                            <label for="">Specific
-                                                situations/incidents
-                                                to support rating:</label>
-                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m-t-10"></div>
-                            @if ($loop->last)
-                                <div class="c m-r-15">
-                                    <strong>
-                                        <span>Total Actual Points/Rate =
-                                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                            <span class="box">
-                                                {{ $partWithFactors['totalRate'] }}</span>
-                                        </span>
-                                        </span>
-                                    </strong>
-                                </div>
-                            @endif
-                        @endif
-                    @endforeach
-                @endif
-            @endforeach
-        </div>
-
-        <div class="page-break"></div>
-        <div class="">
-            @foreach ($partsWithFactors as $partWithFactors)
-                @if ($loop->index === 1)
-                    @if ($loop->first)
-                        <div class="rating-scale">
-                        </div>
-                        <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                    @endif
-                    @foreach ($partWithFactors['factors'] as $factorData)
-                        @if ($loop->index > 3)
-                            <div class="row">
-                                <div class="col-6 text-left">
-                                    <h5>{{ $factorData['factor']->name }}</h5>
-                                    <p>{{ $factorData['factor']->description }}</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="">
-                                        <label class="radio-inline">
-                                            @if ($loop->first)
-                                                <span>Allotted<br><br></span>
-                                            @endif
-                                            <span
-                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                        </label>
-
-                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                            <label class="radio-inline">
-                                                {{ $ratingScale->acronym }}<br>
-                                                {{ $ratingScale->equivalent_points }}
-
-                                                <br>
-                                                <input disabled class="custom-radio" type="radio"
-                                                    name="rating_{{ $ratingScale->factor_id }}"
-                                                    value="{{ $ratingScale->equivalent_points }}"
-                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                            </label>
-                                        @endforeach
-
-                                        <label class="radio-inline">
-                                            @if ($loop->parent->first && $loop->first)
-                                                <span>POINTS<br><br>
-                                            @endif
-                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                                {{ $factorData['points'] }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="comment m-t-3">
-                                        <div class="form-group">
-                                            <label for="">Specific
-                                                situations/incidents
-                                                to support rating:</label>
-                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if ($loop->last)
-                                <div class="c m-t-10 m-r-15">
-                                    <strong>
-                                        <span>Total Actual Points/Rate =
-                                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                            <span class="box">
-                                                {{ $partWithFactors['totalRate'] }}</span>
-                                        </span>
-                                    </strong>
-                                </div>
-                            @endif
-                        @endif
-                    @endforeach
-                @elseif($loop->index === 2)
-                    @if (!$loop->first)
-                        <div class="rating-scale">
-                        </div>
-
-                        <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                    @endif
-
-                    @foreach ($partWithFactors['factors'] as $factorData)
-                        @if ($loop->index < 5)
-                            <!-- Display only the first two factors -->
-
-                            <div class="row">
-                                <div class="col-6 text-left">
-                                    <h5>{{ $factorData['factor']->name }}</h5>
-                                    <p>{{ $factorData['factor']->description }}</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="">
-                                        <label class="radio-inline">
-                                            @if ($loop->first)
-                                                <span>Allotted<br><br></span>
-                                            @endif
-                                            <span
-                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                        </label>
-                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                            <label class="radio-inline">
-                                                {{ $ratingScale->acronym }}<br>
-                                                {{ $ratingScale->equivalent_points }}
-
-                                                <br>
-                                                <input disabled class="custom-radio" type="radio"
-                                                    name="rating_{{ $ratingScale->factor_id }}"
-                                                    value="{{ $ratingScale->equivalent_points }}"
-                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                            </label>
-                                        @endforeach
-
-                                        <label class="radio-inline">
-                                            @if ($loop->parent->first && $loop->first)
-                                                <span>POINTS<br><br>
-                                            @endif
-                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                                {{ $factorData['points'] }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="comment m-t-3">
-                                        <div class="form-group">
-                                            <label for="">Specific
-                                                situations/incidents
-                                                to support rating:</label>
-                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            @if ($loop->last)
-                                <div class="c m-t-10 m-r-15">
-                                    <strong>
-                                        <span>Total Actual Points/Rate =
-                                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                            <span class="box">
-                                                {{ $partWithFactors['totalRate'] }}</span>
-                                        </span>
-                                    </strong>
-                                </div>
-                            @endif
-                        @endif
-                    @endforeach
-                @endif
-            @endforeach
-        </div>
+            @foreach ($partsWithFactors as $index => $partWithFactors)
+                <div class="rating-scale"></div>
+                <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
 
 
-
-
-        {{-- part 4 --}}
-
-        <div class="">
-            @foreach ($partsWithFactors as $partWithFactors)
-                @if ($loop->index === 3)
-                    <div class="page-break"></div>
-                    @if (!$loop->first)
-                        <div class="rating-scale">
-                        </div>
-                        <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                    @endif
-                    @foreach ($partWithFactors['factors'] as $factorData)
+                @foreach ($partWithFactors['factors'] as $factorData)
+                    <li style="list-style: none;">
                         <div class="row">
+                            {{-- FACTOR RIGHT SIDE --}}
                             <div class="col-6 text-left">
+                                @if ($loop->first)
+                                    <h5 class="m-l-90 m-b-30">
+                                        Factors</h5>
+                                @endif
                                 <h5>{{ $factorData['factor']->name }}</h5>
                                 <p>{{ $factorData['factor']->description }}</p>
                             </div>
+
+                            {{-- FACTOR LEFT SIDE --}}
                             <div class="col-6 text-center">
-                                <div class="">
+                                <label class="radio-inline">
+                                    @if ($loop->first)
+                                        <span>Allotted<br><br></span>
+                                    @endif
+                                    <span
+                                        class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                                </label>
+                                {{-- DISPLAY THE FACTOR RATING SCALES --}}
+                                @foreach ($factorData['rating_scales'] as $key => $ratingScale)
                                     <label class="radio-inline">
-                                        @if ($loop->first)
-                                            <span>Allotted<br><br></span>
-                                        @endif
-                                        <span
-                                            class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                                        {{ $ratingScale->acronym }}<br>
+                                        {{ $ratingScale->equivalent_points }}
+
+                                        <br>
+                                        <input disabled class="custom-radio" type="radio"
+                                            name="rating_{{ $ratingScale->factor_id }}"
+                                            value="{{ $ratingScale->equivalent_points }}"
+                                            @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
                                     </label>
-
-                                    @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                        <label class="radio-inline">
-                                            {{ $ratingScale->acronym }}<br>
-                                            {{ $ratingScale->equivalent_points }}
-
-                                            <br>
-                                            <input disabled class="custom-radio" type="radio"
-                                                name="rating_{{ $ratingScale->factor_id }}"
-                                                value="{{ $ratingScale->equivalent_points }}"
-                                                @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                        </label>
-                                    @endforeach
-
-                                    <label class="radio-inline">
-                                        @if ($loop->parent->first && $loop->first)
-                                            <span>POINTS<br><br>
-                                        @endif
-                                        <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                            {{ $factorData['points'] }}
-                                        </span>
-                                    </label>
-                                </div>
+                                @endforeach
+                                <label class="radio-inline">
+                                    @if ($loop->parent->first && $loop->first)
+                                        <span>POINTS<br><br>
+                                    @endif
+                                    <span id="points-{{ $factorData['factor']->id }}" class="box">
+                                        {{ $factorData['points'] }}
+                                    </span>
+                                </label>
+                                {{-- DISPLAY THE COMMENT OF FACTOR --}}
                                 <div class="comment m-t-3">
                                     <div class="form-group">
                                         <label for="">Specific
                                             situations/incidents
                                             to support rating:</label>
-                                        <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
+                                        <textarea class="form-control" style="overflow: hidden;">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @if ($loop->last)
-                            <div class="c m-t-10 m-r-15">
-                                <strong>
-                                    <span>Total Actual Points/Rate =
-                                        {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                        <span class="box">
-                                            {{ $partWithFactors['totalRate'] }}</span>
-                                    </span>
-                                </strong>
-                            </div>
-                        @endif
-                    @endforeach
-                    <div class="page-break"></div>
-                @elseif($loop->index === 4)
-                    @if (!$loop->first)
-                        <div class="rating-scale">
-                        </div>
+                    </li>
+                @endforeach
 
-                        <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                    @endif
+                <div class="c m-t-20 m-r-15">
+                    <strong>
+                        <span>Total Actual Points/Rate =
+                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
+                            <span class="box">
+                                {{ $partWithFactors['totalRate'] }}</span>
+                        </span>
+                    </strong>
+                </div>
 
-                    @foreach ($partWithFactors['factors'] as $factorData)
-                        @if ($loop->index < 5)
-                            <!-- Display only the first two factors -->
+                <div class="page-break"></div>
+            @endforeach
+            <div class="page-break"></div>
 
-                            <div class="row">
-                                <div class="col-6 text-left">
-                                    <h5>{{ $factorData['factor']->name }}</h5>
-                                    <p>{{ $factorData['factor']->description }}</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="">
-                                        <label class="radio-inline">
-                                            @if ($loop->first)
-                                                <span>Allotted<br><br></span>
-                                            @endif
-                                            <span
-                                                class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                        </label>
-                                        @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                            <label class="radio-inline">
-                                                {{ $ratingScale->acronym }}<br>
-                                                {{ $ratingScale->equivalent_points }}
-
+            <div class="text-center">
+                <h3>RATING SUMMARY</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Performance Measurement</th>
+                        <th>Criteria</th>
+                        <th>Total Actual Points/Rate</th>
+                        <th>Passing Points/Rate</th>
+                        <th>Ratee's Performance Level</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($partsWithFactors as $index => $partWithFactors)
+                        <tr>
+                            <td>{{ $partWithFactors['part']->name }}</td>
+                            <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
+                            <td class="text-center">{{ $partWithFactors['totalRate'] }}</td>
+                            @if ($loop->first)
+                                <td style="text-align: center; vertical-align: middle" rowspan="4">80%
+                                </td>
+                                <td rowspan="5">
+                                    <ul>
+                                        @foreach ($ratingScales as $scale)
+                                            @if ($scale['name'] == 'Outstanding')
+                                                @if ($totalRateForAllParts >= 95)
+                                                    <strong> 95-100% {{ $scale['name'] }}</strong>
+                                                @else
+                                                    95-100% {{ $scale['name'] }}
+                                                @endif
                                                 <br>
-                                                <input disabled class="custom-radio" type="radio"
-                                                    name="rating_{{ $ratingScale->factor_id }}"
-                                                    value="{{ $ratingScale->equivalent_points }}"
-                                                    @if ($key === $factorData['ratingScaleId'] - 1) checked @endif>
-                                            </label>
-                                        @endforeach
-
-                                        <label class="radio-inline">
-                                            @if ($loop->parent->first && $loop->first)
-                                                <span>POINTS<br><br>
-                                            @endif
-                                            <span id="points-{{ $factorData['factor']->id }}" class="box">
-                                                {{ $factorData['points'] }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="comment m-t-3">
-                                        <div class="form-group">
-                                            <label for="">Specific
-                                                situations/incidents
-                                                to support rating:</label>
-                                            <textarea class="form-control">{{ $factorData['note'] }}</textarea> {{-- Display the factor note --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            @if ($loop->last)
-                                <div class="c m-t-10 m-r-15">
-                                    <strong>
-                                        <span>Total Actual Points/Rate =
-                                            {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                            <span class="box">
-                                                {{ $partWithFactors['totalRate'] }}</span>
-                                        </span>
-                                    </strong>
-                                </div>
+                                            @elseif ($scale['name'] == 'High Average')
+                                                @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
+                                                    <strong>90-94% {{ $scale['name'] }}</strong>
+                                                @else
+                                                    90-94% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'Average')
+                                                @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
+                                                    <strong>80-89% {{ $scale['name'] }}</strong>
+                                                @else
+                                                    80-89% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'Satisfactory')
+                                                @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
+                                                    <strong>70-79% {{ $scale['name'] }}</strong>
+                                                @else
+                                                    70-79% {{ $scale['name'] }}
+                                                @endif
+                                                <br>
+                                            @elseif ($scale['name'] == 'Poor')
+                                                @if ($totalRateForAllParts <= 69)
+                                                    <strong> 69% & below {{ $scale['name'] }}</strong>
+                                                @else
+                                                    69% & below {{ $scale['name'] }}
+                                                @endif
+                                    </ul>
+                            @endif
+                    @endforeach
+                    </ul>
+                    </td>
+                    @endif
+                    <td>
+                        @if ($loop->iteration == 1)
+                            @if ($totalRateForAllParts >= 80)
+                                <a class="btn btn-sm bg-success-light mr-2"> <strong>Passed</strong></a>
+                            @else
+                                Passed
+                            @endif
+                        @elseif ($loop->iteration == 2)
+                            @if ($totalRateForAllParts < 80)
+                                <a class="btn btn-sm bg-danger-light mr-2">Failed</a>
+                            @else
+                                Failed
                             @endif
                         @endif
+                    </td>
+                    </tr>
                     @endforeach
-                @endif
-            @endforeach
-        </div>
-        <div class="page-break"></div>
 
-        <div class="text-center">
-            <h3>RATING SUMMARY</h3>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Performance Measurement</th>
-                    <th>Criteria</th>
-                    <th>Total Actual Points/Rate</th>
-                    <th>Passing Points/Rate</th>
-                    <th>Ratee's Performance Level</th>
-                    <th>Remarks</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($partsWithFactors as $index => $partWithFactors)
+
+                    </tr>
+
                     <tr>
-                        <td>{{ $partWithFactors['part']->name }}</td>
-                        <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                        <td class="text-center">{{ $partWithFactors['totalRate'] }}</td>
-                        @if ($loop->first)
-                            <td style="text-align: center; vertical-align: middle" rowspan="4">80%
-                            </td>
-                            <td rowspan="5">
-                                <ul>
-                                    @foreach ($ratingScales as $scale)
-                                        @if ($scale['name'] == 'Outstanding')
-                                            @if ($totalRateForAllParts >= 95)
-                                                <strong> 95-100% {{ $scale['name'] }}</strong>
-                                            @else
-                                                95-100% {{ $scale['name'] }}
-                                            @endif
-                                            <br>
-                                        @elseif ($scale['name'] == 'High Average')
-                                            @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
-                                                <strong>90-94% {{ $scale['name'] }}</strong>
-                                            @else
-                                                90-94% {{ $scale['name'] }}
-                                            @endif
-                                            <br>
-                                        @elseif ($scale['name'] == 'Average')
-                                            @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
-                                                <strong>80-89% {{ $scale['name'] }}</strong>
-                                            @else
-                                                80-89% {{ $scale['name'] }}
-                                            @endif
-                                            <br>
-                                        @elseif ($scale['name'] == 'Satisfactory')
-                                            @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
-                                                <strong>70-79% {{ $scale['name'] }}</strong>
-                                            @else
-                                                70-79% {{ $scale['name'] }}
-                                            @endif
-                                            <br>
-                                        @elseif ($scale['name'] == 'Poor')
-                                            @if ($totalRateForAllParts <= 69)
-                                                <strong> 69% & below {{ $scale['name'] }}</strong>
-                                            @else
-                                                69% & below {{ $scale['name'] }}
-                                            @endif
-                                </ul>
-                        @endif
-                @endforeach
-                </ul>
-                </td>
-                @endif
-                <td>
-                    @if ($loop->iteration == 1)
-                        @if ($totalRateForAllParts >= 80)
-                            <a class="btn btn-sm bg-success-light mr-2"> <strong>Passed</strong></a>
-                        @else
-                            Passed
-                        @endif
-                    @elseif ($loop->iteration == 2)
-                        @if ($totalRateForAllParts < 80)
-                            <a class="btn btn-sm bg-danger-light mr-2">Failed</a>
-                        @else
-                            Failed
-                        @endif
-                    @endif
-                </td>
-                </tr>
-                @endforeach
-
-
-                </tr>
-
-                <tr>
-                    <td>Total</td>
-                    <td>100%</td>
-                    <td class="text-center"> <strong>{{ $totalRateForAllParts }}</strong></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="m-t-50">
-            <div class="comment">
-                <div class="form-group">
-                    <label for="recommendations">RECOMMENDATION:</label>
-                    <textarea name="recommendations" id="recommendations" class="form-control">{{ $evaluation->recommendation_note }}</textarea>
+                        <td>Total</td>
+                        <td>100%</td>
+                        <td class="text-center"> <strong>{{ $totalRateForAllParts }}</strong></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="m-t-50">
+                <div class="comment">
+                    <div class="form-group">
+                        <label for="recommendations">RECOMMENDATION:</label>
+                        <textarea name="recommendations" id="recommendations" class="form-control" style="height: 150px; overflow: hidden;">{{ $evaluation->recommendation_note }}</textarea>
+                    </div>
                 </div>
-            </div>
 
-            <div class="comment m-t-10">
-                <div class="form-group">
-                    <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                    <textarea name="ratee_comments" id="ratee_comments" class="form-control">{{ $evaluation->ratees_comment }}</textarea>
+                <div class="comment m-t-10">
+                    <div class="form-group">
+                        <label for="ratee_comments">RATEE’S COMMENTS:</label>
+                        <textarea name="ratee_comments" id="ratee_comments" class="form-control" style="height: 150px; overflow: hidden;">{{ $evaluation->ratees_comment }}</textarea>
+                    </div>
                 </div>
+
+
             </div>
+            @if ($evaluation->recommendation)
+                <!-- Check if recommendation exists -->
 
+                <div class="m-t-30">
+                    <h4 class="text-center">Recommendation</h4>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="current_salary">Current Salary:</label>
+                                <input type="number" class="form-control" wire:model="currentSalary"
+                                    value="{{ $evaluation->recommendation->current_salary }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_position">Recommended Position:</label>
+                                <input type="text" class="form-control" wire:model="recommendedPosition"
+                                    value="{{ $evaluation->recommendation->recommended_position }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="level">Level:</label>
+                                <input type="text" class="form-control" wire:model="level"
+                                    value="{{ $evaluation->recommendation->level }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_salary">Recommended Salary:</label>
+                                <input type="number" class="form-control" wire:model="recommendedSalary"
+                                    value="{{ $evaluation->recommendation->recommended_salary }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_salary">Percentage Increase:</label>
+                                <input type="number" class="form-control" wire:model="recommendedSalary"
+                                    value="{{ $evaluation->recommendation->percentage_increase }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
 
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                                <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                                    value="{{ $evaluation->recommendation->effectivity }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="remarks">Remarks:</label>
+                                <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
+                                    style="height: 150px; overflow: hidden;">{{ $evaluation->recommendation->remarks }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
-        @if ($evaluation->recommendation)
-            <!-- Check if recommendation exists -->
-
-            <div class="m-t-30">
-                <h4 class="text-center">Recommendation</h4>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="current_salary">Current Salary:</label>
-                            <input type="number" class="form-control" wire:model="currentSalary"
-                                value="{{ $evaluation->recommendation->current_salary }}">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="recommended_position">Recommended Position:</label>
-                            <input type="text" class="form-control" wire:model="recommendedPosition"
-                                value="{{ $evaluation->recommendation->recommended_position }}">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="level">Level:</label>
-                            <input type="text" class="form-control" wire:model="level"
-                                value="{{ $evaluation->recommendation->level }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="recommended_salary">Recommended Salary:</label>
-                            <input type="number" class="form-control" wire:model="recommendedSalary"
-                                value="{{ $evaluation->recommendation->recommended_salary }}">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="recommended_salary">Percentage Increase:</label>
-                            <input type="number" class="form-control" wire:model="recommendedSalary"
-                                value="{{ $evaluation->recommendation->percentage_increase }}">
-                        </div>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                                value="{{ $evaluation->recommendation->effectivity }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="remarks">Remarks:</label>
-                            <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks">{{ $evaluation->recommendation->remarks }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
-</div>
 </div>
