@@ -18,7 +18,7 @@
                 <h5 class="text-muted mt-1">Date Hired: <strong>{{ $employee->date_hired }}</strong></h5>
 
             </div>
-            @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
+            @if (Auth::user()->role_id == 2)
                 <div class="col-auto profile-btn"> <a
                         href="{{ route('evaluations.select', ['employeeId' => $employee->id]) }}"
                         class="btn btn-primary mb-3">
