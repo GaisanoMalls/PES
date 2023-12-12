@@ -563,7 +563,7 @@
         <div class="text-center">
             <h3>RATING SUMMARY</h3>
         </div>
-        <table class="table table-borderless">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Performance Measurement</th>
@@ -583,29 +583,25 @@
                         @if ($loop->first)
                             <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
                             <td rowspan="5">
-                                <ul>
-                                    @foreach ($ratingScales as $scale)
-                                        @if ($scale['name'] == 'Outstanding')
-                                            95-100% {{ $scale['name'] }}
 
-                                            <br>
-                                        @elseif ($scale['name'] == 'High Average')
-                                            90-94% {{ $scale['name'] }}
+                                @foreach ($ratingScales as $scale)
+                                    @if ($scale['name'] == 'Outstanding')
+                                        95-100% {{ $scale['name'] }}
+                                        <br>
+                                    @elseif ($scale['name'] == 'High Average')
+                                        90-94% {{ $scale['name'] }}
+                                        <br>
+                                    @elseif ($scale['name'] == 'Average')
+                                        80-89% {{ $scale['name'] }}
+                                        <br>
+                                    @elseif ($scale['name'] == 'Satisfactory')
+                                        70-79% {{ $scale['name'] }}
+                                        <br>
+                                    @elseif ($scale['name'] == 'Poor')
+                                        69% & below {{ $scale['name'] }}
+                                    @endif
+                                @endforeach
 
-                                            <br>
-                                        @elseif ($scale['name'] == 'Average')
-                                            80-89% {{ $scale['name'] }}
-
-                                            <br>
-                                        @elseif ($scale['name'] == 'Satisfactory')
-                                            70-79% {{ $scale['name'] }}
-
-                                            <br>
-                                        @elseif ($scale['name'] == 'Poor')
-                                            69% & below {{ $scale['name'] }}
-                                        @endif
-                                    @endforeach
-                                </ul>
                             </td>
                         @endif
                         <td>
@@ -622,10 +618,30 @@
                     <td>100%</td>
                     <td class="text-center"><strong></strong></td>
                     <td></td>
-                    <td></td>
                 </tr>
             </tbody>
         </table>
+        <div class="m-t-50">
+            <div class="row">
+                <div class="col-4">
+                    <label class="col-lg-2">RATED BY: </label>
+                    <input type="text" class="form-control" style="height: 45px !important;">
+                    <p class="">
+                        EVALUATOR
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="col-lg-2">REVIEWED BY: </label>
+                    <input type="text" class="form-control" style="height: 45px !important;">
+                    <p class="">
+                        APPROVER
+                    </p>
+                </div>
+
+            </div>
+        </div>
         <div class="m-t-50">
             <div class="comment">
                 <div class="form-group">
@@ -633,16 +649,27 @@
                     <textarea name="recommendations" id="recommendations" class="form-control" style="height: 150px; overflow: hidden;"></textarea>
                 </div>
             </div>
+        </div>
 
-            <div class="comment m-t-10">
-                <div class="form-group">
-                    <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                    <textarea name="ratee_comments" id="ratee_comments" class="form-control" style="height: 150px; overflow: hidden;"></textarea>
+        <div class="m-t-50">
+            <div class="row">
+                <div class="col-4">
+                    <label class="col-lg-2">READ: </label>
+                    <input type="text" class="form-control" style="height: 45px !important;">
+                    <p class="">
+                        NAME OF EMPLOYEE
+                    </p>
                 </div>
             </div>
-
-
         </div>
+        <div class="comment m-t-30">
+            <div class="form-group">
+                <label for="ratee_comments">RATEES COMMENTS:</label>
+                <textarea name="ratee_comments" id="ratee_comments" class="form-control" style="height: 150px; overflow: hidden;"></textarea>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
 
         <!-- Check if recommendation exists -->
 

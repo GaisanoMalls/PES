@@ -1,5 +1,5 @@
-<div>
-    <div class="container22">
+<div class="m-t-50">
+    <div class="container22 m-b-10">
         @if ($evaluation->status === 2)
             <a href="#" class="btn btn-lg bg-success-light mb-2" style="cursor: default;">Approved
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
@@ -72,58 +72,8 @@
         <form wire:submit.prevent="submitStep1">
             @csrf
             <div class="m-t-20 m-b-30">
-                <div class="employee-details">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="department">Department</label>
-                            <input type="text" class="form-control" id="department" name="department"
-                                placeholder="Enter Department/Section"
-                                value="{{ $evaluation->employee->department->name }}" readonly disabled>
-                        </div>
 
-                        <div class="col-md-4">
-                            <label for="employee_id">Employee ID</label>
-                            <input type="text" class="form-control" id="employee_id" name="employee_id"
-                                placeholder="Enter Employee ID" value="{{ $evaluation->employee->employee_id }}"
-                                readonly disabled>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="first_name">Employee Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name"
-                                placeholder="Enter Employee Name"
-                                value="{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}"
-                                readonly disabled>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="position">Position</label>
-                            <input type="text" class="form-control" id="position" name="position"
-                                placeholder="Enter Position" value="{{ $evaluation->employee->position }}" readonly
-                                disabled>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="covered_period_start">Join Date</label>
-                                <input class="form-control" type="date" id="covered_period_start"
-                                    name="covered_period_start" value="{{ $evaluation->employee->date_hired }}"
-                                    disabled readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="created_at">Date of Evaluation</label>
-                                <input class="form-control" type="text" id="created_at" name="created_at"
-                                    value="{{ $evaluation->created_at }}" readonly disabled>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                @include('components.evaluation-employee-details', ['evaluation' => $evaluation])
 
             </div>
             <div class="bg-white2">
@@ -384,69 +334,11 @@
         </div>
 
 
-
+        {{-- CLARIFICATIONS --}}
         @if ($showClarificationSection)
-            <div class="m-t-30">
-                @if ($clarifications->count() > 0)
-                    @foreach ($clarifications as $clarification)
-                        <div class="widget author-widget">
-                            <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
-                                {{ $clarification->commentorName->last_name }} -
-                                {{ $clarification->commentor->role->name }}</span>
-                            <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
-                            <div class="about-author">
-                                <div class="author-details">
-                                    {{-- Editing mode --}}
-                                    @if ($editingClarificationId === $clarification->id)
-                                        <textarea wire:model="clarificationDescription" class="form-control" placeholder="Write your clarifications.."></textarea>
-                                        <a href="#"
-                                            wire:click.prevent="submitClarification({{ $clarification->id }})">Update</a>
-                                        <a href="#" wire:click.prevent="cancelEdit">Cancel</a>
-                                    @else
-                                        <p>
-                                            {{ $clarification->description }}</p>
-                                        @auth
-                                            @if (auth()->user()->employee_id == $clarification->commentor_id)
-                                                <a href="#"
-                                                    wire:click.prevent="deleteClarification({{ $clarification->id }})"
-                                                    class="span-ED">Delete</a>
-                                                @if ($editingClarificationId === $clarification->id)
-                                                    <a href="#" wire:click.prevent="cancelEdit"
-                                                        class="span-ED">Cancel</a>
-                                                @else
-                                                    <a href="#"
-                                                        wire:click.prevent="editClarification({{ $clarification->id }})"
-                                                        class="span-ED">Update</a>
-                                                @endif
-                                            @endif
-                                        @endauth
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <p>No clarifications available.</p>
-                @endif
-
-
-                {{-- Hide the form when in editing mode --}}
-                <div class="form-group">
-                    @if ($editingClarificationId)
-                    @else
-                        <label for="description">Description:</label>
-                        <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
-                            id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
-                        <div class="m-t-15">
-                            <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
-                                Clarification</button>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-
+            @include('components.clarification', ['clarifications' => $clarifications])
         @endif
+        {{-- END CLARIFICATIONS --}}
 
 
         <div class="m-b-15 m-t-15">
@@ -480,86 +372,12 @@
 
     <!-- Modal -->
     @if ($evaluation->recommendation)
-        <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog"
-            aria-labelledby="recommendationModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-m" role="document"> <!-- Add 'modal-lg' class for a larger width -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="recommendationModalLabel">Recommendation</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="m-t-10">
-                            <div class="justify-content-center">
-                                <div class="form-group">
-                                    <label for="current_salary">Current Salary:</label>
-                                    <input type="number" class="form-control" wire:model="currentSalary"
-                                        wire:change="calculatePercentageIncrease"
-                                        placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
-                                        disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="recommended_salary">Recommended Salary:</label>
-                                    <input type="number" class="form-control" wire:model="recommendedSalary"
-                                        wire:change="calculatePercentageIncrease"
-                                        placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
-                                        disabled>
-                                </div>
-
-
-
-                                <div class="form-group">
-                                    <label for="recommended_salary">Percentage Increase:</label>
-                                    <input type="number" class="form-control"
-                                        placeholder="{{ $evaluation->recommendation->percentage_increase }}" readonly
-                                        disabled wire:model="percentageIncrease">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="recommended_position">Recommended Position:</label>
-                                    <input type="text" class="form-control" wire:model="recommendedPosition"
-                                        placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
-                                        disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="level">Level:</label>
-                                <input type="text" class="form-control" wire:model="level"
-                                    placeholder="{{ $evaluation->recommendation->level ?? '' }}" disabled>
-                            </div>
-                        </div>
-
-
-
-                        <div class="form-group">
-                            @php
-                                $effectivity = optional($evaluation->recommendation)->effectivity;
-                            @endphp
-                            <label for="effectivityTimestamp">Effectivity Timestamp:
-                                {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
-                            </label>
-                            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                                disabled>
-                        </div>
-
-
-
-                        <div class="form-group">
-                            <label for="remarks">Remarks:</label>
-                            <textarea name="remarks" id="remarks" rows="5" class="form-control" wire:model="remarks"
-                                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" disabled></textarea>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+        @php
+            $editMode = false; // Set editMode to false in review.blade.php
+        @endphp
+        @include('components.modals.recommendation', [
+            'evaluation' => $evaluation,
+        ])
     @endif
 
     <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"

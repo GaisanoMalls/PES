@@ -31,6 +31,8 @@
                                                 Name</a></th>
                                         <th><a class="text-black">
                                                 Created At</a></th>
+                                        <th><a class="text-black">
+                                                Status</a></th>
                                         <th class="text-center text-black">Actions</th>
                                     </tr>
                                 </thead>
@@ -41,6 +43,25 @@
                                             <td>{{ $template->id }}</td>
                                             <td>{{ $template->name }}</td>
                                             <td>{{ $template->created_at }}</td>
+                                            <td>
+
+                                                @if ($template->status == 1)
+                                                    <div class="actions">
+                                                        <a href="#" class="btn btn-sm bg-success-light mr-2"
+                                                            style="cursor: default;">Published</a>
+                                                    </div>
+                                                @elseif($template->status == 2)
+                                                    <div class="actions">
+                                                        <a href="#" class="btn btn-sm bg-danger-light mr-2"
+                                                            style="cursor: default;">Unpublished</a>
+                                                    </div>
+                                                @elseif($template->status == 0)
+                                                    <div class="actions">
+                                                        <a href="#" class="btn btn-sm bg-default-light mr-2"
+                                                            style="cursor: default;">On Progress</a>
+                                                    </div>
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 <div class="dropdown dropdown-action">
                                                     <a href="#" class="action-icon dropdown-toggle"
