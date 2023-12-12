@@ -42,6 +42,7 @@ class ReviewEvaluation extends Component
     public $ratingScales;
     public $partsWithFactors;
 
+    public $rateeComment;
 
     public $totalRates = [];
     public $ratingScaleNames = [];
@@ -56,6 +57,7 @@ class ReviewEvaluation extends Component
     public $clarificationDescription;
     public $editingClarificationId = null;
 
+    public $isEditing = false;
 
     public function mount(Evaluation $evaluation)
     {
@@ -73,6 +75,7 @@ class ReviewEvaluation extends Component
         $this->name = $this->employee->first_name . ' ' . $this->employee->last_name;
         $this->position = $this->employee->position;
         $this->date_hired = $this->employee->date_hired;
+        $this->rateeComment = $this->evaluation->ratees_comment;
 
         // Convert JSON string to a Carbon date instance
         $this->created_at = \Carbon\Carbon::parse($this->evaluation->created_at)->toDateTimeString();
@@ -198,13 +201,16 @@ class ReviewEvaluation extends Component
         if ($this->isFormSubmitted) {
             return;
         }
-        $this->validate([
-            'disapprovalDescription' => 'required|string', // Add validation rules if necessary
-        ]);
+
         $userEmployeeId = Auth::user()->employee_id;
         $this->evaluation->status = 3;
         $this->evaluation->approver_id = $userEmployeeId;
         $this->evaluation->save();
+
+        //  $userEmployeeId = Auth::user()->employee_id;
+        // $this->evaluation->status = 3;
+        // $this->evaluation->approver_id = $userEmployeeId;
+        // $this->evaluation->save();
 
 
 
@@ -265,6 +271,9 @@ class ReviewEvaluation extends Component
             $clarification->description = $this->clarificationDescription;
             $clarification->save();
 
+
+
+
             // Reset the editing mode
             $this->editingClarificationId = null;
         } else {
@@ -282,6 +291,7 @@ class ReviewEvaluation extends Component
             $this->evaluation->approver_id = $user->employee->id;
             // Change the evaluation status
             $this->evaluation->status = 4;
+
             $this->evaluation->save();
 
             Notification::create([
@@ -335,6 +345,27 @@ class ReviewEvaluation extends Component
     public function submitStep1()
     {
         $this->currentStep = 2;
+    }
+
+    public function storeRateeComment()
+    {
+        $this->evaluation->update(['ratees_comment' => $this->rateeComment]);
+        $this->isEditing = false;
+        session()->flash('success', 'Ratee\'s comment saved successfully!');
+    }
+    public function toggleEditMode()
+    {
+        $this->isEditing = !$this->isEditing;
+    }
+
+    public function setEditMode()
+    {
+        $this->isEditing = true;
+    }
+
+    public function setViewMode()
+    {
+        $this->isEditing = false;
     }
 
 

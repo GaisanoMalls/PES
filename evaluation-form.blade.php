@@ -1,90 +1,142 @@
-<div>
-    <span>Non-Supervisory (Support & Non-Sales)</span>
-    <h1>{{ $templateName }}</h1>
-    <form wire:submit.prevent="submitStep1">
-        @csrf
+           {{-- EVALUATORS OR APPROVERS INPUTS --}}
+           <div class="row">
+               <div class="col-md-6">
+                   <div class="form-group row">
+                       <label class="col-lg-3 col-form-label">RATED BY: </label>
+                       <div class="col-lg-7">
+                           <a href="#" class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
+                               style="cursor: default;">{{ $evaluation->evaluatorEmployee->first_name . ' ' . $evaluation->evaluatorEmployee->last_name }}
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                                   class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                   stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                   <polyline points="22 4 12 14.01 9 11.01" />
+                               </svg>
+                           </a>
+                           <p class="text-center">
+                               {{ $evaluation->evaluatorEmployee->department->name . ' - ' . $evaluation->evaluatorEmployee->position }}
+                           </p>
+                       </div>
+                   </div>
+               </div>
 
-        <div class="bg-white">
-            <div>
-                <ul style="list-style: none;">
-                    @foreach ($partsWithFactors as $partWithFactors)
-                        <li style="list-style: none;">
-                            <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-                            <ul style="list-style: none;">
-                                @foreach ($partWithFactors['factors'] as $factorData)
-                                    <li style="list-style: none;">
+               <div class="col-md-6">
+                   <div class="form-group row">
+                       <label class="col-lg-3 col-form-label">REVIEWED BY: </label>
+                       <div class="col-lg-7">
+                           @if ($evaluation->approver_id)
+                               <a href="#"
+                                   @if ($evaluation->status == 2) class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
+                                   @elseif ($evaluation->status == 3)
+                                   class="btn btn-m bg-danger-light mb-2 text-center strong-text form-control"   @else class="btn btn-m bg-warning-light mb-2 text-center strong-text form-control" @endif
+                                   style="cursor: default;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
+                                   @if ($evaluation->status == 2)
+                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                           height="24" class="main-grid-item-icon" fill="none"
+                                           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                           stroke-width="2">
+                                           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                           <polyline points="22 4 12 14.01 9 11.01" />
+                                       </svg>
+                                   @elseif ($evaluation->status == 3)
+                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                           height="24" class="main-grid-item-icon" fill="none"
+                                           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                           stroke-width="2">
+                                           <circle cx="12" cy="12" r="10" />
+                                           <line x1="15" x2="9" y1="9" y2="15" />
+                                           <line x1="9" x2="15" y1="9" y2="15" />
+                                       </svg>
+                                   @elseif ($evaluation->status == 4)
+                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                           height="24" class="main-grid-item-icon" fill="none"
+                                           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                           stroke-width="2">
+                                           <circle cx="12" cy="12" r="10" />
+                                           <line x1="12" x2="12" y1="8" y2="12" />
+                                           <line x1="12" x2="12.01" y1="16" y2="16" />
+                                       </svg>
+                                   @endif
+                               </a>
+                           @else
+                               <a href="#"
+                                   class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control"
+                                   style="cursor: default;">Pending Review
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                       height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                       stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                       <circle cx="12" cy="12" r="10" />
+                                       <polyline points="12 6 12 12 16 14" />
+                                   </svg>
+                               </a>
+                           @endif
+                           <p class="text-center">
+                               @if ($evaluation->approver_id)
+                                   {{ $evaluation->approverEmployee->department->name . ' - ' . $evaluation->approverEmployee->position }}
+                               @else
+                                   APPROVER
+                               @endif
+                           </p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="m-t-15">
+               <div class="comment">
+                   <div class="form-group">
+                       <label for="recommendations">RECOMMENDATION:</label>
+                       <textarea class="form-control" wire:model="recommendationNote" rows="4"
+                           placeholder="{{ $evaluation->recommendation_note }}"></textarea>
+                   </div>
+               </div>
+           </div>
+           {{-- END EVALUATORS OR APPROVERS INPUTS --}}
 
-                                        <div class="row">
-                                            <div class="col-6 text-left">
-                                                <h5>{{ $factorData['factor']->name }}</h5>
-                                                <p>{{ $factorData['factor']->description }}</p>
-                                            </div>
-                                            <div class="col-6 text-center">
-                                                <div class="">
-                                                    <label class="radio-inline">
-                                                        @if ($loop->first)
-                                                            <span>Allotted<br><br></span>
-                                                        @endif
-                                                        <span
-                                                            class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                                    </label>
-
-                                                    @foreach ($factorData['rating_scales'] as $ratingScale)
-                                                        <label class="radio-inline">
-                                                            <!-- Display rating scale and its equivalent points -->
-                                                            {{ $ratingScale->acronym }}<br>
-                                                            {{ $ratingScale->equivalent_points }}<br>
-
-                                                            <!-- Radio button for each rating scale -->
-                                                            <input class="custom-radio" type="radio"
-                                                                name="rating_scale_id_{{ $factorData['factor']->id }}"
-                                                                value="{{ $ratingScale->equivalent_points }}"
-                                                                wire:model="selectedValues.{{ $factorData['factor']->id }}"
-                                                                wire:click="updateSelectedValue({{ $factorData['factor']->id }}, {{ $ratingScale->equivalent_points }})">
-
-                                                        </label>
-                                                    @endforeach
-
-                                                    <label class="radio-inline">
-                                                        @if ($loop->parent->first && $loop->first)
-                                                            <span>POINTS<br><br>
-                                                        @endif
-                                                        <span id="points-{{ $factorData['factor']->id }}"
-                                                            class="box">
-                                                            {{ $selectedValues[$factorData['factor']->id] ?? 0 }}
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="comment m-t-10">
-                                                    <div class="form-group">
-                                                        <label for="">Specific situations/incidents to
-                                                            support rating:</label>
-                                                        <textarea placeholder="Type here..." class="form-control" wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                            wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                            <div class="c m-t-20 m-r-15">
-                                <strong>
-                                    <span>Total Actual Points/Rate =
-                                        {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                        <span class="box">
-                                            {{ $totalRates[$partWithFactors['part']->id] }}</span>
-                                    </span>
-                                </strong>
-                            </div>
-                            <div class="m-b-30 p-20"></div>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-
-        <button wire:click="submitStep1" class="btn btn-primary btn-right">Next Page>></button>
-    </form>
-
-</div>
+           {{-- EMPLOYEE INPUTS --}}
+           <div class="row m-t-50">
+               <div class="col-md-6">
+                   <div class="form-group row">
+                       <label class="col-lg-3 col-form-label">READ: </label>
+                       <div class="col-lg-7">
+                           @if ($evaluation->ratees_comment == null)
+                               <a class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control"
+                                   style="cursor: default;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                       height="24" class="main-grid-item-icon" fill="none"
+                                       stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                       stroke-width="2">
+                                       <circle cx="12" cy="12" r="10" />
+                                       <polyline points="12 6 12 12 16 14" />
+                                   </svg>
+                               </a>
+                               <p class="text-center">
+                                   NAME OF EMPLOYEE
+                               </p>
+                           @else
+                               <a href="#"
+                                   class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
+                                   style="cursor: default;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                       height="24" class="main-grid-item-icon" fill="none"
+                                       stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                       stroke-width="2">
+                                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                       <polyline points="22 4 12 14.01 9 11.01" />
+                                   </svg>
+                               </a>
+                               <p class="text-center">
+                                   {{ $evaluation->employee->department->name . ' - ' . $evaluation->employee->position }}
+                               </p>
+                           @endif
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="comment m-t-15">
+               <div class="form-group">
+                   <label for="ratee_comments">RATEE’S COMMENTS:</label>
+                   <textarea class="form-control" wire:model="rateesComment" rows="4"
+                       placeholder="{{ $evaluation->ratees_comment }}"></textarea>
+               </div>
+           </div>
+           {{-- END EMPLOYEE INPUTS --}}

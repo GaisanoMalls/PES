@@ -71,7 +71,6 @@
     @endif
     <br>
     @if ($currentStep === 1)
-
         <div class="bg-white">
             <div>
                 <ul style="list-style: none;">
@@ -80,8 +79,6 @@
                         @if ($index + 1 == $currentPart)
                             <div class="rating-scale"></div>
                             <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-
-
                             @foreach ($partWithFactors['factors'] as $factorData)
                                 <li style="list-style: none;">
                                     <div class="row">
@@ -132,7 +129,7 @@
                                                         support rating:</label>
                                                     <textarea placeholder="Type here..." class="form-control" rows="2"
                                                         wire:model="factorNotes.{{ $factorData['factor']->id }}"
-                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="100"></textarea>
+                                                        wire:change="updateNote({{ $factorData['factor']->id }}, $event.target.value)" maxlength="200"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -306,6 +303,22 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">RATED BY: </label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control text-center"
+                                    value="{{ Auth::user()->employee->first_name . ' ' . Auth::user()->employee->last_name }}"
+                                    disabled readonly />
+                                <p class="text-center">
+                                    {{ Auth::user()->employee->department->name . ' - ' . Auth::user()->employee->position }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
                 <div class="m-t-30">
@@ -316,16 +329,13 @@
                                 wire:model="recommendationNote" wire:change="updateComment('recommendations')" maxlength="1000"></textarea>
                         </div>
                     </div>
-                    <div class="comment m-t-10">
-                        <div class="form-group">
-                            <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                            <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control"
-                                wire:model="rateesComment" wire:change="updateComment('ratee_comments')" maxlength="1000"></textarea>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
+
+
+
 
         <button wire:click="goBackToStep({{ $lastStep }})" class="btn btn-primary btn-left">Back</button>
 

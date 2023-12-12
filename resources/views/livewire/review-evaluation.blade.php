@@ -186,7 +186,7 @@
                                                     <label for="">Specific
                                                         situations/incidents
                                                         to support rating:</label>
-                                                    <textarea class="form-control" readonly disabled>{{ $factorNotes[$factorData['factor']->id] ?? '' }}</textarea> {{-- Display the factor note --}}
+                                                    <textarea class="form-control" rows="3" readonly disabled>{{ $factorNotes[$factorData['factor']->id] ?? '' }}</textarea> {{-- Display the factor note --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -212,267 +212,356 @@
         </form>
     @elseif ($currentStep === 2)
         <div class="bg-white2 p-20">
-            <ul style="list-style: none;">
-                <table class="table table-borderless">
-                    <thead>
-                        <tr>
-                            <th>Performance Measurement</th>
-                            <th>Criteria</th>
-                            <th>Total Actual Points/Rate</th>
-                            <th>Passing Points/Rate</th>
-                            <th>Ratee's Performance Level</th>
-                            <th>Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($partsWithFactors as $index => $partWithFactors)
-                            <tr>
-                                <td>{{ $partWithFactors['part']->name }}</td>
-                                <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                                <td class="text-center">{{ $partWithFactors['totalRate'] }}</td>
-                                @if ($loop->first)
-                                    <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
-                                    <td rowspan="5">
-                                        <ul>
-                                            @foreach ($ratingScales as $scale)
-                                                @if ($scale['name'] == 'Outstanding')
-                                                    @if ($totalRateForAllParts >= 95)
-                                                        <strong> 95-100% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        95-100% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'High Average')
-                                                    @if ($totalRateForAllParts >= 90 && $totalRateForAllParts <= 94)
-                                                        <strong>90-94% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        90-94% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Average')
-                                                    @if ($totalRateForAllParts >= 80 && $totalRateForAllParts <= 89)
-                                                        <strong>80-89% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        80-89% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Satisfactory')
-                                                    @if ($totalRateForAllParts >= 70 && $totalRateForAllParts <= 79)
-                                                        <strong>70-79% {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        70-79% {{ $scale['name'] }}
-                                                    @endif
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Poor')
-                                                    @if ($totalRateForAllParts <= 69)
-                                                        <strong> 69% & below {{ $scale['name'] }}</strong>
-                                                    @else
-                                                        69% & below {{ $scale['name'] }}
-                                                    @endif
-                                        </ul>
+            @include('components.summary-table-review', ['evaluation' => $evaluation])
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="form-group row">
+                    <label class="col-lg-3 col-form-label">RATED BY: </label>
+                    <div class="col-lg-7">
+                        <a class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
+                            style="cursor: default;">{{ $evaluation->evaluatorEmployee->first_name . ' ' . $evaluation->evaluatorEmployee->last_name }}
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                        </a>
+                        <p class="text-center">
+                            {{ $evaluation->evaluatorEmployee->department->name . ' - ' . $evaluation->evaluatorEmployee->position }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6">
+                <div class="form-group row">
+                    <label class="col-lg-3 col-form-label">REVIEWED BY: </label>
+                    <div class="col-lg-7">
+                        @if ($evaluation->approver_id)
+                            <a href="#"
+                                @if ($evaluation->status == 2) class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
+                                   @elseif ($evaluation->status == 3)
+                                   class="btn btn-m bg-danger-light mb-2 text-center strong-text form-control" @else class="btn btn-m bg-warning-light mb-2 text-center strong-text form-control" @endif
+                                style="cursor: default;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
+                                @if ($evaluation->status == 2)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                        height="24" class="main-grid-item-icon" fill="none"
+                                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                    </svg>
+                                @elseif ($evaluation->status == 3)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                        height="24" class="main-grid-item-icon" fill="none"
+                                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="15" x2="9" y1="9" y2="15" />
+                                        <line x1="9" x2="15" y1="9" y2="15" />
+                                    </svg>
+                                @elseif ($evaluation->status == 4)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                        height="24" class="main-grid-item-icon" fill="none"
+                                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" x2="12" y1="8" y2="12" />
+                                        <line x1="12" x2="12.01" y1="16" y2="16" />
+                                    </svg>
                                 @endif
-                        @endforeach
-            </ul>
-            </td>
-    @endif
-    <td>
-        @if ($loop->iteration == 1)
-            @if ($totalRateForAllParts >= 80)
-                <a class="btn btn-sm bg-success-light mr-2"><strong>Passed</strong></a>
-            @else
-                Passed
-            @endif
-        @elseif ($loop->iteration == 2)
-            @if ($totalRateForAllParts < 80)
-                <a class="btn btn-sm bg-danger-light mr-2"><strong>Failed</strong></a>
-            @else
-                Failed
-            @endif
-        @endif
-    </td>
-    </tr>
-    @endforeach
-
-
-    </tr>
-
-    <tr>
-        <td>Total</td>
-        <td>100%</td>
-        <td class="text-center"><strong>{{ $totalRateForAllParts }}</strong></td>
-        <td></td>
-        <td></td>
-    </tr>
-    </tbody>
-    </table>
-    <div class="m-t-50">
-        <div class="comment">
-            <div class="form-group">
-                <label for="recommendations">RECOMMENDATION:</label>
-                <textarea name="recommendations" id="recommendations" placeholder="Write a message" class="form-control" readonly
-                    disabled>{{ $evaluation->recommendation_note }}</textarea>
+                            </a>
+                        @else
+                            <a href="#"
+                                class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control"
+                                style="cursor: default;">Pending Review
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                    height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </a>
+                        @endif
+                        <p class="text-center">
+                            @if ($evaluation->approver_id)
+                                {{ $evaluation->approverEmployee->department->name . ' - ' . $evaluation->approverEmployee->position }}
+                            @else
+                                APPROVER
+                            @endif
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="comment m-t-10">
+
+
+        <div class="m-t-15">
+            <div class="comment">
+                <div class="form-group">
+                    <label for="recommendations">RECOMMENDATION:</label>
+                    <textarea name="recommendations" id="recommendations" placeholder="Write a message" rows="4"
+                        class="form-control" readonly disabled>{{ $evaluation->recommendation_note }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-t-30">
+            <div class="col-xl-6">
+                <div class="form-group row">
+                    <label class="col-lg-3 col-form-label">READ: </label>
+                    <div class="col-lg-7">
+                        @if ($evaluation->ratees_comment == null)
+                            <a class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control"
+                                style="cursor: default;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                    height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </a>
+                            <p class="text-center">
+                                NAME OF EMPLOYEE
+                            </p>
+                        @else
+                            <a href="#"
+                                class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
+                                style="cursor: default;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                    height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                            </a>
+                            <p class="text-center">
+                                {{ $evaluation->employee->department->name . ' - ' . $evaluation->employee->position }}
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="comment m-t-5">
             <div class="form-group">
                 <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                <textarea name="ratee_comments" id="ratee_comments" placeholder="Write a message" class="form-control" readonly
-                    disabled>{{ $evaluation->ratees_comment }}</textarea>
+                <textarea wire:model="rateeComment" id="ratee_comments" rows="4"
+                    @if (Auth::user()->role_id == 4) placeholder="Write a comment to your evaluation" @endif class="form-control"
+                    @if (!$isEditing) readonly @endif></textarea>
             </div>
-        </div>
-
-    </div>
-    @if ($evaluation->recommendation)
-        <div class="m-t-30">
-            <h4 class="text-center">Recommendation</h4>
-            <div class="row">
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="current_salary">Current Salary:</label>
-                        <input type="number" class="form-control" wire:model="currentSalary" readonly disabled
-                            value="{{ $evaluation->recommendation->current_salary }}">
-                    </div>
-                </div>
-                <div class="col-4">
-
-                    <div class="form-group">
-                        <label for="recommended_position">Recommended Position:</label>
-                        <input type="text" class="form-control" wire:model="recommendedPosition" readonly disabled
-                            value="{{ $evaluation->recommendation->recommended_position }}">
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="level">Level:</label>
-                        <input type="text" class="form-control" wire:model="level" readonly disabled
-                            value="{{ $evaluation->recommendation->level }}">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="recommended_salary">Recommended Salary:</label>
-                        <input type="number" class="form-control" wire:model="recommendedSalary" readonly disabled
-                            value="{{ $evaluation->recommendation->recommended_salary }}">
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="recommended_salary">Percentage Increase:</label>
-                        <input type="number" class="form-control"
-                            value="{{ $evaluation->recommendation->percentage_increase }}" readonly disabled>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                        <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                            value="{{ $evaluation->recommendation->effectivity }}" readonly disabled>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="remarks">Remarks:</label>
-                <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks" readonly>{{ $evaluation->recommendation->remarks }}</textarea>
-            </div>
-
-        </div>
-    @endif
-
-    <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
-            class="btn btn-outline-success">Back</button></a>
-    @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
-        <button wire:click="approveEvaluation" wire:loading.attr="disabled"
-            @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
-            <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
-                role="status"></span>
-            <span wire:loading.remove wire:target="approveEvaluation"></span>Approve
-            Evaluation
-        </button>
-
-        <button data-toggle="modal" data-target="#disapproveModal"
-            @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
-            Evaluation
-        </button>
-    @endif
-
-
-    <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 ">View
-        Clarifications</button>
-
-    @if ($showClarificationSection)
-        <div class="m-t-30">
-            @if ($clarifications->count() > 0)
-                @foreach ($clarifications as $clarification)
-                    <div class="widget author-widget">
-                        <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
-                            {{ $clarification->commentorName->last_name }} -
-                            {{ $clarification->commentor->role->name }}</span>
-                        <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
-                        <div class="about-author">
-                            <div class="author-details">
-                                {{-- Editing mode --}}
-                                @if ($editingClarificationId === $clarification->id)
-                                    <textarea wire:model="clarificationDescription" class="form-control" placeholder="Write your clarifications.."></textarea>
-                                    <a href="#"
-                                        wire:click.prevent="submitClarification({{ $clarification->id }})">Update</a>
-                                    <a href="#" wire:click.prevent="cancelEdit">Cancel</a>
-                                @else
-                                    {{-- Display mode --}}
-                                    <p>
-                                        {{ $clarification->description }}</p>
-                                    {{-- Check if authenticated user's employee_id is equal to clarification's commentor_id --}}
-                                    @auth
-                                        @if (auth()->user()->employee_id == $clarification->commentor_id)
-                                            {{-- Add your delete button here --}}
-                                            <a href="#"
-                                                wire:click.prevent="deleteClarification({{ $clarification->id }})"
-                                                class="span-ED">Delete</a>
-                                            {{-- Change the link based on whether in editing mode or not --}}
-                                            @if ($editingClarificationId === $clarification->id)
-                                                <a href="#" wire:click.prevent="cancelEdit"
-                                                    class="span-ED">Cancel</a>
-                                            @else
-                                                <a href="#"
-                                                    wire:click.prevent="editClarification({{ $clarification->id }})"
-                                                    class="span-ED">Update</a>
-                                            @endif
-                                        @endif
-                                    @endauth
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <p>No clarifications available.</p>
+            @if (Auth::user()->role_id == 4)
+                @if (!$isEditing)
+                    @if ($evaluation->ratees_comment == null)
+                        <button wire:click="setEditMode" class="btn btn-secondary m-b-30">
+                            Add Comment
+                        </button>
+                    @endif
+                    @if ($evaluation->ratees_comment != null)
+                        <button wire:click="setEditMode" class="btn btn-secondary m-b-30">
+                            Edit
+                        </button>
+                    @endif
+                @else
+                    <button wire:click="storeRateeComment" class="btn btn-primary m-b-30">
+                        Save
+                    </button>
+                    <button wire:click="setViewMode" class="btn btn-secondary m-b-30">
+                        Cancel
+                    </button>
+                @endif
             @endif
 
-
-            {{-- Hide the form when in editing mode --}}
-            <div class="form-group">
-                @if ($editingClarificationId)
-                @else
-                    <label for="description">Description:</label>
-                    <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
-                        id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
-                    <div class="m-t-15">
-                        <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
-                            Clarification</button>
-                    </div>
-                @endif
-            </div>
         </div>
 
 
-    @endif
 
+        @if ($showClarificationSection)
+            <div class="m-t-30">
+                @if ($clarifications->count() > 0)
+                    @foreach ($clarifications as $clarification)
+                        <div class="widget author-widget">
+                            <span class="blog-author-name">{{ $clarification->commentorName->first_name }}
+                                {{ $clarification->commentorName->last_name }} -
+                                {{ $clarification->commentor->role->name }}</span>
+                            <span class="span-left">{{ $clarification->created_at->diffForHumans() }}</span>
+                            <div class="about-author">
+                                <div class="author-details">
+                                    {{-- Editing mode --}}
+                                    @if ($editingClarificationId === $clarification->id)
+                                        <textarea wire:model="clarificationDescription" class="form-control" placeholder="Write your clarifications.."></textarea>
+                                        <a href="#"
+                                            wire:click.prevent="submitClarification({{ $clarification->id }})">Update</a>
+                                        <a href="#" wire:click.prevent="cancelEdit">Cancel</a>
+                                    @else
+                                        <p>
+                                            {{ $clarification->description }}</p>
+                                        @auth
+                                            @if (auth()->user()->employee_id == $clarification->commentor_id)
+                                                <a href="#"
+                                                    wire:click.prevent="deleteClarification({{ $clarification->id }})"
+                                                    class="span-ED">Delete</a>
+                                                @if ($editingClarificationId === $clarification->id)
+                                                    <a href="#" wire:click.prevent="cancelEdit"
+                                                        class="span-ED">Cancel</a>
+                                                @else
+                                                    <a href="#"
+                                                        wire:click.prevent="editClarification({{ $clarification->id }})"
+                                                        class="span-ED">Update</a>
+                                                @endif
+                                            @endif
+                                        @endauth
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <p>No clarifications available.</p>
+                @endif
+
+
+                {{-- Hide the form when in editing mode --}}
+                <div class="form-group">
+                    @if ($editingClarificationId)
+                    @else
+                        <label for="description">Description:</label>
+                        <textarea rows="3" @if (!$editingClarificationId) wire:model="clarificationDescription" @endif
+                            id="description" class="form-control" placeholder="Write your clarifications.."></textarea>
+                        <div class="m-t-15">
+                            <button wire:click="submitClarification" class="btn btn-outline-success btn-center">Submit
+                                Clarification</button>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+
+        @endif
+
+
+        <div class="m-b-15 m-t-15">
+            <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
+                    class="btn btn-outline-success m-t-15">Back</button></a>
+            @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
+                <button wire:click="approveEvaluation" wire:loading.attr="disabled"
+                    @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
+                    <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
+                        role="status"></span>
+                    <span wire:loading.remove wire:target="approveEvaluation"></span>Approve
+                    Evaluation
+                </button>
+                <button data-toggle="modal" data-target="#disapproveModal"
+                    @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
+                    Evaluation
+                </button>
+                @if ($evaluation->recommendation && Auth::user()->role_id == 3)
+                    <button type="button" class="btn btn-outline-secondary btn-right m-r-5" data-toggle="modal"
+                        data-target="#recommendationModal">
+                        View Recommendation
+                    </button>
+                @endif
+            @endif
+            <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5"
+                @if ($showClarificationSection) disabled @endif>View
+                Clarifications</button>
+        </div>
 
     @endif
 
     <!-- Modal -->
+    @if ($evaluation->recommendation)
+        <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog"
+            aria-labelledby="recommendationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-m" role="document"> <!-- Add 'modal-lg' class for a larger width -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="recommendationModalLabel">Recommendation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="m-t-10">
+                            <div class="justify-content-center">
+                                <div class="form-group">
+                                    <label for="current_salary">Current Salary:</label>
+                                    <input type="number" class="form-control" wire:model="currentSalary"
+                                        wire:change="calculatePercentageIncrease"
+                                        placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
+                                        disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recommended_salary">Recommended Salary:</label>
+                                    <input type="number" class="form-control" wire:model="recommendedSalary"
+                                        wire:change="calculatePercentageIncrease"
+                                        placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
+                                        disabled>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label for="recommended_salary">Percentage Increase:</label>
+                                    <input type="number" class="form-control"
+                                        placeholder="{{ $evaluation->recommendation->percentage_increase }}" readonly
+                                        disabled wire:model="percentageIncrease">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="recommended_position">Recommended Position:</label>
+                                    <input type="text" class="form-control" wire:model="recommendedPosition"
+                                        placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
+                                        disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="level">Level:</label>
+                                <input type="text" class="form-control" wire:model="level"
+                                    placeholder="{{ $evaluation->recommendation->level ?? '' }}" disabled>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            @php
+                                $effectivity = optional($evaluation->recommendation)->effectivity;
+                            @endphp
+                            <label for="effectivityTimestamp">Effectivity Timestamp:
+                                {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
+                            </label>
+                            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                                disabled>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label for="remarks">Remarks:</label>
+                            <textarea name="remarks" id="remarks" rows="5" class="form-control" wire:model="remarks"
+                                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" disabled></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
         aria-labelledby="disapproveModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -510,5 +599,4 @@
 
 </div>
 
-<!-- Add any additional content or buttons for the review page -->
 </div>

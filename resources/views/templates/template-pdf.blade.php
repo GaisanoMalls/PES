@@ -4,31 +4,21 @@
 <style>
     .form-control {
         color: #333;
-        font-size: 15px;
-        height: 40px
-    }
-
-    .form-control:focus {
-        box-shadow: none;
-        outline: 0
-    }
-
-    .form-control.form-control-sm {
-        height: calc(1.5em + .5rem + 2px)
-    }
-
-    .form-control.form-control-lg {
-        height: calc(1.5em + 1rem + 2px)
+        font-size: 5px;
+        height: 85px;
+        resize: none;
+        /* Prevent resizing of the textarea */
     }
 
 
 
-    .form-group {
-        margin-bottom: 10px;
-    }
+
+
+
+
 
     .input-group .form-control {
-        height: 40px
+        height: 65px
     }
 
 
@@ -104,6 +94,9 @@
         margin-left: 180px !important
     }
 
+    .m-t-3 {
+        margin-top: 3px !important
+    }
 
     .m-t-5 {
         margin-top: 5px !important
@@ -172,6 +165,11 @@
     .bg-info-light {
         background-color: #1363ad(2, 182, 179, .12) !important;
         color: #1A8DF8 !important
+    }
+
+    .bg-warning-pending {
+        background-color: rgba(255, 152, 0, .12) !important;
+        color: #228AA6 !important
     }
 
     .bg-primary-light {
@@ -319,7 +317,7 @@
     .form-control {
         padding: 0.375rem 0.75rem;
         font-size: 1rem;
-        line-height: 1.5;
+        line-height: 1;
         border-color: #6c757d;
 
     }
@@ -332,260 +330,382 @@
         text-align: center;
     }
 
-
     .page-break {
         page-break-before: always;
     }
+
+    .container22 {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        /* Align items to the right side */
+    }
+
+    .border-side {
+        border: 2px solid #383838;
+        padding: 15px;
+        border-style: double;
+    }
 </style>
 <div class="m-t-30">
-    <div class="container">
-        <div>
-            <div class="bg-white2">
-                <h3 class="text-center">DSG Sons Group Inc.</h4>
-                    <h4 class="text-center">J.P Laurel Ave., Davao City</h4>
-                    <h1 class="text-center">{{ $template->name }}</h1>
-                    <div class="employee-details">
+    <div>
 
+        <div class="bg-white2sdsd">
+            <h3 class="text-center"><strong>DSG Sons Group Inc.</strong></h4>
+                <h5 class="text-center">J.P Laurel Ave., Davao City</h5>
+                <h2 class="text-center"><strong>{{ $template->name }}</strong></h2>
+                <div class="employee-details">
+
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="department">Department</label>
+                            <input type="text" class="form-control" id="department" name="department"
+                                style="height: 45px !important;">
+                        </div>
+                        <div class="col-4">
+                            <label for="employee_id">Employee ID</label>
+                            <input type="text" class="form-control" id="employee_id" name="employee_id"
+                                style="height: 45px !important;">
+                        </div>
+                        <div class="col-4">
+                            <label for="first_name">Employee Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name"
+                                style="height: 45px !important;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="position">Position</label>
+                            <input type="text" class="form-control" id="position" name="position"
+                                style="height: 45px !important;">
+                        </div>
+                        <div class="col-4">
+                            <label for="covered_period_start">Join Date</label>
+                            <input class="form-control" type="date" id="covered_period_start"
+                                name="covered_period_start" style="height: 45px !important;">
+                        </div>
+                        <div class="col-4">
+                            <label for="created_at">Date of Evaluation</label>
+                            <input class="form-control" type="text" id="created_at" name="created_at"
+                                style="height: 45px !important;">
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+
+        <div class="rating-scale"></div>
+
+        <span>Direction: Rate the following factors by checking the appropriate box which
+            indicates the most accurate appraisal of the ratee’s performance on the job.
+            The rating scale are outlined below:
+        </span>
+
+        @foreach ($ratingScales as $scale)
+            <div class="rating-scale-item">
+
+                <strong> <span class="rating-scale-acronym">{{ $scale->acronym }}=</span>
+                    <span class="rating-scale-name"> {{ $scale->name }}:</span></strong>
+                <span class="rating-scale-description">{{ $scale->description }}</span>
+            </div>
+        @endforeach
+
+        @foreach ($partsWithFactors as $index => $partWithFactors)
+            <div class="rating-scale"></div>
+            <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
+
+            @php $factorCount = 0; @endphp
+
+            @foreach ($partWithFactors['factors'] as $factorData)
+                {{-- Only display 2 factors on the first loop --}}
+                @if ($loop->parent->first && $factorCount < 2)
+                    <li style="list-style: none;">
                         <div class="row">
-                            <div class="col-4">
-                                <label for="department">Department</label>
-                                <input type="text" class="form-control" id="department" name="department">
+                            {{-- FACTOR RIGHT SIDE --}}
+                            <div class="col-6 text-left">
+                                @if ($loop->first)
+                                    <h5 class="m-l-90 m-b-30">
+                                        Factors</h5>
+                                @endif
+                                <h5>{{ $factorData['factor']->name }}</h5>
+                                <p>{{ $factorData['factor']->description }}</p>
                             </div>
-                            <div class="col-4">
-                                <label for="employee_id">Employee ID</label>
-                                <input type="text" class="form-control" id="employee_id" name="employee_id">
-                            </div>
-                            <div class="col-4">
-                                <label for="first_name">Employee Name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name">
+                            {{-- FACTOR LEFT SIDE --}}
+                            <div class="col-6 text-center">
+                                <label class="radio-inline">
+                                    @if ($loop->first)
+                                        <span>Allotted<br><br></span>
+                                    @endif
+                                    <span
+                                        class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                                </label>
+                                {{-- DISPLAY THE FACTOR RATING SCALES --}}
+                                @foreach ($factorData['rating_scales'] as $key => $ratingScale)
+                                    <label class="radio-inline">
+                                        {{ $ratingScale->acronym }}<br>
+                                        {{ $ratingScale->equivalent_points }}
+
+                                        <br>
+                                        <input disabled class="custom-radio" type="radio"
+                                            name="rating_{{ $ratingScale->factor_id }}"
+                                            value="{{ $ratingScale->equivalent_points }}">
+                                    </label>
+                                @endforeach
+                                <label class="radio-inline">
+                                    @if ($loop->parent->first && $loop->first)
+                                        <span>POINTS<br><br>
+                                    @endif
+                                    <span id="points-{{ $factorData['factor']->id }}" class="box">
+
+                                    </span>
+                                </label>
+                                {{-- DISPLAY THE COMMENT OF FACTOR --}}
+                                <div class="comment m-t-3">
+                                    <div class="form-group">
+                                        <label for="">Specific situations/incidents to support rating:</label>
+                                        <textarea class="form-control" style="overflow: hidden;"></textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <label for="position">Position</label>
-                                <input type="text" class="form-control" id="position" name="position">
-                            </div>
-                            <div class="col-4">
-                                <label for="covered_period_start">Join Date</label>
-                                <input class="form-control" type="date" id="covered_period_start">
-                            </div>
-                            <div class="col-4">
-                                <label for="created_at">Date of Evaluation</label>
-                                <input class="form-control" type="text" id="created_at" name="created_at">
+                    </li>
+                    @php $factorCount++; @endphp
+                @endif
+            @endforeach
+
+            {{-- Add page-break after displaying 2 factors on the first loop --}}
+            @if ($loop->first)
+                <div class="page-break"></div>
+            @endif
+
+            {{-- Continue with the remaining factors --}}
+            @foreach ($partWithFactors['factors'] as $factorData)
+                {{-- Skip the factors already displayed --}}
+                @if ($loop->parent->first && $factorCount > 0)
+                    @php
+                        $factorCount--;
+                        continue;
+                    @endphp
+                @endif
+                {{-- Skip the second factor on the second page --}}
+                @if (!$loop->parent->first && $factorCount === 1)
+                    @php
+                        $factorCount--;
+                        continue;
+                    @endphp
+                @endif
+                {{-- Display the remaining factors --}}
+                <li style="list-style: none;">
+                    <div class="row">
+                        {{-- FACTOR RIGHT SIDE --}}
+                        <div class="col-6 text-left">
+                            @if ($loop->first)
+                                <h5 class="m-l-90 m-b-30">
+                                    Factors</h5>
+                            @endif
+                            <h5>{{ $factorData['factor']->name }}</h5>
+                            <p>{{ $factorData['factor']->description }}</p>
+                        </div>
+
+                        {{-- FACTOR LEFT SIDE --}}
+                        <div class="col-6 text-center">
+                            <label class="radio-inline">
+                                @if ($loop->first)
+                                    <span>Allotted<br><br></span>
+                                @endif
+                                <span
+                                    class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
+                            </label>
+                            {{-- DISPLAY THE FACTOR RATING SCALES --}}
+                            @foreach ($factorData['rating_scales'] as $key => $ratingScale)
+                                <label class="radio-inline">
+                                    {{ $ratingScale->acronym }}<br>
+                                    {{ $ratingScale->equivalent_points }}
+
+                                    <br>
+                                    <input disabled class="custom-radio" type="radio"
+                                        name="rating_{{ $ratingScale->factor_id }}"
+                                        value="{{ $ratingScale->equivalent_points }}">
+                                </label>
+                            @endforeach
+                            <label class="radio-inline">
+                                @if ($loop->parent->first && $loop->first)
+                                    <span>POINTS<br><br>
+                                @endif
+                                <span id="points-{{ $factorData['factor']->id }}" class="box">
+                                </span>
+                            </label>
+                            {{-- DISPLAY THE COMMENT OF FACTOR --}}
+                            <div class="comment m-t-3">
+                                <div class="form-group">
+                                    <label for="">Specific situations/incidents to support rating:</label>
+                                    <textarea class="form-control" style="overflow: hidden;"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </li>
+            @endforeach
+
+            <div class="c m-t-20 m-r-15">
+                <strong>
+                    <span>Total Actual Points/Rate = <span class="box"></span></span>
+                </strong>
             </div>
-            <div class="bg-white2">
-                <div>
-                    <ul style="list-style: none;">
-                        @foreach ($partsWithFactors as $partWithFactors)
-                            <div class="rating-scale"></div>
-                            <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
 
-                            @foreach ($partWithFactors['factors'] as $factorData)
-                                <div class="row">
-                                    <div class="col-6 text-left">
-                                        <h5>{{ $factorData['factor']->name }}</h5>
-                                        <p>{{ $factorData['factor']->description }}</p>
-                                    </div>
+            <div class="page-break"></div>
+        @endforeach
 
-                                    <div class="col-6 text-center">
-                                        <div class="">
-                                            <label class="radio-inline">
-                                                @if ($loop->first)
-                                                    <span>Allotted%<br><br></span>
-                                                @endif
-                                                <span
-                                                    class="box">{{ $factorData['rating_scales']->max('equivalent_points') }}%</span>
-                                            </label>
-                                            @foreach ($factorData['rating_scales'] as $key => $ratingScale)
-                                                <label class="radio-inline">
-                                                    {{ $ratingScale->acronym }}<br>
-                                                    {{ $ratingScale->equivalent_points }}
 
-                                                    <br>
-                                                    <input disabled class="custom-radio" type="radio"
-                                                        name="rating_{{ $ratingScale->factor_id }}">
-                                                </label>
-                                            @endforeach
-                                            <label class="radio-inline">
-                                                @if ($loop->parent->first && $loop->first)
-                                                    <span>POINTS<br><br>
-                                                @endif
-                                                <span id="points-{{ $factorData['factor']->id }}" class="box">
+        <div class="page-break"></div>
 
-                                                </span>
-                                            </label>
-                                        </div>
-                                        <div class="comment m-t-10">
-                                            <div class="form-group">
-                                                <label for="">Specific
-                                                    situations/incidents
-                                                    to support rating:</label>
-                                                <textarea class="form-control"></textarea> {{-- Display the factor note --}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="m-t-30"></div>
-                                @if ($loop->last)
-                                    <div class="c m-t-20 m-r-15">
-                                        <strong>
-                                            <span>Total Actual Points/Rate =
-                                                {{-- {{ $partWithFactors['part']->name }} - Total Rate: --}}
-                                                <span class="box">
-                                                </span>
-                                            </span>
-                                        </strong>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="page-break"></div>
-                <div class="text-center">
-                    <h3>RATING SUMMARY</h3>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Performance Measurement</th>
-                            <th>Criteria</th>
-                            <th>Total Actual Points/Rate</th>
-                            <th>Passing Points/Rate</th>
-                            <th>Ratee's Performance Level</th>
-                            <th>Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($partsWithFactors as $index => $partWithFactors)
-                            <tr>
-                                <td>{{ $partWithFactors['part']->name }}</td>
-                                <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
-                                <td> </td>
-                                @if ($loop->first)
-                                    <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
-                                    <td rowspan="5">
-                                        <ul>
-                                            @foreach ($ratingScales as $scale)
-                                                @if ($scale['name'] == 'Outstanding')
-                                                    95-100% {{ $scale['name'] }}
 
-                                                    <br>
-                                                @elseif ($scale['name'] == 'High Average')
-                                                    90-94% {{ $scale['name'] }}
+        <div class="text-center">
+            <h3>RATING SUMMARY</h3>
+        </div>
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Performance Measurement</th>
+                    <th>Criteria</th>
+                    <th>Total Actual Points/Rate</th>
+                    <th>Passing Points/Rate</th>
+                    <th>Ratee's Performance Level</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($partsWithFactors as $index => $partWithFactors)
+                    <tr>
+                        <td>{{ $partWithFactors['part']->name }}</td>
+                        <td>{{ $partWithFactors['part']->criteria_allocation }}%</td>
+                        <td class="text-center"></td>
+                        @if ($loop->first)
+                            <td style="text-align: center; vertical-align: middle" rowspan="4">80%</td>
+                            <td rowspan="5">
+                                <ul>
+                                    @foreach ($ratingScales as $scale)
+                                        @if ($scale['name'] == 'Outstanding')
+                                            95-100% {{ $scale['name'] }}
 
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Average')
-                                                    80-89% {{ $scale['name'] }}
+                                            <br>
+                                        @elseif ($scale['name'] == 'High Average')
+                                            90-94% {{ $scale['name'] }}
 
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Satisfactory')
-                                                    70-79% {{ $scale['name'] }}
+                                            <br>
+                                        @elseif ($scale['name'] == 'Average')
+                                            80-89% {{ $scale['name'] }}
 
-                                                    <br>
-                                                @elseif ($scale['name'] == 'Poor')
-                                                    69% & below {{ $scale['name'] }}
-                                        </ul>
-                                @endif
-                        @endforeach
-                        </ul>
-                        </td>
+                                            <br>
+                                        @elseif ($scale['name'] == 'Satisfactory')
+                                            70-79% {{ $scale['name'] }}
+
+                                            <br>
+                                        @elseif ($scale['name'] == 'Poor')
+                                            69% & below {{ $scale['name'] }}
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </td>
                         @endif
                         <td>
                             @if ($loop->iteration == 1)
-                                Passed
+                                <a class="btn btn-sm bg-success-light mr-2"><strong>Passed</strong></a>
                             @elseif ($loop->iteration == 2)
                                 Failed
                             @endif
                         </td>
-                        </tr>
-                        @endforeach
+                    </tr>
+                @endforeach
+                <tr>
+                    <td>Total</td>
+                    <td>100%</td>
+                    <td class="text-center"><strong></strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="m-t-50">
+            <div class="comment">
+                <div class="form-group">
+                    <label for="recommendations">RECOMMENDATION:</label>
+                    <textarea name="recommendations" id="recommendations" class="form-control" style="height: 150px; overflow: hidden;"></textarea>
+                </div>
+            </div>
+
+            <div class="comment m-t-10">
+                <div class="form-group">
+                    <label for="ratee_comments">RATEE’S COMMENTS:</label>
+                    <textarea name="ratee_comments" id="ratee_comments" class="form-control" style="height: 150px; overflow: hidden;"></textarea>
+                </div>
+            </div>
 
 
-                        </tr>
+        </div>
 
-                        <tr>
-                            <td>Total</td>
-                            <td>100%</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="m-t-50">
-                    <div class="comment">
-                        <div class="form-group">
-                            <label for="recommendations">RECOMMENDATION:</label>
-                            <textarea name="recommendations" id="recommendations" class="form-control"></textarea>
-                        </div>
+        <!-- Check if recommendation exists -->
+
+        <div class="m-t-30">
+            <h4 class="text-center">Recommendation</h4>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="current_salary">Current Salary:</label>
+                        <input type="number" class="form-control" wire:model="currentSalary"
+                            style="height: 45px !important;">
                     </div>
-
-                    <div class="comment m-t-10">
-                        <div class="form-group">
-                            <label for="ratee_comments">RATEE’S COMMENTS:</label>
-                            <textarea name="ratee_comments" id="ratee_comments" class="form-control"></textarea>
-                        </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="recommended_position">Recommended Position:</label>
+                        <input type="text" class="form-control" wire:model="recommendedPosition"
+                            style="height: 45px !important;">
                     </div>
-
-
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="level">Level:</label>
+                        <input type="text" class="form-control" wire:model="level"
+                            style="height: 45px !important;">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="recommended_salary">Recommended Salary:</label>
+                        <input type="number" class="form-control" wire:model="recommendedSalary"
+                            style="height: 45px !important;">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="recommended_salary">Percentage Increase:</label>
+                        <input type="number" class="form-control" wire:model="recommendedSalary"
+                            style="height: 45px !important;">
+                    </div>
                 </div>
 
-                <div class="m-t-30">
-                    <h4 class="text-center">Recommendation</h4>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="current_salary">Current Salary:</label>
-                                <input type="number" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="recommended_position">Recommended Position:</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="level">Level:</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                        <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                            style="height: 45px !important;">
                     </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="recommended_salary">Recommended Salary:</label>
-                                <input type="number" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="recommended_salary">Percentage Increase:</label>
-                                <input type="number" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                                <input type="datetime-local" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="remarks">Remarks:</label>
-                                <textarea name="remarks" id="remarks" class="form-control"></textarea>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="remarks">Remarks:</label>
+                        <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
+                            style="height: 150px; overflow: hidden;"></textarea>
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
+</div>

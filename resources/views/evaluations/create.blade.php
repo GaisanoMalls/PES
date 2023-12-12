@@ -7,8 +7,7 @@
         <div class="container">
 
             <livewire:evaluation-form :employee="$employee->id" :templateName="$templateName" :templateId="$template->id" />
-
-
         </div>
+
     </div>
 @endsection

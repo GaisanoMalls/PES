@@ -244,10 +244,6 @@
                                                     href="{{ route('reports.list-evaluated') }}">List of Evaluated
                                                     Employees
                                                 </a></li>
-
-
-
-
                                             <li><a class="{{ request()->routeIs('reports.list-evaluation') ? 'active' : '' }}"
                                                     href="{{ route('reports.list-evaluation') }}">List of Evaluations
                                                 </a></li>

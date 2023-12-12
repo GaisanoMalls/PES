@@ -42,6 +42,12 @@ class Evaluation extends Model
     {
         return $this->belongsTo(Employee::class, 'evaluator_id', 'id');
     }
+    public function approverEmployee()
+    {
+        return $this->belongsTo(Employee::class, 'approver_id', 'id');
+    }
+
+
 
     public function evaluationTemplate()
     {

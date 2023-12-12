@@ -336,6 +336,9 @@ div.c {
     margin-left: 180px !important
 }
 
+.m-t-100 {
+    margin-top: -25px !important
+}
 
 .m-t-5 {
     margin-top: 5px !important
@@ -664,7 +667,6 @@ button.bg-danger:hover {
 .btn-right {
   float: right;
     margin-top: 1rem;
-        width: 8rem;
 }
 .btn-left {
   float: left;
@@ -679,7 +681,10 @@ button.bg-danger:hover {
     padding-bottom: 20px;
 }
 
-
+    .form-group p {
+      color: #333; /* Set the color as needed */
+      margin-top: 5px; /* Adjust the margin as needed */
+    }
 
 .btn-info:hover,
 .btn-info:focus,
@@ -2299,7 +2304,7 @@ html.menu-opened body {
 }
 
 .page-wrapper>.content {
-    padding: 1.875rem 1.875rem 0
+    padding: 1rem 1rem 0
 }
 
 .page-header {
@@ -6146,7 +6151,10 @@ h3.page-sub-title {
 }
 
 .row{
-    margin-top: 2rem;
+    margin-top: 1rem;
+}
+.strong-text {
+    font-weight: bold;
 }
 
 .custom-checkbox {
