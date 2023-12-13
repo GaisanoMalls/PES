@@ -9,6 +9,7 @@ use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
 use App\Models\Factor;
 use App\Models\FactorRatingScale;
+use App\Models\NotificationEvaluation;
 use App\Models\Part;
 use App\Models\RatingScale;
 use App\Models\User;
@@ -21,7 +22,6 @@ use PDF;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
 use App\Models\Clarification;
-use App\Models\Notification;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Response;
@@ -158,9 +158,10 @@ class ReviewEvaluation extends Component
 
             // Send email to the evaluator
             // Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
-            Notification::create([
-                'employee_id' => $evaluator->employee_id,
-                'evaluation_id' => $this->evaluation->id,
+            NotificationEvaluation::create([
+                'type' => 'evaluation',
+                'notifiable_id' => $evaluator->employee_id,
+                'person_id' => $this->evaluation->id,
                 'notif_title' => $dataEvaluator['subject'],
                 'notif_desc' => $dataEvaluator['body'],
             ]);
@@ -178,9 +179,10 @@ class ReviewEvaluation extends Component
             foreach ($hrUsers as $hrUser) {
                 if ($hrUser->email) {
                     //     Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
-                    Notification::create([
-                        'employee_id' => $hrUser->employee_id,
-                        'evaluation_id' => $this->evaluation->id,
+                    NotificationEvaluation::create([
+                        'type' => 'evaluation',
+                        'notifiable_id' => $hrUser->employee_id,
+                        'person_id' => $this->evaluation->id,
                         'notif_title' =>  $dataHR['subject'],
                         'notif_desc' => $dataHR['body'],
                     ]);
@@ -228,9 +230,10 @@ class ReviewEvaluation extends Component
             ];
             // Send email to the evaluator
             //  Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
-            Notification::create([
-                'employee_id' => $evaluator->employee_id,
-                'evaluation_id' => $this->evaluation->id,
+            NotificationEvaluation::create([
+                'type' => 'evaluation',
+                'notifiable_id' => $evaluator->employee_id,
+                'person_id' => $this->evaluation->id,
                 'notif_title' => $dataEvaluator['subject'],
                 'notif_desc' => $dataEvaluator['body'],
             ]);
@@ -294,9 +297,10 @@ class ReviewEvaluation extends Component
 
             $this->evaluation->save();
 
-            Notification::create([
-                'employee_id' => $this->evaluation->evaluator_id,
-                'evaluation_id' => $this->evaluation->id,
+            NotificationEvaluation::create([
+                'notifiable_id' => $this->evaluation->evaluator_id,
+                'type' => 'evaluation',
+                'person_id' => $this->evaluation->id,
                 'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
                 'notif_desc' => $this->clarificationDescription,
             ]);

@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class NotificationEmployee extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'employee_id',
-        'evaluation_id',
+        'notifiable_id',
+        'type',
+        'person_id',
         'notif_title',
         'notif_desc',
     ];
 
     public function employee()
     {
-        return $this->belongsTo(User::class, 'employee_id', 'employee_id');
+        return $this->belongsTo(User::class, 'notifiable_id');
     }
-    public function evaluation()
+    public function employee2()
     {
-        return $this->belongsTo(Evaluation::class, 'evaluation_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 }

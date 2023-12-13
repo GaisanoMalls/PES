@@ -64,21 +64,31 @@
                     <ul class="nav user-menu">
                         @auth
                             <?php
-                            // Get the current authenticated user
                             $user = Auth::user();
                             
-                            // Retrieve user notifications based on employee_id, ordered by created_at in descending order
-                            $notifications = \App\Models\Notification::where('employee_id', $user->employee_id)
+                            $evaluationNotifications = \App\Models\NotificationEvaluation::select('*', \DB::raw("'evaluation' as type"))
+                                ->where('notifiable_id', $user->employee_id)
+                                ->orderBy('created_at', 'desc');
+                            
+                            $employeeNotifications = \App\Models\NotificationEmployee::select('*', \DB::raw("'employee' as type"))
+                                ->where('notifiable_id', $user->employee_id)
+                                ->orderBy('created_at', 'desc');
+                            
+                            $notifications = $evaluationNotifications
+                                ->union($employeeNotifications)
                                 ->orderBy('created_at', 'desc')
                                 ->get();
+                            
                             ?>
                         @endauth
-
                         <li class="nav-item dropdown noti-dropdown">
                             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                                 <i class="fe fe-bell"></i>
-                                <span
-                                    class="badge badge-pill">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
+                                <span class="@if ($notifications->count()) badge @endif badge-pill">
+                                    @if ($notifications->count() > 0)
+                                        {{ isset($notifications) ? $notifications->count() : '' }}
+                                    @endif
+                                </span>
                             </a>
                             <div class="dropdown-menu notifications">
                                 <div class="topnav-dropdown-header">
@@ -91,7 +101,7 @@
                                             @forelse ($notifications as $notification)
                                                 <li class="notification-message">
                                                     <a href="#"
-                                                        onclick="redirectToEvaluation('{{ $notification->evaluation_id }}', '{{ Auth::user()->role_id }}')">
+                                                        onclick="redirectToNotification('{{ $notification->type }}', '{{ $notification->person_id }}', '{{ Auth::user()->role_id }}')">
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <p class="noti-details">
@@ -107,15 +117,18 @@
                                                             </div>
                                                         </div>
                                                     </a>
-
                                                     <script>
-                                                        function redirectToEvaluation(evaluationId, userRoleId) {
-                                                            var baseUrl = '/evaluations';
-
-                                                            if (userRoleId == 2 || userRoleId == 5) {
-                                                                window.location.href = baseUrl + '/view/' + evaluationId;
-                                                            } else if (userRoleId == 3) {
-                                                                window.location.href = baseUrl + '/' + evaluationId + '/review';
+                                                        function redirectToNotification(type, targetId, userRoleId) {
+                                                            var baseUrl = '/evaluations'; // Change this to the appropriate base URL
+                                                            var baseUrl2 = '/employee_evaluations/'; // Change this to the appropriate base URL
+                                                            if (type === 'evaluation') {
+                                                                if (userRoleId == 2 || userRoleId == 5) {
+                                                                    window.location.href = baseUrl + '/view/' + targetId;
+                                                                } else if (userRoleId == 3) {
+                                                                    window.location.href = baseUrl + '/' + targetId + '/review';
+                                                                }
+                                                            } else if (type === 'employee') {
+                                                                window.location.href = baseUrl2 + targetId;
                                                             }
                                                         }
                                                     </script>
@@ -126,6 +139,7 @@
                                                 </li>
                                             @endforelse
                                         @endauth
+
                                     </ul>
                                 </div>
                                 <div class="topnav-dropdown-footer">

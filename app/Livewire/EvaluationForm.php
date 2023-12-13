@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Evaluation;
 use App\Models\EvaluationPoint;
+use App\Models\NotificationEvaluation;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\RatingScale;
@@ -16,7 +17,7 @@ use App\Models\Part;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
-use App\Models\Notification;
+
 use App\Models\Recommendation;
 
 class EvaluationForm extends Component
@@ -294,9 +295,10 @@ class EvaluationForm extends Component
         foreach ($approverUsers as $user) {
             //  Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
             // Store notification in the database
-            Notification::create([
-                'employee_id' => $user->employee_id,
-                'evaluation_id' => $evaluation->id,
+            NotificationEvaluation::create([
+                'type' => 'evaluation',
+                'notifiable_id' => $user->employee_id,
+                'person_id' => $evaluation->id,
                 'notif_title' => $data['subject'],
                 'notif_desc' => $data['body'],
             ]);

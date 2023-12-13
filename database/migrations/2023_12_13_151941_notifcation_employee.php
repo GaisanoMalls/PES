@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('notification_employees', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('employee_id');
-            $table->bigInteger('evaluation_id');
+            $table->string('type');
+            $table->unsignedBigInteger('notifiable_id');
+            $table->bigInteger('person_id');
             $table->text('notif_title');
             $table->text('notif_desc');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
             // Define foreign key constraint
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        //
     }
 };

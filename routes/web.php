@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HRController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Livewire\EditEvaluation;
 use App\Livewire\EvaluationForm;
@@ -105,6 +106,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 
+//notfication
 
 
 // Show all users
