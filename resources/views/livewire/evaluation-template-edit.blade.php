@@ -1,11 +1,27 @@
 <div>
-    <div class="row">
+    <div class="row m-t-30">
 
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Create Evaluation Template Form</h4>
+                    <h4 class="card-title">Evaluation Template</h4>
+
+                    <div class="text-left">
+                        @if ($status == 1)
+                            <a href="#" class="btn btn-m bg-success-light  m-t-15"
+                                style="cursor: default;"><strong>Published</strong></a>
+                        @elseif ($status == 2)
+                            <a href="#" class="btn btn-m bg-default-light  m-t-15"
+                                style="cursor: default;"><strong>Unpublished</strong></a>
+                        @else
+                            <a href="#" class="btn btn-m bg-default-light  m-t-15"
+                                style="cursor: default;"><strong>On
+                                    Progress</strong></a>
+                        @endif
+                    </div>
+
                     <div class="text-right">
+
                         <button wire:click="toggleEditMode" class="btn btn-outline-secondary">
                             @if ($editMode)
                                 View
@@ -20,7 +36,6 @@
 
                     </div>
                 </div>
-
 
                 <div class="card-body">
                     <form wire:submit.prevent="saveEvaluationTemplate">
@@ -124,25 +139,23 @@
                                     </div>
                                 </div>
                             @endforeach
-                            <div class="text-right m-t-15">
-                                <button type="button" class="btn btn-outline-success" wire:click="addPart"
-                                    @if (!$editMode) hidden @endif>Add
-                                    Part</button>
-                            </div>
                         </div>
-                        <div class="text-right m-t-15">
+                        <div class="text-right m-t-10">
+
+                            <button type="button" class="btn btn-outline-success" wire:click="addPart"
+                                @if (!$editMode) hidden @endif>Add Part</button>
+                        </div>
+                        <div class="text-right m-t-30">
+                            <button type="button" class="btn btn-success" wire:click="saveAsAnotherTemplate"
+                                @if (!$editMode) hidden @endif>Save As Another Template</button>
                             <button type="submit" class="btn btn-primary"
                                 @if (!$editMode) hidden @endif>Update Evaluation Template</button>
-                        </div>
 
+                        </div>
 
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
 </div>

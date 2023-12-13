@@ -12,6 +12,7 @@ class EvaluationTemplateEdit extends Component
 {
     public $templateId;
     public $name;
+    public $status;
     public $parts = [];
     public $editMode = false; // Add this property
 
@@ -24,7 +25,7 @@ class EvaluationTemplateEdit extends Component
         // Fetch the template data and populate the form fields
         $template = EvaluationTemplate::findOrFail($templateId);
         $this->name = $template->name;
-
+        $this->status = $template->status;
         foreach ($template->parts as $part) {
             $partData = [
                 'name' => $part->name,
@@ -105,9 +106,7 @@ class EvaluationTemplateEdit extends Component
 
     public function saveEvaluationTemplate()
     {
-        $this->dispatch('swal:update', [
-            'callback' => 'redirectAfterClose'
-        ]);
+        $this->dispatch('swal:update');
 
         // Update the template and related entities based on the form data
         $template = EvaluationTemplate::findOrFail($this->templateId);
@@ -185,7 +184,45 @@ class EvaluationTemplateEdit extends Component
         })->each->delete();
     }
 
+    public function saveAsAnotherTemplate()
+    {
+        // Clone the existing template
+        $template = EvaluationTemplate::findOrFail($this->templateId);
+        $clonedTemplate = $template->replicate();
+        $clonedTemplate->name = $this->name . ' (Copy)'; // You can customize the name as needed
+        $clonedTemplate->status = 2; // Set the status to 2
+        $clonedTemplate->save();
 
+        // Clone and associate the parts and factors
+        foreach ($this->parts as $part) {
+            $clonedPart = $clonedTemplate->parts()->create([
+                'name' => $part['name'],
+                'criteria_allocation' => $part['criteria_allocation'],
+            ]);
+
+            foreach ($part['factors'] as $factor) {
+                $clonedFactor = $clonedPart->factors()->create([
+                    'evaluation_template_id' => $clonedTemplate->id,
+                    'name' => $factor['name'],
+                    'description' => $factor['description'],
+                    'alloted' => $this->getMaxEquivalentPoints($factor['rating_scales']),
+                ]);
+
+                foreach ($factor['rating_scales'] as $scaleId => $equivalentPoints) {
+                    $clonedFactor->factorRatingScales()->create([
+                        'evaluation_template_id' => $clonedTemplate->id,
+                        'part_id' => $clonedPart->id,
+                        'rating_scale_id' => $scaleId,
+                        'equivalent_points' => $equivalentPoints,
+                    ]);
+                }
+            }
+        }
+        $this->dispatch('swal:success');
+
+        // Redirect to the newly created template or update the Livewire component state as needed
+        // Example: $this->redirect(route('templates.index'));
+    }
     private function getMaxEquivalentPoints($ratingScales)
     {
         $maxPoints = 0;
@@ -203,6 +240,7 @@ class EvaluationTemplateEdit extends Component
     public function render()
     {
         $ratingScales = RatingScale::all();
-        return view('livewire.evaluation-template-edit', ['ratingScales' => $ratingScales]);
+        $templates = EvaluationTemplate::all();
+        return view('livewire.evaluation-template-edit', ['ratingScales' => $ratingScales, 'templates' => $templates]);
     }
 }

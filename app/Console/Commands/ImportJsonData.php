@@ -51,7 +51,7 @@ class ImportJsonData extends Command
                 ['employee_id' => $employeeId],
                 [
                     'department_id' => $department->id,
-                    'branch_name' => $item['BRANCHNAME'] ?? 'No branch',
+                    // 'branch_name' => $item['BRANCHNAME'] ?? 'No branch',
                     'first_name' => $item['FNAME'] ?? 'Unknown',
                     'last_name' => $item['LNAME'] ?? 'Unknown',
                     'date_hired' => $item['DTEHIRED'] ?? now(),

@@ -130,4 +130,18 @@ class HRController extends Controller
             // Add other data as needed...
         ];
     }
+    public function updateStatus($id)
+    {
+        $template = EvaluationTemplate::findOrFail($id);
+
+        // Validate and update the status
+        request()->validate([
+            'status' => 'required|in:1,2',
+        ]);
+
+        $template->status = request('status');
+        $template->save();
+
+        return redirect()->back(); // Redirect back to the previous page or wherever you prefer
+    }
 }

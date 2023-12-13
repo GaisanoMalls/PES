@@ -84,6 +84,7 @@ Route::delete('/templates/{template}', [HRController::class, 'destroy'])->name('
 
 Route::get('/templates/{evaluation}/pdf', [HRController::class, 'generatePDFTemplate'])->name('templates.generatePDFTemplate');
 
+Route::post('/templates/{id}/update-status', [HRController::class, 'updateStatus'])->name('templates.updateStatus');
 
 
 

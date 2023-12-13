@@ -16,6 +16,7 @@ class EvaluationTemplateSeeder extends Seeder
         $data = [
             [
                 'name' => 'Performance Management Evaluation',
+                'status' => 1,
             ],
             // Add more data entries as needed
         ];

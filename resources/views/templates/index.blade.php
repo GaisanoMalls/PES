@@ -21,7 +21,7 @@
             <div class="col-sm-12">
                 <div class="card card-table">
                     <div class="table-responsive">
-                        <div class="datatable table table-stripped">
+                        <div class="datatable table table-stripped m-b-15">
                             <table id="evaluation-templates" class="table table-hover">
                                 <thead>
                                     <tr class="text-center">
@@ -52,7 +52,7 @@
                                                     </div>
                                                 @elseif($template->status == 2)
                                                     <div class="actions">
-                                                        <a href="#" class="btn btn-sm bg-danger-light mr-2"
+                                                        <a href="#" class="btn btn-sm bg-default-light mr-2"
                                                             style="cursor: default;">Unpublished</a>
                                                     </div>
                                                 @elseif($template->status == 0)
@@ -85,7 +85,23 @@
                                                             <a class="dropdown-item" href="#"
                                                                 onclick="deleteTemplate({{ $template->id }})">Delete</a>
                                                         </form>
-
+                                                        @if ($template->status == 1)
+                                                            <form method="POST"
+                                                                action="{{ route('templates.updateStatus', $template->id) }}">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="2">
+                                                                <button type="submit"
+                                                                    class="dropdown-item">Unpublish</button>
+                                                            </form>
+                                                        @elseif ($template->status == 2)
+                                                            <form method="POST"
+                                                                action="{{ route('templates.updateStatus', $template->id) }}">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="1">
+                                                                <button type="submit"
+                                                                    class="dropdown-item">Publish</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>

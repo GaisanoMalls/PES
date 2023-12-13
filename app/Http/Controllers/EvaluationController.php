@@ -71,7 +71,7 @@ class EvaluationController extends Controller
         $employee = Employee::find($employeeId);
 
         // Fetch evaluation templates from the database
-        $evaluationTemplates = EvaluationTemplate::all();
+        $evaluationTemplates = EvaluationTemplate::where('status', 1)->get();
 
         // Pass the templates to the view
         return view('evaluations.select-template', [

@@ -259,7 +259,7 @@
                 </div>
 
                 <div class="page-wrapper">
-                    <div class="content container-fluid">
+                    <div class="content m-t-15">
                         @yield('content')
                     </div>
                 </div>
@@ -352,6 +352,9 @@
                 }
             });
         });
+
+
+
 
         window.addEventListener('swal:success2', event => {
             Swal.fire({

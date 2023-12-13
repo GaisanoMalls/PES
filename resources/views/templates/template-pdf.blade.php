@@ -563,7 +563,7 @@
         <div class="text-center">
             <h3>RATING SUMMARY</h3>
         </div>
-        <table class="table table-bordered">
+        <table class="table table-borderless">
             <thead>
                 <tr>
                     <th>Performance Measurement</th>
