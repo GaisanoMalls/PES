@@ -304,6 +304,15 @@ class EvaluationForm extends Component
             ]);
         }
 
+        //Notify employee
+        NotificationEvaluation::create([
+            'type' => 'evaluation',
+            'notifiable_id' =>  $this->employeeId,
+            'person_id' => $evaluation->id,
+            'notif_title' => $data['subject'],
+            'notif_desc' => $data['body'],
+        ]);
+
 
         //ADD RECOMMENDATION
         if (

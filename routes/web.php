@@ -107,6 +107,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 //notfication
+Route::get('/update-notification/{id}', [NotificationController::class, 'updateNotification']);
+
+Route::get('/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 
 
 // Show all users

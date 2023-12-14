@@ -78,7 +78,7 @@ class ReviewEvaluation extends Component
         $this->rateeComment = $this->evaluation->ratees_comment;
 
         // Convert JSON string to a Carbon date instance
-        $this->created_at = \Carbon\Carbon::parse($this->evaluation->created_at)->toDateTimeString();
+        $this->created_at = Carbon::parse($this->evaluation->created_at)->toDateTimeString();
     }
     public function displayClarificationSection()
     {
@@ -224,8 +224,8 @@ class ReviewEvaluation extends Component
         // Check if the evaluator is found
         if ($evaluator && $evaluator->email) {
             $dataEvaluator = [
-                'subject' => 'Disapprove Evaluation ' . 'ID: ' . $this->evaluation->id,
-                'body' => 'Reason of disapproval: ' . $this->disapprovalDescription,
+                'subject' => 'Disapproved Evaluation ' . 'ID: ' . $this->evaluation->id,
+                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name, 'has been disapproved.',
                 // Add any additional data you want to pass to the email view
             ];
             // Send email to the evaluator
@@ -355,6 +355,41 @@ class ReviewEvaluation extends Component
     {
         $this->evaluation->update(['ratees_comment' => $this->rateeComment]);
         $this->isEditing = false;
+
+        NotificationEvaluation::create([
+            'notifiable_id' => $this->evaluation->evaluator_id,
+            'type' => 'evaluation',
+            'person_id' => $this->evaluation->id,
+            'notif_title' => "Evaluation ID: " . '' . $this->evaluation->id,
+            'notif_desc' => "The employee has acknowledged the evaluation.",
+        ]);
+
+        $approverUsers = User::where('role_id', 3)->get();
+
+        // Ensure that the approverUsers collection is not empty before the loop
+        if ($approverUsers->isNotEmpty()) {
+            // Send email to each approver and store notification in the database
+            foreach ($approverUsers as $user) {
+                // Check if a notification for the current user and evaluation ID already exists
+                $existingNotification = NotificationEvaluation::where([
+                    'type' => 'evaluation',
+                    'notifiable_id' => $user->employee_id,
+                    'person_id' => $this->evaluation->id,
+                ])->first();
+
+                // If no existing notification is found, create a new one
+                if (!$existingNotification) {
+                    NotificationEvaluation::create([
+                        'type' => 'evaluation',
+                        'notifiable_id' => $user->employee_id,
+                        'person_id' => $this->evaluation->id,
+                        'notif_title' => "Evaluation ID: " . '' . $this->evaluation->id,
+                        'notif_desc' => "The employee has acknowledged the evaluation.",
+                    ]);
+                }
+            }
+        }
+
         session()->flash('success', 'Ratee\'s comment saved successfully!');
     }
     public function toggleEditMode()

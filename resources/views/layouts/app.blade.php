@@ -66,34 +66,36 @@
                             <?php
                             $user = Auth::user();
                             
-                            $evaluationNotifications = \App\Models\NotificationEvaluation::select('*', \DB::raw("'evaluation' as type"))
-                                ->where('notifiable_id', $user->employee_id)
-                                ->orderBy('created_at', 'desc');
-                            
-                            $employeeNotifications = \App\Models\NotificationEmployee::select('*', \DB::raw("'employee' as type"))
-                                ->where('notifiable_id', $user->employee_id)
-                                ->orderBy('created_at', 'desc');
-                            
-                            $notifications = $evaluationNotifications
-                                ->union($employeeNotifications)
+                            $evaluationNotifications = \App\Models\NotificationEvaluation::where('notifiable_id', $user->employee_id)
                                 ->orderBy('created_at', 'desc')
                                 ->get();
+                            $employeeNotifications = \App\Models\NotificationEmployee::where('notifiable_id', $user->employee_id)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+                            
+                            $unreadEvaluationNotificationsCount = $evaluationNotifications->whereNull('read_at')->count();
+                            $unreadEmployeeNotificationsCount = $employeeNotifications->whereNull('read_at')->count();
+                            
+                            $unreadNotificationsCount = $unreadEvaluationNotificationsCount + $unreadEmployeeNotificationsCount;
+                            
+                            $notifications = $evaluationNotifications->merge($employeeNotifications)->sortByDesc('created_at');
                             
                             ?>
                         @endauth
                         <li class="nav-item dropdown noti-dropdown">
                             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                                 <i class="fe fe-bell"></i>
-                                <span class="@if ($notifications->count()) badge @endif badge-pill">
-                                    @if ($notifications->count() > 0)
-                                        {{ isset($notifications) ? $notifications->count() : '' }}
+                                <span class="@if ($unreadNotificationsCount > 0) badge badge-pill @endif">
+                                    @if (!$unreadNotificationsCount == 0)
+                                        {{ $unreadNotificationsCount }}
                                     @endif
                                 </span>
                             </a>
+
                             <div class="dropdown-menu notifications">
                                 <div class="topnav-dropdown-header">
                                     <span class="notification-title">Notifications</span>
-                                    <a href="{{ route('markAllAsRead') }}" class="clear-noti"> Clear All </a>
+                                    <a href="{{ url('/mark-all-as-read') }}" class="clear-noti">Mark as Read All</a>
                                 </div>
                                 <div class="noti-content">
                                     <ul class="notification-list">
@@ -101,14 +103,106 @@
                                             @forelse ($notifications as $notification)
                                                 <li class="notification-message">
                                                     <a href="#"
-                                                        onclick="redirectToNotification('{{ $notification->type }}', '{{ $notification->person_id }}', '{{ Auth::user()->role_id }}')">
+                                                        onclick="redirectToNotification('{{ $notification->type }}', '{{ $notification->person_id }}', '{{ Auth::user()->role_id }}', '{{ $notification->id }}')">
                                                         <div class="media">
                                                             <div class="media-body">
-                                                                <p class="noti-details">
+                                                                <p
+                                                                    class=" @if (!$notification->read_at) noti-details-unread unread-notification @else noti-details @endif">
+                                                                    @if ($notification->type == 'evaluation')
+                                                                        @if (stripos($notification->notif_title, 'Approved') === 0)
+                                                                            <!-- SVG code for Approved -->
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#339900"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                                                            </svg>
+                                                                        @elseif (stripos($notification->notif_title, 'New') !== false)
+                                                                            <!-- SVG code for New -->
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#99cc33"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path
+                                                                                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                                                <polyline points="14 2 14 8 20 8" />
+                                                                                <line x1="16" x2="8"
+                                                                                    y1="13" y2="13" />
+                                                                                <line x1="16" x2="8"
+                                                                                    y1="17" y2="17" />
+                                                                                <polyline points="10 9 9 9 8 9" />
+                                                                            </svg>
+                                                                        @elseif (stripos($notification->notif_title, 'Disapproved') === 0)
+                                                                            <!-- SVG code for Disapproved -->
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#cc3300"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <circle cx="12" cy="12"
+                                                                                    r="10" />
+                                                                                <line x1="15" x2="9"
+                                                                                    y1="9" y2="15" />
+                                                                                <line x1="9" x2="15"
+                                                                                    y1="9" y2="15" />
+                                                                            </svg>
+                                                                        @elseif (stripos($notification->notif_title, 'Clarificaiton') !== false)
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#ffcc00"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <circle cx="12" cy="12"
+                                                                                    r="10" />
+                                                                                <line x1="12" x2="12"
+                                                                                    y1="16" y2="12" />
+                                                                                <line x1="12" x2="12.01"
+                                                                                    y1="8" y2="8" />
+                                                                            </svg>
+                                                                        @endif
+                                                                    @else
+                                                                        @if (stripos($notification->notif_desc, '105') !== false)
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#ff9966"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path
+                                                                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                                                                <line x1="12" x2="12"
+                                                                                    y1="9" y2="13" />
+                                                                                <line x1="12" x2="12.01"
+                                                                                    y1="17" y2="17" />
+                                                                            </svg>
+                                                                        @else
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#cc3300"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path
+                                                                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                                                                <line x1="12" x2="12"
+                                                                                    y1="9" y2="13" />
+                                                                                <line x1="12" x2="12.01"
+                                                                                    y1="17" y2="17" />
+                                                                            </svg>
+                                                                        @endif
+                                                                    @endif
                                                                     <span
                                                                         class="noti-title">{{ $notification->notif_title }}</span>
                                                                     <span
                                                                         class="noti-title">{{ $notification->notif_desc }}</span>
+
                                                                 </p>
                                                                 <p class="noti-time">
                                                                     <span
@@ -118,20 +212,33 @@
                                                         </div>
                                                     </a>
                                                     <script>
-                                                        function redirectToNotification(type, targetId, userRoleId) {
+                                                        function redirectToNotification(type, targetId, userRoleId, notificationId) {
                                                             var baseUrl = '/evaluations'; // Change this to the appropriate base URL
                                                             var baseUrl2 = '/employee_evaluations/'; // Change this to the appropriate base URL
-                                                            if (type === 'evaluation') {
-                                                                if (userRoleId == 2 || userRoleId == 5) {
-                                                                    window.location.href = baseUrl + '/view/' + targetId;
-                                                                } else if (userRoleId == 3) {
-                                                                    window.location.href = baseUrl + '/' + targetId + '/review';
+
+                                                            // Make an AJAX request to update the notification status
+                                                            $.ajax({
+                                                                url: '/update-notification/' + notificationId,
+                                                                type: 'GET',
+                                                                success: function() {
+                                                                    // Handle success, then redirect based on the notification type
+                                                                    if (type === 'evaluation') {
+                                                                        if (userRoleId == 2 || userRoleId == 5) {
+                                                                            window.location.href = baseUrl + '/view/' + targetId;
+                                                                        } else if (userRoleId == 3 || userRoleId == 4) {
+                                                                            window.location.href = baseUrl + '/' + targetId + '/review';
+                                                                        }
+                                                                    } else if (type === 'employee') {
+                                                                        window.location.href = baseUrl2 + targetId;
+                                                                    }
+                                                                },
+                                                                error: function(error) {
+                                                                    console.error('Error updating notification:', error);
                                                                 }
-                                                            } else if (type === 'employee') {
-                                                                window.location.href = baseUrl2 + targetId;
-                                                            }
+                                                            });
                                                         }
                                                     </script>
+
                                                 </li>
                                             @empty
                                                 <li class="notification-message ml-3 mt-3">
@@ -195,7 +302,7 @@
                                 @if (Auth::user()->role_id != 4)
                                     <li class="list-divider"></li>
                                     <li class="submenu">
-                                        <a href="#"><i class="fas fa-user"></i> <span> Evaluations </span>
+                                        <a href="#"><i class="fas fa-file"></i> <span> Evaluations </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
                                             style="{{ request()->routeIs('employees.evaluations') ? 'display:block' : 'display:none' }}">

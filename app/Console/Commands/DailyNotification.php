@@ -39,14 +39,16 @@ class DailyNotification extends Command
             return;
         }
 
-        // Calculate the date 105 days ago
-        $cutOffDate = now()->subDays(105);
+        // Calculate the dates 105 and 175 days ago
+        $cutOffDate105Days = now()->subDays(105);
+        $cutOffDate175Days = now()->subDays(175);
 
-        // Get employees whose date_hired is exactly 105 days ago
-        $employeesToNotify = Employee::whereDate('date_hired', $cutOffDate)->get();
+        // Get employees whose date_hired is exactly 105 or 175 days ago
+        $employeesToNotify105Days = Employee::whereDate('date_hired', $cutOffDate105Days)->get();
+        $employeesToNotify175Days = Employee::whereDate('date_hired', $cutOffDate175Days)->get();
 
-        // Check if there are employees to notify
-        if ($employeesToNotify->isEmpty()) {
+        // Check if there are employees to notify for each cutoff date
+        if ($employeesToNotify105Days->isEmpty() && $employeesToNotify175Days->isEmpty()) {
             $this->info('No employees to notify.');
             return;
         }
@@ -56,10 +58,23 @@ class DailyNotification extends Command
 
         // Send notifications to each user for the employees whose date_hired is exactly 105 days ago
         foreach ($evaluatorUsers as $user) {
-            foreach ($employeesToNotify as $employee) {
-                // Include first name and last name in the notification body
+            foreach ($employeesToNotify105Days as $employee) {
                 $body = "{$employee->first_name} {$employee->last_name} has exceeded 105 days since the date of hire.";
+                // Store notification in the database
+                NotificationEmployee::create([
+                    'type' => 'employee',
+                    'notifiable_id' => $user->employee_id,
+                    'person_id' => $employee->id,
+                    'notif_title' => $subject,
+                    'notif_desc' => $body,
+                ]);
+            }
+        }
 
+        // Send notifications to each user for the employees whose date_hired is exactly 175 days ago
+        foreach ($evaluatorUsers as $user) {
+            foreach ($employeesToNotify175Days as $employee) {
+                $body = "{$employee->first_name} {$employee->last_name} has exceeded 175 days since the date of hire.";
                 // Store notification in the database
                 NotificationEmployee::create([
                     'type' => 'employee',

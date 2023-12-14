@@ -2622,6 +2622,10 @@ html.menu-opened body {
     color: #989c9e;
     margin-bottom: 0
 }
+.noti-details-unread {
+    color: #535353;
+    margin-bottom: 0
+}
 
 .noti-title {
     color: #333
@@ -6356,6 +6360,10 @@ h3.page-sub-title {
     color: #000;
 }
 
+.unread-notification {
+    font-weight: 700;
+    color: #007bff; /* Change to your preferred highlight color */
+}
 @media only screen and (min-width:768px) {
     .avatar-xxl {
         width: 8rem;
