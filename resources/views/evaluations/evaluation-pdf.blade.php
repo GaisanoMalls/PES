@@ -94,6 +94,10 @@
         margin-left: 180px !important
     }
 
+    .m-l-100 {
+        margin-left: 100px !important
+    }
+
     .m-t-3 {
         margin-top: 3px !important
     }
@@ -713,8 +717,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <label class="col-lg-2">RATED BY: </label>
-                    <a href="#" class="btn btn-lg bg-success-light mb-2 text-center strong-text"
-                        style="cursor: default;">{{ $evaluation->evaluatorEmployee->first_name . ' ' . $evaluation->evaluatorEmployee->last_name }}
+                    <a href="#" class="btn btn-m bg-success-light mb-2 strong-text"
+                        style="cursor: default; width: 300px;">{{ $evaluation->evaluatorEmployee->first_name . ' ' . $evaluation->evaluatorEmployee->last_name }}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2">
@@ -722,7 +726,7 @@
                             <polyline points="22 4 12 14.01 9 11.01" />
                         </svg>
                     </a>
-                    <p class="">
+                    <p class="m-l-15">
                         {{ $evaluation->evaluatorEmployee->department->name . ' - ' . $evaluation->evaluatorEmployee->position }}
                     </p>
                 </div>
@@ -733,10 +737,10 @@
                     <label class="col-lg-2">REVIEWED BY: </label>
                     @if ($evaluation->approver_id)
                         <a href="#"
-                            @if ($evaluation->status == 2) class="btn btn-lg bg-success-light mb-2 text-center strong-text"
+                            @if ($evaluation->status == 2) class="btn btn-m bg-success-light mb-2 strong-text"
                                    @elseif ($evaluation->status == 3)
-                                   class="btn btn-lg bg-danger-light mb-2 text-center strong-text"   @else class="btn btn-lg bg-warning-light mb-2 text-center strong-text" @endif
-                            style="cursor: default;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
+                                   class="btn btn-lg bg-danger-light mb-2 strong-text"   @else class="btn btn-lg bg-warning-light mb-2 strong-text" @endif
+                            style="cursor: default; width: 300px;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
                             @if ($evaluation->status == 2)
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                     height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
@@ -763,8 +767,8 @@
                             @endif
                         </a>
                     @else
-                        <a href="#" class="btn btn-lg bg-warning-pending mb-2 text-center strong-text"
-                            style="cursor: default;">Pending Review
+                        <a href="#" class="btn btn-m bg-warning-pending mb-2 text-center strong-text"
+                            style="cursor: default; width: 300px;">PENDING REVIEW
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                 height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -773,7 +777,7 @@
                             </svg>
                         </a>
                     @endif
-                    <p>
+                    <p class="m-l-15">
                         @if ($evaluation->approver_id)
                             {{ $evaluation->approverEmployee->department->name . ' - ' . $evaluation->approverEmployee->position }}
                         @else
@@ -800,8 +804,8 @@
                 <div class="col-md-6">
                     <label class="col-lg-2">READ: </label>
                     @if ($evaluation->ratees_comment == null)
-                        <a class="btn btn-lg bg-warning-pending mb-2 text-center strong-text"
-                            style="cursor: default;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
+                        <a class="btn btn-m bg-warning-pending mb-2 strong-text"
+                            style="cursor: default;  width: 300px;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                 height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -809,7 +813,7 @@
                                 <polyline points="12 6 12 12 16 14" />
                             </svg>
                         </a>
-                        <p>
+                        <p class="m-l-15">
                             NAME OF EMPLOYEE
                         </p>
                     @else
@@ -822,7 +826,7 @@
                                 <polyline points="22 4 12 14.01 9 11.01" />
                             </svg>
                         </a>
-                        <p>
+                        <p class="m-l-15">
                             {{ $evaluation->employee->department->name . ' - ' . $evaluation->employee->position }}
                         </p>
                     @endif

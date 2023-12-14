@@ -33,7 +33,7 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="covered_period_start">Join Date</label>
+                            <label for="covered_period_start">Date Hired</label>
                             <input class="form-control" type="date" id="covered_period_start"
                                 name="covered_period_start" value="{{ $date_hired }}" required readonly disabled>
                         </div>

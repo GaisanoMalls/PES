@@ -364,31 +364,6 @@ class ReviewEvaluation extends Component
             'notif_desc' => "The employee has acknowledged the evaluation.",
         ]);
 
-        $approverUsers = User::where('role_id', 3)->get();
-
-        // Ensure that the approverUsers collection is not empty before the loop
-        if ($approverUsers->isNotEmpty()) {
-            // Send email to each approver and store notification in the database
-            foreach ($approverUsers as $user) {
-                // Check if a notification for the current user and evaluation ID already exists
-                $existingNotification = NotificationEvaluation::where([
-                    'type' => 'evaluation',
-                    'notifiable_id' => $user->employee_id,
-                    'person_id' => $this->evaluation->id,
-                ])->first();
-
-                // If no existing notification is found, create a new one
-                if (!$existingNotification) {
-                    NotificationEvaluation::create([
-                        'type' => 'evaluation',
-                        'notifiable_id' => $user->employee_id,
-                        'person_id' => $this->evaluation->id,
-                        'notif_title' => "Evaluation ID: " . '' . $this->evaluation->id,
-                        'notif_desc' => "The employee has acknowledged the evaluation.",
-                    ]);
-                }
-            }
-        }
 
         session()->flash('success', 'Ratee\'s comment saved successfully!');
     }
