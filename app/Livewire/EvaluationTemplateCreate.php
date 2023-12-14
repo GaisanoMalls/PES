@@ -16,6 +16,12 @@ class EvaluationTemplateCreate extends Component
     public $name;
     public $parts = [];
     // Add this method to your Livewire component
+    // New property to handle the modal state
+    public $newFactorName = '';
+    public $newFactorDescription = '';
+    public $newFactorRatingScales = [];
+    public $currentPartIndex;
+    public $currentFactorIndex;
 
     public function addPart()
     {
@@ -25,13 +31,32 @@ class EvaluationTemplateCreate extends Component
             'factors' => []
         ];
     }
+
     public function addFactor($partIndex)
     {
-        $this->parts[$partIndex]['factors'][] = [
-            'name' => '',
-            'description' => '',
-            'rating_scales' => []
-        ];
+
+        // Check if the required fields are not empty
+        if (!empty($this->newFactorName) || !empty($this->newFactorDescription) || !empty($this->newFactorRatingScales)) {
+            // Make sure $this->newFactorRatingScales is an array
+            if (!is_array($this->newFactorRatingScales)) {
+                $this->newFactorRatingScales = [];
+            }
+
+            $newFactor = [
+                'name' => $this->newFactorName,
+                'description' => $this->newFactorDescription,
+                'rating_scales' => $this->newFactorRatingScales
+            ];
+
+            // Add the new factor to the specified part
+            $this->parts[$partIndex]['factors'][] = $newFactor;
+
+            // Reset the input fields
+            $this->reset(['newFactorName', 'newFactorDescription', 'newFactorRatingScales']);
+
+            // Close the modal
+            $this->dispatch('closeAddFactorModal');
+        }
     }
 
 

@@ -30,7 +30,6 @@
                         <input type="text" class="form-control" id="position" name="position"
                             placeholder="Enter Position" value="{{ $position }}" readonly disabled>
                     </div>
-
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="covered_period_start">Date Hired</label>
@@ -38,7 +37,6 @@
                                 name="covered_period_start" value="{{ $date_hired }}" required readonly disabled>
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="date_of_evaluation">Date of Evaluation</label>
