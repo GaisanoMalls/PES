@@ -7,7 +7,7 @@
         font-size: 5px;
         height: 85px;
         resize: none;
-        /* Prevent resizing of the textarea */
+
     }
 
 
@@ -817,7 +817,7 @@
                             NAME OF EMPLOYEE
                         </p>
                     @else
-                        <a href="#" class="btn btn-lg bg-success-light mb-2 text-center strong-text"
+                        <a href="#" class="btn btn-m bg-success-light mb-2 text-center strong-text"
                             style="cursor: default;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                 height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"

@@ -411,11 +411,12 @@
         @endforeach
 
         @foreach ($partsWithFactors as $index => $partWithFactors)
+            @php
+                $factorCount = 0;
+                $part1TotalFactors = count($partWithFactors['factors']);
+            @endphp
             <div class="rating-scale"></div>
             <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
-
-            @php $factorCount = 0; @endphp
-
             @foreach ($partWithFactors['factors'] as $factorData)
                 {{-- Only display 2 factors on the first loop --}}
                 @if ($loop->parent->first && $factorCount < 2)
@@ -462,7 +463,8 @@
                                 {{-- DISPLAY THE COMMENT OF FACTOR --}}
                                 <div class="comment m-t-3">
                                     <div class="form-group">
-                                        <label for="">Specific situations/incidents to support rating:</label>
+                                        <label for="">Specific situations/incidents to support
+                                            rating:</label>
                                         <textarea class="form-control" style="overflow: hidden;"></textarea>
                                     </div>
                                 </div>
@@ -478,11 +480,18 @@
                 @endif
             @endforeach
 
-            {{-- Add page-break after displaying 2 factors on the first loop --}}
+
+            {{-- Display total on first page if part 1 has only one factor --}}
+            @if ($part1TotalFactors < 2)
+                <div class="c m-t-20 m-r-15">
+                    <strong>
+                        <span>Total Actual Points/Rate = <span class="box"></span></span>
+                    </strong>
+                </div>
+            @endif
             @if ($loop->first)
                 <div class="page-break"></div>
             @endif
-
             {{-- Continue with the remaining factors --}}
             @foreach ($partWithFactors['factors'] as $factorData)
                 {{-- Skip the factors already displayed --}}
@@ -551,13 +560,22 @@
                     </div>
                 </li>
             @endforeach
+
+
+            @if ($index === 0 && $part1TotalFactors < 2)
+                <div class="page-break"></div>
+
+                {{-- Skip this iteration --}}
+                @continue
+            @endif
+
             <div class="c m-t-20 m-r-15">
                 <strong>
                     <span>Total Actual Points/Rate = <span class="box"></span></span>
                 </strong>
             </div>
 
-            <div class="page-break"></div>
+            {{-- TO separate parts on each page --}}
         @endforeach
 
 
@@ -610,7 +628,7 @@
                         @endif
                         <td>
                             @if ($loop->iteration == 1)
-                                <a class="btn btn-sm bg-success-light mr-2"><strong>Passed</strong></a>
+                                Passed
                             @elseif ($loop->iteration == 2)
                                 Failed
                             @endif
