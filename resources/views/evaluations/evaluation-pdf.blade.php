@@ -435,7 +435,7 @@
                                 style="height: 45px !important;">
                         </div>
                         <div class="col-4">
-                            <label for="covered_period_start">Join Date</label>
+                            <label for="covered_period_start">Date Hired</label>
                             <input class="form-control" type="date" id="covered_period_start"
                                 name="covered_period_start" value="{{ $evaluation->employee->date_hired }}"
                                 style="height: 45px !important;">

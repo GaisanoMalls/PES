@@ -12,6 +12,7 @@ use App\Models\EvaluationPoint;
 use App\Models\Factor;
 use App\Models\FactorRatingScale;
 use App\Models\Notification;
+use App\Models\NotificationEvaluation;
 use App\Models\Part;
 use App\Models\Recommendation;
 use Carbon\Carbon;
@@ -61,6 +62,7 @@ class EditEvaluation extends Component
     public $editingClarificationId = null;
 
     public $editMode = false;
+
     public $disapprovalReason;
     public $approverFirstName;
 
@@ -142,6 +144,8 @@ class EditEvaluation extends Component
         // Trigger Livewire update when selectedValues change
         $this->selectedScale = array_merge($this->selectedScale, [$factorId => $value]);
     }
+
+
     public function calculatePercentageIncrease()
     {
         if ($this->currentSalary > 0 && $this->recommendedSalary > 0) {
@@ -227,6 +231,7 @@ class EditEvaluation extends Component
                 'recommended_position' => $this->recommendedPosition ?? $this->evaluation->recommendation->recommended_position,
                 'level' => $this->level ?? $this->evaluation->recommendation->level,
                 'recommended_salary' => $this->recommendedSalary ?? $this->evaluation->recommendation->recommended_salary,
+                'percentage_increase' => $this->percentageIncrease ?? $this->evaluation->recommendation->percentage_increase,
                 'remarks' => $this->remarks ?? $this->evaluation->recommendation->remarks,
                 'effectivity' => $effectivity ?? $this->evaluation->recommendation->effectivity,
             ]);
@@ -246,7 +251,7 @@ class EditEvaluation extends Component
                 'level' => $this->level,
                 'employment_status' => 'Active',
                 'recommended_salary' => $this->recommendedSalary,
-                'percentage_increase' => (($this->recommendedSalary - $this->currentSalary) / $this->currentSalary) * 100,
+                'percentage_increase' => $this->percentageIncrease,
                 'remarks' => $this->remarks,
                 'effectivity' => $effectivity,
             ]);
@@ -378,9 +383,10 @@ class EditEvaluation extends Component
             // Change the evaluation status
             $this->evaluation->status = 4;
             $this->evaluation->save();
-            Notification::create([
-                'employee_id' => $this->evaluation->approver_id,
-                'evaluation_id' => $this->evaluation->id,
+            NotificationEvaluation::create([
+                'notifiable_id' => $this->evaluation->approver_id,
+                'type' => 'evaluation',
+                'person_id' => $this->evaluation->id,
                 'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
                 'notif_desc' => $this->clarificationDescription,
             ]);

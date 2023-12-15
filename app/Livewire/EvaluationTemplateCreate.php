@@ -96,7 +96,8 @@ class EvaluationTemplateCreate extends Component
             'callback' => 'redirectAfterClose'
         ]);
         $evaluationTemplate = EvaluationTemplate::create([
-            'name' => $this->name
+            'name' => $this->name,
+            'status' => 2,
         ]);
 
         foreach ($this->parts as $part) {

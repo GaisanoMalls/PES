@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('evaluation_templates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(2);
             $table->timestamps();
         });
     }

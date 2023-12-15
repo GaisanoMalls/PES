@@ -380,7 +380,7 @@
                                 style="height: 45px !important;">
                         </div>
                         <div class="col-4">
-                            <label for="covered_period_start">Join Date</label>
+                            <label for="covered_period_start">Date Hired</label>
                             <input class="form-control" type="date" id="covered_period_start"
                                 name="covered_period_start" style="height: 45px !important;">
                         </div>
@@ -469,6 +469,11 @@
                             </div>
                         </div>
                     </li>
+                    {{-- @if ($part1TotalFactors <= 2)
+                        <strong>
+                            <span>Total Actual Points/Rate = <span class="box"></span></span>
+                        </strong>
+                    @endif --}}
                     @php $factorCount++; @endphp
                 @endif
             @endforeach
@@ -546,7 +551,6 @@
                     </div>
                 </li>
             @endforeach
-
             <div class="c m-t-20 m-r-15">
                 <strong>
                     <span>Total Actual Points/Rate = <span class="box"></span></span>

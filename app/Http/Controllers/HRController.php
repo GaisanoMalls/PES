@@ -88,8 +88,10 @@ class HRController extends Controller
 
         $parts = Part::where('evaluation_template_id', $templateId)->get();
         $partsWithFactors = [];
+        $part1TotalFactors = 0; // Variable to store the count of factors for the first part
 
-        foreach ($parts as $part) {
+
+        foreach ($parts as $index => $part) {
             $factors = Factor::where('part_id', $part->id)->get();
             $factorsData = [];
 
@@ -113,10 +115,16 @@ class HRController extends Controller
 
                 $factorsData[] = $factorData;
             }
+            // If it's the first part, update the count of factors
+            if ($index === 0) {
+                $part1TotalFactors = count($factors);
+            }
 
             $partsWithFactors[] = [
                 'part' => $part,
                 'factors' => $factorsData,
+                'numFactors' => count($factors), // Add the count of factors for the part
+
                 // Add other part data as needed...
             ];
         }
@@ -127,6 +135,8 @@ class HRController extends Controller
             'ratingScales' => $ratingScales,
             'template' => $template, // Include the template data
             'partsWithFactors' => $partsWithFactors,
+            'part1TotalFactors' => $part1TotalFactors, // Variable for the count of factors for the first part
+
             // Add other data as needed...
         ];
     }

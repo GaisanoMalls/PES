@@ -348,7 +348,7 @@
                     <label for="ratee_comments">RATEE’S COMMENTS:</label>
                     <textarea class="form-control" wire:model="rateesComment" rows="4"
                         placeholder="{{ $evaluation->ratees_comment }}" @if (!$editMode) disabled @endif
-                        @if ($evaluation->employee_id == Auth::user()->employee_id) readonly @endif></textarea>
+                        @if ($evaluation->employee_id != Auth::user()->employee_id) readonly @endif></textarea>
                 </div>
             </div>
             {{-- END EMPLOYEE INPUTS --}}
@@ -373,10 +373,18 @@
             @endif
 
             @if ($evaluation->recommendation)
-                <button type="button" class="btn btn-outline-secondary btn-right m-r-5" data-toggle="modal"
-                    data-target="#recommendationModal">
-                    View Recommendation
-                </button>
+                @if ($editMode)
+                    <button type="button" class="btn btn-outline-secondary btn-right m-r-5" data-toggle="modal"
+                        data-target="#recommendationModalEdit">
+                        View Recommendation
+                    </button>
+                @else
+                    <button type="button" class="btn btn-outline-secondary btn-right m-r-5" data-toggle="modal"
+                        data-target="#recommendationModal">
+                        View Recommendation
+                    </button>
+                @endif
+
             @endif
             <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 "
                 @if ($showClarificationSection) disabled @endif>View
@@ -386,41 +394,151 @@
 
 
     {{-- MODALS --}}
-    @if ($evaluation->recommendation)
-        @include('components.modals.recommendation', [
-            'evaluation' => $evaluation,
-            'editMode' => $editMode,
-        ])
-    @endif
-
-    <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
-        aria-labelledby="disapproveModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <span>Disapproved by {{ $approverFirstName }}:</span>
-                        <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
+    <div wire:ignore>
+        @if ($evaluation->recommendation)
+            <div class="modal fade" id="recommendationModalEdit" tabindex="-1" role="dialog"
+                aria-labelledby="recommendationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-m" role="document"> <!-- Add 'modal-lg' class for a larger width -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="recommendationModalLabel">Recommendation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="m-t-10">
+                                <div class="justify-content-center">
+                                    <div class="form-group">
+                                        <label for="current_salary">Current Salary:</label>
+                                        <input type="number" class="form-control" wire:model="currentSalary"
+                                            wire:change="calculatePercentageIncrease"
+                                            placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommended_salary">Recommended Salary:</label>
+                                        <input type="number" class="form-control"wire:model="recommendedSalary"
+                                            wire:change="calculatePercentageIncrease"
+                                            placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommended_salary">Percentage Increase:</label>
+                                        <input type="number" class="form-control"
+                                            placeholder="{{ $evaluation->recommendation->percentage_increase }}"
+                                            readonly disabled wire:model="percentageIncrease"
+                                            wire:loading.attr="disabled">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommended_position">Recommended Position:</label>
+                                        <input type="text" class="form-control" wire:model="recommendedPosition"
+                                            placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="level">Level:</label>
+                                    <input type="text" class="form-control" wire:model="level"
+                                        placeholder="{{ $evaluation->recommendation->level ?? '' }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @php
+                                    $effectivity = optional($evaluation->recommendation)->effectivity;
+                                @endphp
+                                <label for="effectivityTimestamp">Effectivity Timestamp:
+                                    {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
+                                </label>
+                                <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp">
+                            </div>
+                            <div class="form-group">
+                                <label for="remarks">Remarks:</label>
+                                <textarea name="remarks" id="remarks" rows="5" class="form-control" wire:model="remarks"
+                                    placeholder="{{ $evaluation->recommendation->remarks ?? '' }}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+
             </div>
-        </div>
+        @endif
     </div>
+
+
+    <div wire:ignore>
+        @if ($evaluation->recommendation)
+            <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog"
+                aria-labelledby="recommendationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-m" role="document"> <!-- Add 'modal-lg' class for a larger width -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="recommendationModalLabel">Recommendation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="m-t-10">
+                                <div class="justify-content-center">
+                                    <div class="form-group">
+                                        <label for="current_salary">Current Salary:</label>
+                                        <input type="number" class="form-control" wire:model="currentSalary"
+                                            wire:change="calculatePercentageIncrease"
+                                            placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
+                                            readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommended_salary">Recommended Salary:</label>
+                                        <input type="number" class="form-control"wire:model="recommendedSalary"
+                                            wire:change="calculatePercentageIncrease"
+                                            placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
+                                            readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommended_salary">Percentage Increase:</label>
+                                        <input type="number" class="form-control"
+                                            placeholder="{{ $evaluation->recommendation->percentage_increase }}"
+                                            readonly disabled wire:model="percentageIncrease"
+                                            wire:loading.attr="disabled">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recommended_position">Recommended Position:</label>
+                                        <input type="text" class="form-control" wire:model="recommendedPosition"
+                                            placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
+                                            readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="level">Level:</label>
+                                    <input type="text" class="form-control" wire:model="level"
+                                        placeholder="{{ $evaluation->recommendation->level ?? '' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @php
+                                    $effectivity = optional($evaluation->recommendation)->effectivity;
+                                @endphp
+                                <label for="effectivityTimestamp">Effectivity Timestamp:
+                                    {{ $effectivity ? \Carbon\Carbon::parse($effectivity)->format('F d, Y H:i A') : '' }}
+                                </label>
+                                <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                                    readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="remarks">Remarks:</label>
+                                <textarea name="remarks" id="remarks" rows="5" class="form-control" wire:model="remarks"
+                                    placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        @endif
+    </div>
+
 </div>
-<script>
-    $(document).ready(function() {
-        $('#recommendationModal').modal({
-            backdrop: 'static',
-            keyboard: false
-        })
-    });
-</script>
