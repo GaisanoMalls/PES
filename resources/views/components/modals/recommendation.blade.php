@@ -1,4 +1,4 @@
-   {{-- <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog" aria-labelledby="recommendationModalLabel"
+   <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog" aria-labelledby="recommendationModalLabel"
        aria-hidden="true">
        <div class="modal-dialog modal-m" role="document"> <!-- Add 'modal-lg' class for a larger width -->
            <div class="modal-content">
@@ -66,4 +66,4 @@
                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
            </div>
        </div>
-   </div> --}}
+   </div>
