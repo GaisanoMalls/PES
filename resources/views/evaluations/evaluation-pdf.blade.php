@@ -10,13 +10,6 @@
 
     }
 
-
-
-
-
-
-
-
     .input-group .form-control {
         height: 65px
     }
@@ -467,10 +460,13 @@
         @endforeach
 
         @foreach ($partsWithFactors as $index => $partWithFactors)
+            @php
+                $factorCount = 0;
+                $part1TotalFactors = count($partWithFactors['factors']);
+            @endphp
             <div class="rating-scale"></div>
             <h4 class="text-center">{{ $partWithFactors['part']->name }}</h4>
 
-            @php $factorCount = 0; @endphp
 
             @foreach ($partWithFactors['factors'] as $factorData)
                 {{-- Only display 2 factors on the first loop --}}
@@ -530,11 +526,18 @@
                 @endif
             @endforeach
 
-            {{-- Add page-break after displaying 2 factors on the first loop --}}
+            {{-- Display total on first page if part 1 has only one factor --}}
+            @if ($part1TotalFactors < 2)
+                <div class="c m-t-20 m-r-15">
+                    <strong>
+                        <span>Total Actual Points/Rate = <span
+                                class="box">{{ $partWithFactors['totalRate'] }}</span></span>
+                    </strong>
+                </div>
+            @endif
             @if ($loop->first)
                 <div class="page-break"></div>
             @endif
-
             {{-- Continue with the remaining factors --}}
             @foreach ($partWithFactors['factors'] as $factorData)
                 {{-- Skip the factors already displayed --}}
@@ -605,6 +608,12 @@
                     </div>
                 </li>
             @endforeach
+            @if ($index === 0 && $part1TotalFactors < 2)
+                <div class="page-break"></div>
+
+                {{-- Skip this iteration --}}
+                @continue
+            @endif
 
             <div class="c m-t-20 m-r-15">
                 <strong>
@@ -612,8 +621,6 @@
                             class="box">{{ $partWithFactors['totalRate'] }}</span></span>
                 </strong>
             </div>
-
-            <div class="page-break"></div>
         @endforeach
 
 

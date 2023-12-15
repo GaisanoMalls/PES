@@ -492,6 +492,7 @@
             @if ($loop->first)
                 <div class="page-break"></div>
             @endif
+
             {{-- Continue with the remaining factors --}}
             @foreach ($partWithFactors['factors'] as $factorData)
                 {{-- Skip the factors already displayed --}}
@@ -574,8 +575,6 @@
                     <span>Total Actual Points/Rate = <span class="box"></span></span>
                 </strong>
             </div>
-
-            {{-- TO separate parts on each page --}}
         @endforeach
 
 

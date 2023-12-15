@@ -151,8 +151,9 @@ class EvaluationController extends Controller
         $parts = Part::where('evaluation_template_id', $evaluation->evaluation_template_id)->get();
         $partsWithFactors = [];
         $totalRateForAllParts = 0; // Initialize the total rate for all parts
+        $part1TotalFactors = 0; // Variable to store the count of factors for the first part
 
-        foreach ($parts as $part) {
+        foreach ($parts as $index => $part) {
             $factors = Factor::where('part_id', $part->id)->get();
             $factorsData = [];
             $totalRateForPart = 0; // Initialize the total rate for the part
@@ -201,10 +202,16 @@ class EvaluationController extends Controller
                 $factorsData[] = $factorData;
             }
 
+            // If it's the first part, update the count of factors
+            if ($index === 0) {
+                $part1TotalFactors = count($factors);
+            }
+
             $partsWithFactors[] = [
                 'part' => $part,
                 'factors' => $factorsData,
                 'totalRate' => $totalRateForPart, // Include the total rate in the array
+
                 // Add other part data as needed...
             ];
 
@@ -225,6 +232,8 @@ class EvaluationController extends Controller
             'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
             'selectedScale' => $this->selectedScale,
             'factorsData' => $factorsData, // Include the factorsData array
+            'part1TotalFactors' => $part1TotalFactors, // Variable for the count of factors for the first part
+
             // Add other data as needed...
         ];
     }
