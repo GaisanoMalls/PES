@@ -22,7 +22,8 @@
                         <td>{{ $config->id }}</td>
                         <td>{{ $config->number_of_approvers }}</td>
                         <td>{{ $config->department->name }}</td>
-                        <td>{{ $config->branch_id }}</td>
+                        <td>{{ $config->branch->name }}</td>
+
                         <td>
                             <div class="dropdown dropdown-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"

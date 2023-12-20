@@ -21,12 +21,16 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-6">
-                            <label>Branch: </label>
-                            <select class="form-control">
-                                <option value="1">DAVAO</option>
+                            <label>Branch:</label>
+                            <select class="form-control" wire:model="selectedBranch">
+                                <option value="">Select Branch</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
+
                 </div>
                 @if ($selectedDepartment)
                     <div class="card-body">

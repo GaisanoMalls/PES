@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Evaluator;
@@ -74,7 +75,7 @@ final class Employees extends PowerGridComponent
 
             ->addColumn('department_name', fn (Employee $model) => $model->department->name)
 
-            ->addColumn('branch_name')
+            ->addColumn('branch_name', fn (Employee $model) => $model->branch->name)
 
             ->addColumn('first_name')
             ->addColumn('last_name')
@@ -129,7 +130,6 @@ final class Employees extends PowerGridComponent
     {
         return [
             Filter::inputText('employee_id')->operators(['contains']),
-            Filter::inputText('branch_name')->operators(['contains']),
 
             Filter::inputText('first_name')->operators(['contains']),
             Filter::inputText('last_name')->operators(['contains']),
@@ -139,6 +139,11 @@ final class Employees extends PowerGridComponent
             // Filter::inputText('employment_status')->operators(['contains']),
             Filter::select('department_name', 'department_id')
                 ->dataSource(Department::all())
+                ->optionValue('id')
+                ->optionLabel('name'),
+
+            Filter::select('branch_name', 'branch_id')
+                ->dataSource(Branch::all())
                 ->optionValue('id')
                 ->optionLabel('name'),
             // Filter::datetimepicker('created_at'),

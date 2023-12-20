@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // Auto-incremental primary key
             $table->bigInteger('department_id')->default(0);
             $table->string('employee_id')->default('No ID');
-            $table->string('branch_name')->default('DAVAO');
+            $table->bigInteger('branch_id')->default(0);
             $table->string('first_name')->default('No fname');
             $table->string('last_name')->default('No lname');
             $table->string('contact_no')->default('No contact number');

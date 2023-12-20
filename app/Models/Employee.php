@@ -11,6 +11,7 @@ class Employee extends Model
 
     protected $fillable = [
         'department_id',
+        'branch_id',
         'employee_id',
         'first_name',
         'last_name',
@@ -31,6 +32,10 @@ class Employee extends Model
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
     // Define the inverse relationship with the Recommendation model
     public function recommendations()

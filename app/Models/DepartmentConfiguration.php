@@ -23,6 +23,12 @@ class DepartmentConfiguration extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+
     public function evaluationApprovers()
     {
         return $this->hasMany(EvaluationApprovers::class);

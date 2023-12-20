@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Approver;
+use App\Models\Branch;
 use Livewire\Component;
 use App\Models\Department;
 use App\Models\DepartmentConfiguration;
@@ -17,18 +18,21 @@ class DepartmentConfig extends Component
     public $selectedApprovers = [];
     public $levels = [];
 
+    public $selectedBranch;
 
     public function render()
     {
         $departments = Department::all();
+        $branches = Branch::all(); // Fetch branches
 
         return view('livewire.department-config', [
             'departments' => $departments,
+            'branches' => $branches, // Pass branches to the view
             'approvers' => $this->approvers,
             'canAddLevel' => $this->canAddLevel(),
-
         ]);
     }
+
 
     // This method is triggered when the selected department changes
     public function loadDepartmentDetails()
@@ -77,7 +81,7 @@ class DepartmentConfig extends Component
         $departmentConfiguration = DepartmentConfiguration::create([
             'number_of_approvers' => count($this->selectedApprovers),
             'department_id' => $this->selectedDepartment,
-            'branch_id' => 1
+            'branch_id' => $this->selectedBranch, // Use the selected branch
             // You may need to add the branch_id based on your logic
         ]);
 

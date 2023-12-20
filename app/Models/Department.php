@@ -19,4 +19,8 @@ class Department extends Model
     {
         return $this->hasMany(DepartmentConfiguration::class);
     }
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class);
+    }
 }

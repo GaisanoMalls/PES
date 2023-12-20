@@ -73,6 +73,7 @@
                 <th>Employee ID</th>
                 <th>Employee Name</th>
                 <th>Department</th>
+                <th>Branch</th>
                 <th>Date of Evaluation</th>
                 <th>Total Rate</th>
                 <th>Recommendation Note</th>
@@ -94,6 +95,8 @@
                     <td>{{ $evaluation->employee->employee_id }}</td>
                     <td>{{ $evaluation->employee->last_name . ', ' . $evaluation->employee->first_name }}</td>
                     <td>{{ $evaluation->employee->department->name }}</td>
+                    <td>{{ $evaluation->employee->branch->name }}</td>
+
                     <td>{{ \Carbon\Carbon::parse($evaluation->created_at)->format('F d, Y') }}</td>
                     <td>{{ $evaluationTotals[$evaluation->id] }}</td>
                     <td>{{ substr($evaluation->recommendation_note, 0, 50) }}</td>

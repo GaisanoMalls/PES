@@ -404,7 +404,10 @@ class ReviewEvaluation extends Component
         $clarifications = Clarification::where('evaluation_id', $this->evaluation->id)->get();
 
         $department = $this->evaluation->employee->department;
-        $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->first();
+        $branch = $this->evaluation->employee->branch; // Corrected typo: 'brahcn' to 'branch'
+
+        $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->where('branch_id', $branch->id)->first();
+
         $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)->get();
 
         // Access the number_of_approvers or set it to a default value (e.g., 0) if not found

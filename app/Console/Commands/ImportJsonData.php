@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Console\Command;
@@ -27,7 +28,7 @@ class ImportJsonData extends Command
      */
     public function handle()
     {
-        $jsonFilePath = storage_path('json_data/output.json');
+        $jsonFilePath = storage_path('json_data/outputNew.json');
         $jsonFile = file_get_contents($jsonFilePath); // Read the JSON file
 
         $data = json_decode($jsonFile, true);
@@ -35,9 +36,12 @@ class ImportJsonData extends Command
         foreach ($data as $item) {
             $employeeId = $item['EMPID'] ?? 'DEFAULT_EMPLOYEE_ID';
             $departmentName = $item['DEPARTMENTNAME'] ?? 'Default Department Name';
+            $branchName = $item['BRANCHNAME'] ?? 'Default Branch Name';
 
             // Find the department by name
             $department = Department::where('name', $departmentName)->first();
+            // Find or create the branch by name
+            $branch = Branch::where(['name' => $branchName])->first();
 
             // Check if the department exists; if not, create a new one
             if (!$department) {
@@ -51,7 +55,7 @@ class ImportJsonData extends Command
                 ['employee_id' => $employeeId],
                 [
                     'department_id' => $department->id,
-                    // 'branch_name' => $item['BRANCHNAME'] ?? 'No branch',
+                    'branch_id' => $branch->id,
                     'first_name' => $item['FNAME'] ?? 'Unknown',
                     'last_name' => $item['LNAME'] ?? 'Unknown',
                     'date_hired' => $item['DTEHIRED'] ?? now(),

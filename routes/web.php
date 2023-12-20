@@ -139,6 +139,10 @@ Route::get('/department-configurations', [SettingsController::class, 'deptConfig
 Route::get('/department-configurations/{id}', [SettingsController::class, 'deptConfigShow'])->name('settings.deptconfigEdit');
 
 
+
+//Evaluation Pemission
+Route::get('/evaluation-permissions/create', [SettingsController::class, 'evalpermCreate'])->name('settings.evalpermCreate');
+
 // settings.evalperm' settings.deptconfig
 
 Route::get('/markAllAsRead', function () {
