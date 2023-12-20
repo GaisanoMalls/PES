@@ -14,4 +14,9 @@ class Department extends Model
     {
         return $this->hasMany(Employee::class);
     }
+    // Define relationships if any
+    public function departmentConfigurations()
+    {
+        return $this->hasMany(DepartmentConfiguration::class);
+    }
 }

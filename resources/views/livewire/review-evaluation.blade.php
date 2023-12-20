@@ -187,17 +187,21 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+
+        <div class="row">
             <div class="col-xl-6">
                 <div class="form-group row">
                     <label class="col-lg-3 col-form-label">REVIEWED BY: </label>
                     <div class="col-lg-7">
-                        @if ($evaluation->approver_id)
+                        @foreach ($evaluationApprovers as $approver)
                             <a href="#"
                                 @if ($evaluation->status == 2) class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
-                                   @elseif ($evaluation->status == 3)
-                                   class="btn btn-m bg-danger-light mb-2 text-center strong-text form-control" @else class="btn btn-m bg-warning-light mb-2 text-center strong-text form-control" @endif
-                                style="cursor: default;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
+                                @elseif ($evaluation->status == 3) class="btn btn-m bg-danger-light mb-2 text-center strong-text form-control"
+                                @elseif ($evaluation->status == 4) class="btn btn-m bg-warning-light mb-2 text-center strong-text form-control"
+                                @else class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control" @endif
+                                style="cursor: default;">{{ $approver->employee->first_name . ' ' . $approver->employee->last_name }}
                                 @if ($evaluation->status == 2)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                         height="24" class="main-grid-item-icon" fill="none"
@@ -224,27 +228,20 @@
                                         <line x1="12" x2="12" y1="8" y2="12" />
                                         <line x1="12" x2="12.01" y1="16" y2="16" />
                                     </svg>
+                                @elseif ($evaluation->status == 1)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                        height="24" class="main-grid-item-icon" fill="none"
+                                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <polyline points="12 6 12 12 16 14" />
+                                    </svg>
                                 @endif
                             </a>
-                        @else
-                            <a href="#"
-                                class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control"
-                                style="cursor: default;">Pending Review
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                    height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                            </a>
-                        @endif
-                        <p class="text-center">
-                            @if ($evaluation->approver_id)
-                                {{ $evaluation->approverEmployee->department->name . ' - ' . $evaluation->approverEmployee->position }}
-                            @else
-                                APPROVER
-                            @endif
-                        </p>
+                            <p class="text-center">
+                                {{ 'Level: ' . '' . $approver->approver_level . ' (' . $approver->employee->department->name . ' - ' . $approver->employee->position . ')' }}
+                            </p>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -322,7 +319,7 @@
                         </button>
                     @endif
                 @else
-                    <button wire:click="storeRateeComment" class="btn btn-primary m-b-30">
+                    <button wire:click.once="storeRateeComment" class="btn btn-primary m-b-30">
                         Save
                     </button>
                     <button wire:click="setViewMode" class="btn btn-secondary m-b-30">

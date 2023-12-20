@@ -166,6 +166,19 @@
                                                                                 <line x1="12" x2="12.01"
                                                                                     y1="8" y2="8" />
                                                                             </svg>
+                                                                        @elseif (stripos($notification->notif_desc, 'acknowledged') !== false)
+                                                                            <!-- https://feathericons.dev/?search=user-check&iconset=feather -->
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#99cc33"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path
+                                                                                    d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                                                                <circle cx="8.5" cy="7" r="4" />
+                                                                                <polyline points="17 11 19 13 23 9" />
+                                                                            </svg>
                                                                         @endif
                                                                     @else
                                                                         @if (stripos($notification->notif_desc, '105') !== false)
@@ -371,9 +384,26 @@
                                         </ul>
                                     </li>
                                 @endif
-                                <li class="{{ request()->routeIs('settings') ? 'active' : '' }}">
-                                    <a href="#"><i class="fa fa-cog"></i> <span>Settings</span></a>
-                                </li>
+
+                                @if (Auth::user()->role_id == 1)
+                                    <li class="submenu">
+                                        <a href="#"><i class="fas fa-user"></i> <span> Settings </span>
+                                            <span class="menu-arrow"></span></a>
+                                        <ul class="submenu_class"
+                                            style="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.deptconfig') || request()->routeIs('settings.deptconfigCreate') ? 'display:block' : 'display:none' }}">
+                                            <li>
+                                                <a class="{{ request()->routeIs('settings.evalperm') ? 'active' : '' }}"
+                                                    href="{{ route('settings.evalperm') }}">Evaluations Permissions</a>
+                                            </li>
+                                            <li>
+                                                <a class="{{ request()->routeIs('settings.deptconfig') ? 'active' : '' }}"
+                                                    href="{{ route('settings.deptconfig') }}">Department
+                                                    Configuration</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endif
+
                             </ul>
                         </div>
                     </div>

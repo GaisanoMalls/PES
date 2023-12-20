@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HRController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use App\Livewire\EditEvaluation;
 use App\Livewire\EvaluationForm;
@@ -124,6 +125,21 @@ Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
 Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');
 
+
+//SETTINGS
+// Show evalaution permissions
+Route::get('/evaluation-permissions', [SettingsController::class, 'evalPerm'])->name('settings.evalperm');
+// Show department config (CREATE)
+Route::get('/department-configurations/create', [SettingsController::class, 'deptConfig'])->name('settings.deptconfigCreate');
+
+//Show all department configurations
+Route::get('/department-configurations', [SettingsController::class, 'deptConfigIndex'])->name('settings.deptconfig');
+
+// Show department config (CREATE)
+Route::get('/department-configurations/{id}', [SettingsController::class, 'deptConfigShow'])->name('settings.deptconfigEdit');
+
+
+// settings.evalperm' settings.deptconfig
 
 Route::get('/markAllAsRead', function () {
     Auth::user()->unreadNotifications->markAsRead();

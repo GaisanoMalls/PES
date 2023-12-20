@@ -36,10 +36,15 @@
                                             <div class="form-group">
                                                 <label for="criteria_allocation_{{ $partIndex }}">Criteria
                                                     Allocation:</label>
-                                                <input class="form-control" type="number" step="0.01"
+                                                <input class="form-control" type="number"
                                                     id="criteria_allocation_{{ $partIndex }}"
-                                                    wire:model="parts.{{ $partIndex }}.criteria_allocation">
+                                                    wire:model="parts.{{ $partIndex }}.criteria_allocation"
+                                                    max="100">
+                                                @error('parts.criteria_allocation')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
+
                                         </div>
                                     </div>
                                     <button class="btn btn-outline-danger"
@@ -61,6 +66,7 @@
                                                         <input class="form-control" type="text"
                                                             id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -82,7 +88,7 @@
                                                 @foreach ($ratingScales as $scale)
                                                     <div class="col-md-2">
                                                         <label>{{ $scale['name'] }}</label>
-                                                        <input class="form-control" type="number" step="0.01"
+                                                        <input class="form-control" type="number"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
                                                     </div>
                                                 @endforeach
@@ -104,8 +110,6 @@
                                 <div wire:ignore.self class="modal fade" id="addFactorModal_{{ $partIndex }}"
                                     tabindex="-1" role="dialog"
                                     aria-labelledby="addFactorModalLabel_{{ $partIndex }}" aria-hidden="true">
-
-
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -119,15 +123,25 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
                                                 <!-- Modal content goes here, similar to the fields for adding a factor -->
                                                 <div class="form-group">
                                                     <label for="newFactorName">Factor Name:</label>
                                                     <input type="text" class="form-control" id="newFactorName"
-                                                        wire:model="newFactorName">
+                                                        wire:model="newFactorName" wire:change="validateInputs">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="newFactorDescription">Factor Description:</label>
-                                                    <textarea class="form-control" id="newFactorDescription" wire:model="newFactorDescription"></textarea>
+                                                    <textarea class="form-control" id="newFactorDescription" wire:model="newFactorDescription"
+                                                        wire:change="validateInputs"></textarea>
                                                 </div>
                                                 <!-- Rating Scales and Equivalent Points -->
                                                 <div class="rating-scale"></div>
@@ -137,7 +151,8 @@
                                                         <div class="col-md-2">
                                                             <label>{{ $scale['name'] }}</label>
                                                             <input class="form-control" type="number" step="0.01"
-                                                                wire:model="newFactorRatingScales.{{ $scale['id'] }}">
+                                                                wire:model="newFactorRatingScales.{{ $scale['id'] }}"
+                                                                wire:change="validateInputs">
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -145,15 +160,15 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                                    wire:click="addFactor({{ $partIndex }})">Add Factor</button>
-
+                                                <button type="button" class="btn btn-primary"
+                                                    wire:click="addFactor({{ $partIndex }})"
+                                                    @if ($isValid) data-dismiss="modal" @endif>Add
+                                                    Factor</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
-
                             <div class="text-right m-t-15">
                                 <button type="button" class="btn btn-primary" wire:click="addPart">Add Part</button>
                             </div>
@@ -165,7 +180,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <script>
         function openAddFactorModal(partIndex) {

@@ -6,7 +6,7 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-12 mt-5">
-                    <h3 class="page-title mt-3">Good Day {{ Auth::user()->employee->first_name }}!</h3>
+                    <h3 class="page-title mt-3">Great Day {{ Auth::user()->employee->first_name }}!</h3>
 
 
                     <ul class="breadcrumb">

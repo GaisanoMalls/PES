@@ -69,13 +69,12 @@ final class Employees extends PowerGridComponent
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns()
-            ->addColumn('id')
             ->addColumn('employee_id')
 
-            ->addColumn('department_id')
 
             ->addColumn('department_name', fn (Employee $model) => $model->department->name)
 
+            ->addColumn('branch_name')
 
             ->addColumn('first_name')
             ->addColumn('last_name')
@@ -91,12 +90,14 @@ final class Employees extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id')
-                ->searchable(),
+
             Column::make('Employee id', 'employee_id')
                 ->searchable(),
 
             Column::make('Department Name', 'department_name')
+                ->searchable(),
+
+            Column::make('Branch Name', 'branch_name')
                 ->searchable(),
 
             Column::make('First name', 'first_name')
@@ -127,8 +128,9 @@ final class Employees extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::inputText('id')->operators(['contains']),
             Filter::inputText('employee_id')->operators(['contains']),
+            Filter::inputText('branch_name')->operators(['contains']),
+
             Filter::inputText('first_name')->operators(['contains']),
             Filter::inputText('last_name')->operators(['contains']),
             Filter::inputText('date_hired')->operators(['contains']),

@@ -22,6 +22,8 @@ use PDF;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
 use App\Models\Clarification;
+use App\Models\DepartmentConfiguration;
+use App\Models\EvaluationApprovers;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Response;
@@ -356,16 +358,23 @@ class ReviewEvaluation extends Component
         $this->evaluation->update(['ratees_comment' => $this->rateeComment]);
         $this->isEditing = false;
 
-        NotificationEvaluation::create([
+        // Check if notification already exists
+        $existingNotification = NotificationEvaluation::where([
             'notifiable_id' => $this->evaluation->evaluator_id,
             'type' => 'evaluation',
             'person_id' => $this->evaluation->id,
-            'notif_title' => "Evaluation ID: " . '' . $this->evaluation->id,
-            'notif_desc' => "The employee has acknowledged the evaluation.",
-        ]);
+        ])->exists();
 
 
-        session()->flash('success', 'Ratee\'s comment saved successfully!');
+        if ($this->rateeComment != null) {
+            NotificationEvaluation::create([
+                'notifiable_id' => $this->evaluation->evaluator_id,
+                'type' => 'evaluation',
+                'person_id' => $this->evaluation->id,
+                'notif_title' => "Evaluation ID: " . '' . $this->evaluation->id,
+                'notif_desc' => "The employee has acknowledged the evaluation.",
+            ]);
+        }
     }
     public function toggleEditMode()
     {
@@ -393,6 +402,14 @@ class ReviewEvaluation extends Component
     {
         $this->ratingScales = RatingScale::all();
         $clarifications = Clarification::where('evaluation_id', $this->evaluation->id)->get();
+
+        $department = $this->evaluation->employee->department;
+        $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->first();
+        $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)->get();
+
+        // Access the number_of_approvers or set it to a default value (e.g., 0) if not found
+        $departmentApproversCount = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
+
 
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
         $this->partsWithFactors = [];
@@ -452,6 +469,8 @@ class ReviewEvaluation extends Component
             'totalRateForAllParts' => $totalRateForAllParts, // Include the total rate for all parts
             'currentStep' => $this->currentStep,
             'clarifications' => $clarifications,
+            'departmentApproversCount' => $departmentApproversCount, // Pass the count to the view
+            'evaluationApprovers' => $evaluationApprovers,
 
         ]);
     }
