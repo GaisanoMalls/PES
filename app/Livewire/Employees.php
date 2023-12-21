@@ -132,16 +132,26 @@ final class Employees extends PowerGridComponent
     {
         $evaluatorId = auth()->user()->id;
 
-        // Retrieve the EvaluationPermission records based on the current user's evaluator ID
-        $evaluationPermissions = EvaluationPermission::where('evaluator_id', $evaluatorId)->get();
+        // Check if the current user is an admin or a specific role
+        if (auth()->user()->role_id === 1 || auth()->user()->role_id === 5) {
+            // If admin, fetch all departments and branches
+            $allDepartments = Department::all();
+            $allBranches = Branch::all();
+        } else {
+            // If not admin, fetch only relevant departments and branches based on EvaluationPermissions
+            // Retrieve the EvaluationPermission records based on the current user's evaluator ID
+            $evaluationPermissions = EvaluationPermission::where('evaluator_id', $evaluatorId)->get();
 
-        // Retrieve unique department and branch IDs from EvaluationPermissions
-        $departmentIds = $evaluationPermissions->pluck('department_id')->unique()->toArray();
-        $branchIds = $evaluationPermissions->pluck('branch_id')->unique()->toArray();
+            // Retrieve unique department and branch IDs from EvaluationPermissions
+            $departmentIds = $evaluationPermissions->pluck('department_id')->unique()->toArray();
+            $branchIds = $evaluationPermissions->pluck('branch_id')->unique()->toArray();
+
+            $allDepartments = Department::whereIn('id', $departmentIds)->get();
+            $allBranches = Branch::whereIn('id', $branchIds)->get();
+        }
 
         return [
             Filter::inputText('employee_id')->operators(['contains']),
-
             Filter::inputText('first_name')->operators(['contains']),
             Filter::inputText('last_name')->operators(['contains']),
             Filter::inputText('date_hired')->operators(['contains']),
@@ -149,18 +159,17 @@ final class Employees extends PowerGridComponent
             Filter::inputText('employment_status')->operators(['contains']),
             // Filter::inputText('employment_status')->operators(['contains']),
             Filter::select('department_name', 'department_id')
-                ->dataSource(Department::whereIn('id', $departmentIds)->get())
+                ->dataSource($allDepartments)
                 ->optionValue('id')
                 ->optionLabel('name'),
 
             Filter::select('branch_name', 'branch_id')
-                ->dataSource(Branch::whereIn('id', $branchIds)->get())
+                ->dataSource($allBranches)
                 ->optionValue('id')
                 ->optionLabel('name'),
-
-
         ];
     }
+
 
     #[\Livewire\Attributes\On('edit')]
     public function edit($employeeId)
