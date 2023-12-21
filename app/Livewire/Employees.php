@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\EvaluationPermission;
 use App\Models\Evaluator;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +38,7 @@ final class Employees extends PowerGridComponent
         ];
     }
 
+
     public function datasource(): Builder
     {
         // Check if the current user is an admin (assuming role_id 1 represents admin)
@@ -45,21 +47,21 @@ final class Employees extends PowerGridComponent
             return Employee::query();
         }
 
-        // If not admin, proceed with the department-based filtering logic
+        // If not admin, proceed with the EvaluationPermission-based filtering logic
 
-        // Retrieve the current user's department ID
-        $currentDepartmentId = auth()->user()->department_id;
+        // Retrieve the current user's evaluator ID
+        $evaluatorId = auth()->user()->id;
 
-        // Retrieve the current user's person ID from the Evaluator table
-        $evaluator = Evaluator::where('id', auth()->user()->person_id)->first();
+        // Retrieve the EvaluationPermission records based on the current user's evaluator ID
+        $evaluationPermissions = EvaluationPermission::where('evaluator_id', $evaluatorId)->get();
 
-        // If the Evaluator record is found, update the currentDepartmentId
-        if ($evaluator) {
-            $currentDepartmentId = $evaluator->department_id;
-        }
+        // Retrieve unique department and branch IDs from EvaluationPermissions
+        $departmentIds = $evaluationPermissions->pluck('department_id')->unique()->toArray();
+        $branchIds = $evaluationPermissions->pluck('branch_id')->unique()->toArray();
 
-        // Return the Employee query filtered by the current user's department ID
-        return Employee::where('department_id', $currentDepartmentId);
+        // Return the Employee query filtered by the unique department and branch IDs
+        return Employee::whereIn('department_id', $departmentIds)
+            ->whereIn('branch_id', $branchIds);
     }
 
     public function relationSearch(): array
@@ -128,6 +130,15 @@ final class Employees extends PowerGridComponent
 
     public function filters(): array
     {
+        $evaluatorId = auth()->user()->id;
+
+        // Retrieve the EvaluationPermission records based on the current user's evaluator ID
+        $evaluationPermissions = EvaluationPermission::where('evaluator_id', $evaluatorId)->get();
+
+        // Retrieve unique department and branch IDs from EvaluationPermissions
+        $departmentIds = $evaluationPermissions->pluck('department_id')->unique()->toArray();
+        $branchIds = $evaluationPermissions->pluck('branch_id')->unique()->toArray();
+
         return [
             Filter::inputText('employee_id')->operators(['contains']),
 
@@ -138,15 +149,16 @@ final class Employees extends PowerGridComponent
             Filter::inputText('employment_status')->operators(['contains']),
             // Filter::inputText('employment_status')->operators(['contains']),
             Filter::select('department_name', 'department_id')
-                ->dataSource(Department::all())
+                ->dataSource(Department::whereIn('id', $departmentIds)->get())
                 ->optionValue('id')
                 ->optionLabel('name'),
 
             Filter::select('branch_name', 'branch_id')
-                ->dataSource(Branch::all())
+                ->dataSource(Branch::whereIn('id', $branchIds)->get())
                 ->optionValue('id')
                 ->optionLabel('name'),
-            // Filter::datetimepicker('created_at'),
+
+
         ];
     }
 

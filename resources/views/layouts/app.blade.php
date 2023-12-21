@@ -390,13 +390,13 @@
                                         <a href="#"><i class="fas fa-user"></i> <span> Settings </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
-                                            style="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.deptconfig') || request()->routeIs('settings.deptconfigCreate') ? 'display:block' : 'display:none' }}">
+                                            style="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.deptconfig') || request()->routeIs('settings.evalpermShow') || request()->routeIs('settings.deptconfigEdit') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.deptconfigCreate') ? 'display:block' : 'display:none' }}">
                                             <li>
-                                                <a class="{{ request()->routeIs('settings.evalperm') ? 'active' : '' }}"
+                                                <a class="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.evalpermShow') ? 'active' : '' }}"
                                                     href="{{ route('settings.evalperm') }}">Evaluations Permissions</a>
                                             </li>
                                             <li>
-                                                <a class="{{ request()->routeIs('settings.deptconfig') ? 'active' : '' }}"
+                                                <a class="{{ request()->routeIs('settings.deptconfig') || request()->routeIs('settings.deptconfigEdit') || request()->routeIs('settings.deptconfigCreate') ? 'active' : '' }}"
                                                     href="{{ route('settings.deptconfig') }}">Department
                                                     Configuration</a>
                                             </li>

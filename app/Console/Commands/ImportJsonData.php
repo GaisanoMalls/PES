@@ -28,7 +28,7 @@ class ImportJsonData extends Command
      */
     public function handle()
     {
-        $jsonFilePath = storage_path('json_data/outputNew.json');
+        $jsonFilePath = storage_path('json_data/output.json');
         $jsonFile = file_get_contents($jsonFilePath); // Read the JSON file
 
         $data = json_decode($jsonFile, true);

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluationPermission extends Model
 {
+    public $timestamps = false;
+
     use HasFactory;
     protected $fillable = [
         'evaluator_id',
@@ -17,5 +19,16 @@ class EvaluationPermission extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

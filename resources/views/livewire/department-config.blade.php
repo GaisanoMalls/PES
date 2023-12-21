@@ -22,7 +22,8 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <label>Branch:</label>
-                            <select class="form-control" wire:model="selectedBranch">
+                            <select class="form-control" wire:model="selectedBranch"
+                                wire:change="loadDepartmentDetails">
                                 <option value="">Select Branch</option>
                                 @foreach ($branches as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -32,7 +33,7 @@
                     </div>
 
                 </div>
-                @if ($selectedDepartment)
+                @if ($selectedDepartment && $selectedBranch)
                     <div class="card-body">
                         @foreach ($levels as $level)
                             <div class="col-md-6">

@@ -12,9 +12,10 @@ class SettingsController extends Controller
 {
     public function evalPerm()
     {
-        $evaluationPermissions = EvaluationPermission::all();
+        $evaluationPermissions = EvaluationPermission::all()->unique('employee_id');
         return view('admin.settings.evalPerm-index', compact('evaluationPermissions'));
     }
+
     public function deptConfig()
     {
         return view('admin.settings.deptConfig-create');
@@ -40,5 +41,12 @@ class SettingsController extends Controller
     public function evalpermCreate()
     {
         return view('admin.settings.evalPerm.evalPerm-create');
+    }
+    public function evalpermShow($id)
+    {
+        // Assuming $id is the employee_id
+        $evalPerm = EvaluationPermission::where('employee_id', $id)->firstOrFail();
+
+        return view('admin.settings.evalPerm.evalPerm-show', compact('evalPerm'));
     }
 }

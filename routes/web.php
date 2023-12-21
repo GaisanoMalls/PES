@@ -143,6 +143,9 @@ Route::get('/department-configurations/{id}', [SettingsController::class, 'deptC
 //Evaluation Pemission
 Route::get('/evaluation-permissions/create', [SettingsController::class, 'evalpermCreate'])->name('settings.evalpermCreate');
 
+//Evaluation Pemission
+Route::get('/evaluation-permissions/{id}', [SettingsController::class, 'evalpermShow'])->name('settings.evalpermShow');
+
 // settings.evalperm' settings.deptconfig
 
 Route::get('/markAllAsRead', function () {
