@@ -11,6 +11,9 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "bootstrap-select": "^1.13.18",
+        "jquery": "^3.7.1",
+        "select2": "^4.1.0-rc.0",
         "slim-select": "^2.6.0",
         "sweetalert2": "^11.10.0",
         "tom-select": "^2.3.1"

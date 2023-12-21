@@ -11,8 +11,6 @@ use Livewire\Component;
 class EvaluationPermissionCreate extends Component
 {
     public $selectedEvaluator;
-
-    public $selectedBranches = [];
     public $selectedDepartments = [];
 
     public function render()
@@ -31,7 +29,6 @@ class EvaluationPermissionCreate extends Component
         ]);
     }
 
-
     public function saveSelection()
     {
         // Validate that an evaluator is selected
@@ -40,26 +37,20 @@ class EvaluationPermissionCreate extends Component
         ]);
 
         // Loop through selected branches and departments and store in the database
-        foreach ($this->selectedBranches as $branchId => $isSelected) {
-            if ($isSelected) {
-                foreach ($this->selectedDepartments[$branchId] as $departmentId => $isSelected) {
-                    if ($isSelected) {
-                        EvaluationPermission::create([
-                            'evaluator_id' => $this->selectedEvaluator,
-                            'employee_id' => optional(User::find($this->selectedEvaluator)->employee)->id,
-                            'department_id' => $departmentId,
-                            'branch_id' => $branchId,
-                        ]);
-                    }
-                }
+        foreach ($this->selectedDepartments as $branchId => $selectedDepartmentIds) {
+            foreach ($selectedDepartmentIds as $departmentId) {
+                EvaluationPermission::create([
+                    'evaluator_id' => $this->selectedEvaluator,
+                    'employee_id' => optional(User::find($this->selectedEvaluator)->employee)->id,
+                    'department_id' => $departmentId,
+                    'branch_id' => $branchId,
+                ]);
             }
         }
 
         // Optional: You can add a success message or perform other actions here
-
         // Clear the selected values after storing in the database
         $this->selectedEvaluator = null;
-        $this->selectedBranches = [];
         $this->selectedDepartments = [];
     }
 }

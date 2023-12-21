@@ -1,4 +1,5 @@
-<!-- evaluation-permission-create.blade.php -->
+<!-- Add the required Select2 CSS and JS files -->
+
 <div class="m-t-30">
     <div class="row">
         <div class="col-lg-12">
@@ -21,19 +22,14 @@
                     <div>
                         <label>Choose Branches and Departments:</label><br>
                         @foreach ($branches as $branch)
-                            <label>
-                                <input type="checkbox" wire:model="selectedBranches.{{ $branch->id }}"
-                                    value="{{ $branch->id }}">
-                                <h4>{{ $branch->name }}</h4>
-                            </label><br>
-                            @foreach ($departments as $department)
-                                <label>
-                                    <input type="checkbox"
-                                        wire:model="selectedDepartments.{{ $branch->id }}.{{ $department->id }}"
-                                        value="{{ $department->id }}">
-                                    {{ $department->name }}
-                                </label><br>
-                            @endforeach
+                            <label>{{ $branch->name }}</label>
+                            <select class="selectpicker" wire:model="selectedDepartments.{{ $branch->id }}"
+                                multiple="multiple" data-live-search="true" style="width: 100% !important;">
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}" style="width: 100% !important;">
+                                        {{ $department->name }}</option>
+                                @endforeach
+                            </select><br>
                             <div class="rating-scale"></div>
                         @endforeach
                         <button wire:click="saveSelection">Save</button>
@@ -43,3 +39,11 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        $(function() {
+            $('select').selectpicker();
+        });
+    </script>
+@endpush
