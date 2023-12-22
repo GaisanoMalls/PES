@@ -53,6 +53,6 @@ class EvaluationPermissionCreate extends Component
         $this->selectedEvaluator = null;
         $this->selectedDepartments = [];
 
-        return redirect()->route('settings.evalpermEdit', ['id' => optional(User::find($this->selectedEvaluator)->employee)->id]);
+        return redirect()->route('settings.evalperm');
     }
 }

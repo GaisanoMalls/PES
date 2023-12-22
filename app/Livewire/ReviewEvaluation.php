@@ -136,10 +136,21 @@ class ReviewEvaluation extends Component
             // Delete existing entry in DisapprovalReason
             DisapprovalReason::where('evaluation_id', $this->evaluation->id)->delete();
         }
+        $departmentConfig = DepartmentConfiguration::where('department_id', $this->evaluation->employee->department_id)
+            ->where('branch_id', $this->evaluation->employee->branch_id)
+            ->first();
 
-        $userEmployeeId = Auth::user()->employee_id;
-        $this->evaluation->status = 2;
-        $this->evaluation->approver_id = $userEmployeeId;
+        $maxApproverLevel = $departmentConfig ? $departmentConfig->max_approver_level : 0;
+
+
+
+        $this->evaluation->approver_count += 1; // Increment approver_count by 1
+        // Check if approver_count has reached the maximum allowed approver level
+        if ($this->evaluation->approver_count >= $maxApproverLevel) {
+            // Set evaluation status to 2
+            $this->evaluation->status = 2;
+        }
+
         $this->evaluation->save();
         $user = auth()->user();
 
@@ -208,7 +219,7 @@ class ReviewEvaluation extends Component
 
         $userEmployeeId = Auth::user()->employee_id;
         $this->evaluation->status = 3;
-        $this->evaluation->approver_id = $userEmployeeId;
+        $this->evaluation->approver_count -= 1;
         $this->evaluation->save();
 
         //  $userEmployeeId = Auth::user()->employee_id;
@@ -293,7 +304,6 @@ class ReviewEvaluation extends Component
             $clarification->save();
 
 
-            $this->evaluation->approver_id = $user->employee->id;
             // Change the evaluation status
             $this->evaluation->status = 4;
 
@@ -463,6 +473,32 @@ class ReviewEvaluation extends Component
         }
 
 
+        $isApproverLevelValid = ($this->evaluation->status != 2 && $this->evaluation->approver_count >= 0);
+
+        if ($this->evaluation->approver_count >= 0) {
+            $departmentConfig = DepartmentConfiguration::where('department_id', $this->evaluation->employee->department_id)
+                ->where('branch_id', $this->evaluation->employee->branch_id)
+                ->first();
+
+            $maxApproverLevel = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
+
+            $currentUserEmployeeId = auth()->user()->employee_id;
+            $currentUserApprover = EvaluationApprovers::where('employee_id', $currentUserEmployeeId)->first();
+
+            if ($currentUserApprover) {
+                // Check if the current user's approver level matches the expected level
+                if ($currentUserApprover->approver_level == $this->evaluation->approver_count + 1) {
+                    $isApproverLevelValid = true;
+                } else {
+                    $isApproverLevelValid = false;
+                }
+            }
+        }
+
+
+
+
+
 
         return view('livewire.review-evaluation', [
             'employee' => $this->employee,
@@ -474,6 +510,8 @@ class ReviewEvaluation extends Component
             'clarifications' => $clarifications,
             'departmentApproversCount' => $departmentApproversCount, // Pass the count to the view
             'evaluationApprovers' => $evaluationApprovers,
+            'isApproverLevelValid' => $isApproverLevelValid,
+            'maxApproverLevel' => $maxApproverLevel, // Include maxApproverLevel in the data array
 
         ]);
     }

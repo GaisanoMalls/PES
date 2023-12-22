@@ -229,69 +229,34 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+
+
+            <div class="row">
                 <div class="col-xl-6">
                     <div class="form-group row">
                         <label class="col-lg-3 col-form-label">REVIEWED BY: </label>
                         <div class="col-lg-7">
-                            @if ($evaluation->approver_id)
+                            @foreach ($evaluationApprovers as $index => $approver)
+                                @php
+                                    $greenLightClass = $evaluation->approver_count > 0 && $approver->approver_level <= $evaluation->approver_count ? 'btn btn-m bg-success-light mb-2 text-center strong-text form-control' : 'btn btn-m bg-warning-pending mb-2 text-center strong-text form-control';
+                                @endphp
                                 <a href="#"
-                                    @if ($evaluation->status == 2) class="btn btn-m bg-success-light mb-2 text-center strong-text form-control"
-                                   @elseif ($evaluation->status == 3)
-                                   class="btn btn-m bg-danger-light mb-2 text-center strong-text form-control"   @else class="btn btn-m bg-warning-light mb-2 text-center strong-text form-control" @endif
-                                    style="cursor: default;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
-                                    @if ($evaluation->status == 2)
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                            height="24" class="main-grid-item-icon" fill="none"
-                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                            <polyline points="22 4 12 14.01 9 11.01" />
-                                        </svg>
-                                    @elseif ($evaluation->status == 3)
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                            height="24" class="main-grid-item-icon" fill="none"
-                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="15" x2="9" y1="9" y2="15" />
-                                            <line x1="9" x2="15" y1="9" y2="15" />
-                                        </svg>
-                                    @elseif ($evaluation->status == 4)
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                            height="24" class="main-grid-item-icon" fill="none"
-                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" x2="12" y1="8" y2="12" />
-                                            <line x1="12" x2="12.01" y1="16" y2="16" />
-                                        </svg>
-                                    @endif
+                                    class="{{ $evaluation->status == 2 ? 'btn btn-m bg-success-light mb-2 text-center strong-text form-control' : ($evaluation->status == 3 ? 'btn btn-m bg-danger-light mb-2 text-center strong-text form-control' : ($evaluation->status == 4 ? 'btn btn-m bg-warning-light mb-2 text-center strong-text form-control' : $greenLightClass)) }}"
+                                    style="cursor: default;">
+                                    {{ $approver->employee->first_name . ' ' . $approver->employee->last_name }}
                                 </a>
-                            @else
-                                <a href="#"
-                                    class="btn btn-m bg-warning-pending mb-2 text-center strong-text form-control"
-                                    style="cursor: default;">Pending Review
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                        height="24" class="main-grid-item-icon" fill="none"
-                                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <polyline points="12 6 12 12 16 14" />
-                                    </svg>
-                                </a>
-                            @endif
-                            <p class="text-center">
-                                @if ($evaluation->approver_id)
-                                    {{ $evaluation->approverEmployee->department->name . ' - ' . $evaluation->approverEmployee->position }}
-                                @else
-                                    APPROVER
-                                @endif
-                            </p>
+                                <p class="text-center">
+                                    {{ 'Level: ' . $approver->approver_level . ' (' . $approver->employee->department->name . ' - ' . $approver->employee->position . ')' }}
+                                </p>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
+
+
             <div class="m-t-15">
                 <div class="comment">
                     <div class="form-group">

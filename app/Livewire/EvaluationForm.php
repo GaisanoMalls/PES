@@ -17,7 +17,8 @@ use App\Models\Part;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
-
+use App\Models\DepartmentConfiguration;
+use App\Models\EvaluationApprovers;
 use App\Models\Recommendation;
 
 class EvaluationForm extends Component
@@ -283,26 +284,40 @@ class EvaluationForm extends Component
 
 
         // EMAIL NOTIF AND SYSTEM NOTIF
-        // Get all users with role_id 3
-        $approverUsers = User::where('role_id', 3)->get();
-        // Prepare the data for the email
-        $data = [
-            'subject' => 'New evaluation ' . 'ID: ' . $evaluation->id,
-            'body' => 'Evaluation for ' . $evaluation->employee->first_name . ' ' .   $evaluation->employee->last_name,
-        ];
+        // Get the department configuration based on department_id and branch_id
+        $departmentConfiguration = DepartmentConfiguration::where('department_id', $evaluation->employee->department_id)
+            ->where('branch_id', $evaluation->employee->branch_id)
+            ->first();
 
-        // Send email to each approver
-        foreach ($approverUsers as $user) {
-            //  Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
-            // Store notification in the database
-            NotificationEvaluation::create([
-                'type' => 'evaluation',
-                'notifiable_id' => $user->employee_id,
-                'person_id' => $evaluation->id,
-                'notif_title' => $data['subject'],
-                'notif_desc' => $data['body'],
-            ]);
+        if ($departmentConfiguration) {
+            // Access the evaluation_approvers table
+            $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfiguration->id)
+                ->get();
+
+            // Get the employee_id from evaluation_approvers and store it on notifiable_id
+            foreach ($evaluationApprovers as $approver) {
+                $notifiableId = $approver->employee_id;
+
+                // Prepare the data for the email
+                $data = [
+                    'subject' => 'New evaluation ' . 'ID: ' . $evaluation->id,
+                    'body' => 'Evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name,
+                ];
+
+                // Send email to each approver
+                // Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
+
+                // Store notification in the database
+                NotificationEvaluation::create([
+                    'type' => 'evaluation',
+                    'notifiable_id' => $notifiableId,
+                    'person_id' => $evaluation->id,
+                    'notif_title' => $data['subject'],
+                    'notif_desc' => $data['body'],
+                ]);
+            }
         }
+
 
         //Notify employee
         NotificationEvaluation::create([

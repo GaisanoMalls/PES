@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\Clarification;
+use App\Models\DepartmentConfiguration;
 use App\Models\DisapprovalReason;
 use App\Models\Employee;
 use Livewire\Component;
 use App\Models\Evaluation;
+use App\Models\EvaluationApprovers;
 use App\Models\RatingScale;
 use App\Models\EvaluationPoint;
 use App\Models\Factor;
@@ -273,6 +275,13 @@ class EditEvaluation extends Component
         $this->ratingScales = RatingScale::all();
         $clarifications = Clarification::where('evaluation_id', $this->evaluation->id)->get();
 
+        $department = $this->evaluation->employee->department;
+        $branch = $this->evaluation->employee->branch; // Corrected typo: 'brahcn' to 'branch'
+
+        $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->where('branch_id', $branch->id)->first();
+
+        $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)->get();
+
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
         $this->partsWithFactors = [];
         $totalRateForAllParts = 0;
@@ -338,7 +347,28 @@ class EditEvaluation extends Component
             ];
             $totalRateForAllParts += $totalRateForPart;
         }
+        $isApproverLevelValid = ($this->evaluation->status != 2 && $this->evaluation->approver_count >= 0);
 
+        if ($this->evaluation->approver_count >= 0) {
+            $departmentConfig = DepartmentConfiguration::where('department_id', $this->evaluation->employee->department_id)
+                ->where('branch_id', $this->evaluation->employee->branch_id)
+                ->first();
+
+            $maxApproverLevel = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
+
+            $currentUserEmployeeId = auth()->user()->employee_id;
+            $currentUserApprover = EvaluationApprovers::where('employee_id', $currentUserEmployeeId)->first();
+
+            if ($currentUserApprover) {
+                $allowedApproverLevel = $this->evaluation->approver_count + 1;
+
+                if ($currentUserApprover->approver_level == $allowedApproverLevel) {
+                    $isApproverLevelValid = true;
+                } else {
+                    $isApproverLevelValid = false;
+                }
+            }
+        }
         return view('livewire.edit-evaluation', [
             'employee' => $this->employee,
             'department' => $this->departmentName,
@@ -346,8 +376,11 @@ class EditEvaluation extends Component
             'partsWithFactors' => $this->partsWithFactors,
             'totalRateForAllParts' => $totalRateForAllParts,
             'clarifications' => $clarifications,
-
             'currentStep' => $this->currentStep,
+            'evaluationApprovers' => $evaluationApprovers,
+            'isApproverLevelValid' => $isApproverLevelValid,
+            'maxApproverLevel' => $maxApproverLevel, // Include maxApproverLevel in the data array
+
         ]);
     }
 

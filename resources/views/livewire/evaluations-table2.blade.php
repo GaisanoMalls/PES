@@ -149,15 +149,11 @@
                                 @if (
                                     (Auth::user()->role_id == 3 && $evaluation->status == 1) ||
                                         (Auth::user()->role_id == 3 && $evaluation->status == 4) ||
-                                        (Auth::user()->role_id == 5 && $evaluation->status == 2))
+                                        (Auth::user()->role_id == 5 && $evaluation->status == 2) ||
+                                        (Auth::user()->role_id == 3 && $evaluation->status == 2))
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
                                         Review
-                                    </a>
-                                @elseif(Auth::user()->employee_id == $evaluation->approver_id)
-                                    <a class="dropdown-item"
-                                        href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
-                                        Edit Review
                                     </a>
                                 @endif
                                 @if (Auth::user()->role_id == 3 && ($evaluation->status == 2 || $evaluation->status == 3))
