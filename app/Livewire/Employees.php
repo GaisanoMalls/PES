@@ -52,17 +52,16 @@ final class Employees extends PowerGridComponent
         // Retrieve the current user's evaluator ID
         $evaluatorId = auth()->user()->id;
 
-        // Retrieve the EvaluationPermission records based on the current user's evaluator ID
-        $evaluationPermissions = EvaluationPermission::where('evaluator_id', $evaluatorId)->get();
-
-        // Retrieve unique department and branch IDs from EvaluationPermissions
-        $departmentIds = $evaluationPermissions->pluck('department_id')->unique()->toArray();
-        $branchIds = $evaluationPermissions->pluck('branch_id')->unique()->toArray();
-
-        // Return the Employee query filtered by the unique department and branch IDs
-        return Employee::whereIn('department_id', $departmentIds)
-            ->whereIn('branch_id', $branchIds);
+        // Join Employee with EvaluationPermission based on evaluator ID
+        return Employee::join('evaluation_permissions', function ($join) use ($evaluatorId) {
+            $join->on('employees.department_id', '=', 'evaluation_permissions.department_id')
+                ->on('employees.branch_id', '=', 'evaluation_permissions.branch_id')
+                ->where('evaluation_permissions.evaluator_id', $evaluatorId);
+        })
+            ->select('employees.*');
     }
+
+
 
     public function relationSearch(): array
     {
@@ -97,11 +96,10 @@ final class Employees extends PowerGridComponent
             Column::make('Employee id', 'employee_id')
                 ->searchable(),
 
-            Column::make('Department Name', 'department_name')
-                ->searchable(),
+            Column::make('Department Name', 'department_name'),
 
-            Column::make('Branch Name', 'branch_name')
-                ->searchable(),
+
+            Column::make('Branch Name', 'branch_name'),
 
             Column::make('First name', 'first_name')
                 ->sortable()
@@ -140,12 +138,19 @@ final class Employees extends PowerGridComponent
         } else {
             // If not admin, fetch only relevant departments and branches based on EvaluationPermissions
             // Retrieve the EvaluationPermission records based on the current user's evaluator ID
-            $evaluationPermissions = EvaluationPermission::where('evaluator_id', $evaluatorId)->get();
 
             // Retrieve unique department and branch IDs from EvaluationPermissions
-            $departmentIds = $evaluationPermissions->pluck('department_id')->unique()->toArray();
-            $branchIds = $evaluationPermissions->pluck('branch_id')->unique()->toArray();
+            $departmentIds = EvaluationPermission::where('evaluator_id', $evaluatorId)
+                ->pluck('department_id')
+                ->unique()
+                ->toArray();
 
+            $branchIds = EvaluationPermission::where('evaluator_id', $evaluatorId)
+                ->pluck('branch_id')
+                ->unique()
+                ->toArray();
+
+            // Fetch departments and branches only if they match exactly
             $allDepartments = Department::whereIn('id', $departmentIds)->get();
             $allBranches = Branch::whereIn('id', $branchIds)->get();
         }
@@ -157,18 +162,24 @@ final class Employees extends PowerGridComponent
             Filter::inputText('date_hired')->operators(['contains']),
             Filter::inputText('position')->operators(['contains']),
             Filter::inputText('employment_status')->operators(['contains']),
+            // Filter::inputText('department_name')->operators(['contains']),
+            // Filter::inputText('branch_name')->operators(['contains']),
             // Filter::inputText('employment_status')->operators(['contains']),
-            Filter::select('department_name', 'department_id')
+            (auth()->user()->role_id === 1 || auth()->user()->role_id === 5)
+                ? Filter::select('department_name', 'department_id')
                 ->dataSource($allDepartments)
                 ->optionValue('id')
-                ->optionLabel('name'),
-
-            Filter::select('branch_name', 'branch_id')
+                ->optionLabel('name')
+                : null,
+            (auth()->user()->role_id === 1 || auth()->user()->role_id === 5)
+                ? Filter::select('branch_name', 'branch_id')
                 ->dataSource($allBranches)
                 ->optionValue('id')
-                ->optionLabel('name'),
+                ->optionLabel('name')
+                : null,
         ];
     }
+
 
 
     #[\Livewire\Attributes\On('edit')]

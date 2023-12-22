@@ -23,8 +23,9 @@
                         <label>Choose Branches and Departments:</label><br>
                         @foreach ($branches as $branch)
                             <label>{{ $branch->name }}</label>
-                            <select class="selectpicker" wire:model="selectedDepartments.{{ $branch->id }}"
-                                multiple="multiple" data-live-search="true" style="width: 100% !important;">
+                            <select class="selectpicker" wire:model="selectedDepartments.{{ $branch->id }}" multiple
+                                data-live-search="true" style="width: 100% !important;" data-width="100%" multiple
+                                data-actions-box="true" multiple title="Choose Department">
                                 @foreach ($departments as $department)
                                     <option value="{{ $department->id }}" style="width: 100% !important;">
                                         {{ $department->name }}</option>
@@ -32,18 +33,10 @@
                             </select><br>
                             <div class="rating-scale"></div>
                         @endforeach
-                        <button wire:click="saveSelection">Save</button>
+                        <button wire:click="saveSelection" class="btn btn-success">Save</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@push('scripts')
-    <script>
-        $(function() {
-            $('select').selectpicker();
-        });
-    </script>
-@endpush

@@ -1,17 +1,20 @@
+<!-- Add the required Select2 CSS and JS files -->
+
 <div class="m-t-30">
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h2>Evaluation Permission</h2>
+                    <h1>Evaluation Permission</h1>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="evaluator">Select Evaluator:</label>
+                            <select class="form-control" wire:model="selectedEvaluator">
+                                <option value="">Select Evaluator</option>
 
-                    <h6>Employee ID: {{ $employeeId }}</h6>
-                    <h6>Evaluator ID: {{ $selectedEvaluator }}</h6>
-                    @if ($evaluationPermissions->isNotEmpty())
-                        <p>Employee Name: {{ $evaluationPermissions->first()->employee->first_name }}
-                            {{ $evaluationPermissions->first()->employee->last_name }}</p>
-                    @endif
-
+                            </select>
+                        </div>
+                    </div>
                     <div>
                         <label>Choose Branches and Departments:</label><br>
                         @foreach ($branches as $branch)
@@ -20,16 +23,13 @@
                                 data-live-search="true" style="width: 100% !important;" data-width="100%" multiple
                                 data-actions-box="true" multiple title="Choose Department">
                                 @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}" style="width: 100% !important;"
-                                        {{ in_array($department->id, $preSelectedDepartments[$branch->id] ?? []) ? 'selected' : '' }}>
+                                    <option value="{{ $department->id }}" style="width: 100% !important;">
                                         {{ $department->name }}</option>
                                 @endforeach
                             </select><br>
                             <div class="rating-scale"></div>
                         @endforeach
-                        <button wire:click="updateSelection" class="btn btn-success">Save</button>
-                        <a href="{{ route('settings.evalpermEdit', ['id' => $evaluationPermissions->first()->employee_id]) }}"
-                            class="btn btn-success">Cancel</a>
+                        <button wire:click="saveSelection" class="btn btn-success">Save</button>
                     </div>
                 </div>
             </div>

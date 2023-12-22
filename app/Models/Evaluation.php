@@ -12,7 +12,7 @@ class Evaluation extends Model
     protected $table = 'evaluations';
 
     protected $fillable = [
-        'approver_id',
+        'approver_count',
         'evaluator_id',
         'employee_id',
         'evaluation_template_id',
@@ -24,10 +24,10 @@ class Evaluation extends Model
     ];
 
 
-    public function approver()
-    {
-        return $this->belongsTo(Approver::class, 'approver_id', 'id');
-    }
+    // public function approver()
+    // {
+    //     return $this->belongsTo(Approver::class, 'approver_id', 'id');
+    // }
 
     public function evaluator()
     {

@@ -52,5 +52,7 @@ class EvaluationPermissionCreate extends Component
         // Clear the selected values after storing in the database
         $this->selectedEvaluator = null;
         $this->selectedDepartments = [];
+
+        return redirect()->route('settings.evalpermEdit', ['id' => optional(User::find($this->selectedEvaluator)->employee)->id]);
     }
 }

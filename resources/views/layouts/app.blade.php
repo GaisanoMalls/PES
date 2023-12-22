@@ -4,21 +4,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', config('app.name', 'Laravel'))</title>
 
-    <!-- Styles -->
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+
+    <title>@yield('title')</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/feathericon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.css" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
-        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
@@ -28,17 +35,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
     </script>
-    <!-- Scripts -->
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-
+    <!-- Include SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @livewireStyles
+
+
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 
@@ -398,9 +402,9 @@
                                         <a href="#"><i class="fas fa-user"></i> <span> Settings </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
-                                            style="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.deptconfig') || request()->routeIs('settings.evalpermShow') || request()->routeIs('settings.deptconfigEdit') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.deptconfigCreate') ? 'display:block' : 'display:none' }}">
+                                            style="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.deptconfig') || request()->routeIs('settings.evalpermShow') || request()->routeIs('settings.deptconfigEdit') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.deptconfigCreate') || request()->routeIs('settings.evalpermEdit') ? 'display:block' : 'display:none' }}">
                                             <li>
-                                                <a class="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.evalpermShow') ? 'active' : '' }}"
+                                                <a class="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.evalpermShow') || request()->routeIs('settings.evalpermEdit') ? 'active' : '' }}"
                                                     href="{{ route('settings.evalperm') }}">Evaluations Permissions</a>
                                             </li>
                                             <li>
@@ -434,8 +438,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/raphael/raphael.min.js') }}"></script>
     {{-- <script src="{{ asset('assets/plugins/morris/morris.min.js') }}"></script>
@@ -446,6 +449,7 @@
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
         window.addEventListener('swal:modal', event => {
             const swalWithBootstrapButtons = Swal.mixin({

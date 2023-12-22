@@ -216,7 +216,7 @@ class EvaluationForm extends Component
 
         // Create a new evaluation record
         $evaluation =  Evaluation::create([
-            'approver_id' => 0,
+            'approver_count' => 0,
             'evaluator_id' => $user->employee->id,
             'employee_id' => $this->employeeId,
             'evaluation_template_id' => $this->templateId,

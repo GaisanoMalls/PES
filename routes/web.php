@@ -10,9 +10,10 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use App\Livewire\EditEvaluation;
 use App\Livewire\EvaluationForm;
+use App\Livewire\EvaluationPermissionEdit;
 use App\Livewire\ReviewEvaluation;
 use Illuminate\Support\Facades\Auth;
-
+use Livewire\Livewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,8 +144,11 @@ Route::get('/department-configurations/{id}', [SettingsController::class, 'deptC
 //Evaluation Pemission
 Route::get('/evaluation-permissions/create', [SettingsController::class, 'evalpermCreate'])->name('settings.evalpermCreate');
 
-//Evaluation Pemission
+//Evaluation Pemission edit
 Route::get('/evaluation-permissions/{id}', [SettingsController::class, 'evalpermShow'])->name('settings.evalpermShow');
+
+//Evaluation Pemission show
+Route::get('/evaluation-permissions/show/{id}', [SettingsController::class, 'evalpermEdit'])->name('settings.evalpermEdit');
 
 // settings.evalperm' settings.deptconfig
 

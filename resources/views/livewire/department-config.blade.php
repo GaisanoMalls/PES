@@ -70,6 +70,7 @@
                                 <button type="button" class="btn btn-success" wire:click="submitForm">
                                     Save
                                 </button>
+                                <a href="{{ route('settings.deptconfig') }}" class="btn btn-success">Cancel</a>
                             </div>
                         </div>
                 @endif

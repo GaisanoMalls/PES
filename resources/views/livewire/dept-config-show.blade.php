@@ -21,7 +21,7 @@
                         </div>
                         <!-- Display table of evaluation approvers -->
                         <div class="m-t-30">
-                            <h2>Evaluation Approvers</h2>
+                            <h4>Evaluation Approvers</h4>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -38,7 +38,6 @@
                                             <td>{{ $evalApprover->employee->first_name }}</td>
                                             <td>{{ $evalApprover->employee->last_name }}</td>
                                             <td>{{ $evalApprover->approver_level }}</td>
-
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -342,6 +342,8 @@
             <a href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}"><button
                     class="btn btn-outline-success m-t-15">Back</button></a>
             @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
+
+                {{-- approver evaluation --}}
                 <button wire:click="approveEvaluation" wire:loading.attr="disabled"
                     @if ($evaluation->status == 2) class="btn btn-outline-secondary btn-right m-l-5" disabled @else class="btn btn-outline-success btn-right mr-2" @endif>
                     <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
@@ -349,10 +351,14 @@
                     <span wire:loading.remove wire:target="approveEvaluation"></span>Approve
                     Evaluation
                 </button>
+
+                {{-- disapprover evaluation --}}
                 <button data-toggle="modal" data-target="#disapproveModal"
                     @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
                     Evaluation
                 </button>
+
+                {{-- recommendation button --}}
                 @if ($evaluation->recommendation && Auth::user()->role_id == 3)
                     <button type="button" class="btn btn-outline-secondary btn-right m-r-5" data-toggle="modal"
                         data-target="#recommendationModal">
@@ -360,6 +366,7 @@
                     </button>
                 @endif
             @endif
+            {{-- view clarifications button --}}
             <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5"
                 @if ($showClarificationSection) disabled @endif>View
                 Clarifications</button>

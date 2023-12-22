@@ -1,4 +1,6 @@
 import "./bootstrap";
+import "select2/dist/css/select2.min.css";
+import $ from "jquery";
 
 // Import SweetAlert2 CSS
 import "sweetalert2/dist/sweetalert2.css";

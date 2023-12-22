@@ -49,4 +49,12 @@ class SettingsController extends Controller
 
         return view('admin.settings.evalPerm.evalPerm-show', compact('evalPerm'));
     }
+
+    public function evalpermEdit($id)
+    {
+        // Assuming $id is the employee_id
+        $evaluationPermissions = EvaluationPermission::where('employee_id', $id)->get();
+
+        return view('admin.settings.evalPerm.evalPerm-edit', compact('evaluationPermissions'));
+    }
 }
