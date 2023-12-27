@@ -251,7 +251,7 @@
                                                                         if (userRoleId == 2 || userRoleId == 5) {
                                                                             window.location.href = baseUrl + '/view/' + targetId;
                                                                         } else if (userRoleId == 3 || userRoleId == 4) {
-                                                                            window.location.href = baseUrl + '/' + targetId + '/review';
+                                                                            window.location.href = baseUrl + '/review/' + targetId;
                                                                         }
                                                                     } else if (type === 'employee') {
                                                                         window.location.href = baseUrl2 + targetId;

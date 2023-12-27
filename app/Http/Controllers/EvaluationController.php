@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Livewire\EvaluationsTable;
+use App\Models\DepartmentConfiguration;
 use App\Models\Employee;
 use App\Models\Evaluation;
+use App\Models\EvaluationApprovers;
 use App\Models\EvaluationPoint;
 use App\Models\EvaluationTemplate;
 use App\Models\Factor;
@@ -146,6 +148,15 @@ class EvaluationController extends Controller
 
         $ratingScales = RatingScale::all();
 
+        $department = $evaluation->employee->department;
+        $branch = $evaluation->employee->branch; // Corrected typo: 'brahcn' to 'branch'
+
+        $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->where('branch_id', $branch->id)->first();
+
+        $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)->get();
+        // Access the number_of_approvers or set it to a default value (e.g., 0) if not found
+        $departmentApproversCount = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
+
         // Load other data as needed...
 
         $parts = Part::where('evaluation_template_id', $evaluation->evaluation_template_id)->get();
@@ -217,6 +228,32 @@ class EvaluationController extends Controller
 
             $totalRateForAllParts += $totalRateForPart;
         }
+
+        $isApproverLevelValid = ($evaluation->status != 2 && $evaluation->approver_count >= 0);
+
+        if (
+            $evaluation->approver_count >= 0
+        ) {
+            $departmentConfig = DepartmentConfiguration::where('department_id', $evaluation->employee->department_id)
+                ->where('branch_id', $evaluation->employee->branch_id)
+                ->first();
+
+            $maxApproverLevel = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
+
+            $currentUserEmployeeId = auth()->user()->employee_id;
+            $currentUserApprover = EvaluationApprovers::where('employee_id', $currentUserEmployeeId)->first();
+
+            if ($currentUserApprover) {
+                // Check if the current user's approver level matches the expected level
+                if ($currentUserApprover->approver_level == $evaluation->approver_count + 1) {
+                    $isApproverLevelValid = true;
+                } else {
+                    $isApproverLevelValid = false;
+                }
+            }
+        }
+
+
         // Return an associative array with the loaded data
         return [
             'evaluation' => $evaluation,
@@ -233,6 +270,10 @@ class EvaluationController extends Controller
             'selectedScale' => $this->selectedScale,
             'factorsData' => $factorsData, // Include the factorsData array
             'part1TotalFactors' => $part1TotalFactors, // Variable for the count of factors for the first part
+            'departmentApproversCount' => $departmentApproversCount, // Pass the count to the view
+            'evaluationApprovers' => $evaluationApprovers,
+            'isApproverLevelValid' => $isApproverLevelValid,
+            'maxApproverLevel' => $maxApproverLevel, // Include maxApproverLevel in the data array
 
             // Add other data as needed...
         ];

@@ -15,22 +15,10 @@ class EmployeeEvaluationTable extends Component
 
     public function render()
     {
-        // Retrieve the current user's department ID
-        $currentDepartmentId = auth()->user()->department_id;
 
-        // Retrieve the current user's person ID from the Evaluator table
-        $evaluator = Evaluator::where('id', auth()->user()->person_id)->first();
 
-        if ($evaluator) {
-            $currentDepartmentId = $evaluator->department_id;
-        }
-
-        // Fetch employees with evaluations
         $query = Employee::whereHas('evaluations');
 
-        if (auth()->user()->role_id === 2) {
-            $query->where('department_id', $currentDepartmentId);
-        }
         // Add orderBy clause to sort by the latest evaluation date
         $query->orderBy(function ($query) {
             $query->select('updated_at')

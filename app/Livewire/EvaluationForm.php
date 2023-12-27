@@ -297,16 +297,19 @@ class EvaluationForm extends Component
             // Get the employee_id from evaluation_approvers and store it on notifiable_id
             foreach ($evaluationApprovers as $approver) {
                 $notifiableId = $approver->employee_id;
+                $personId = $approver->approver_id;
+                $userApprover = User::where('employee_id', $approver->employee_id)->first();
+                $url = env('APP_URL');
 
                 // Prepare the data for the email
                 $data = [
-                    'subject' => 'New evaluation ' . 'ID: ' . $evaluation->id,
-                    'body' => 'Evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name,
+                    'subject' => 'New Performance Review ' . 'ID: ' . $evaluation->id,
+                    'body' => 'This email is to notify you that ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' is now available for your review.',
+                    'link' => $url . 'evaluations/review/' . $evaluation->id,
                 ];
 
                 // Send email to each approver
-                // Mail::to($user->email)->send(new EmailNotification($data['body'], $data['subject']));
-
+                Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
                 // Store notification in the database
                 NotificationEvaluation::create([
                     'type' => 'evaluation',

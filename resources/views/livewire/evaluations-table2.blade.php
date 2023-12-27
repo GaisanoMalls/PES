@@ -1,7 +1,7 @@
 <!-- resources/views/livewire/evaluations-table.blade.php -->
 <div class="m-t-30 p-t-10">
     <div class="col-md-3 m-t-15">
-        <h4>Employees Evaluation</h4>
+        <h3>Employees Evaluation</h3>
     </div>
     <div class="text-right">
 
@@ -109,7 +109,7 @@
                             <a href="#" class="btn btn-sm bg-success-light mr-2" style="cursor: default;">
                                 Yes</a>
                         @else
-                            <a href="#" class="btn btn-sm bg-danger-light mr-2" style="cursor: default;">
+                            <a href="#" class="btn btn-sm bg-default-light mr-2" style="cursor: default;">
                                 No</a>
                         @endif
                     </td>

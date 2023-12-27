@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EmailNotification extends Mailable
+class EmailNotification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -17,12 +17,13 @@ class EmailNotification extends Mailable
      * Create a new message instance.
      */
 
-    public $subject, $body;
-    public function __construct($body, $subject)
+    public $subject, $body, $link;
+    public function __construct($body, $subject, $link)
     {
         //
         $this->body = $body;
         $this->subject = $subject;
+        $this->link = $link;
     }
 
     /**
@@ -41,7 +42,7 @@ class EmailNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.notification',
+            markdown: 'emails.notification',
         );
     }
 

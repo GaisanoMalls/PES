@@ -5,7 +5,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h1>Evaluation Permission</h1>
+                    <h3>Evaluation Permission</h3>
+                </div>
+                <div class="card-body">
+
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="evaluator">Select Evaluator:</label>
@@ -20,7 +23,7 @@
                         </div>
                     </div>
                     <div>
-                        <label>Choose Branches and Departments:</label><br>
+                        <label class="m-t-15">Choose Branches and Departments:</label><br>
                         @foreach ($branches as $branch)
                             <label>{{ $branch->name }}</label>
                             <select class="selectpicker" wire:model="selectedDepartments.{{ $branch->id }}" multiple

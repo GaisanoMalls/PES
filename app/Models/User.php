@@ -30,6 +30,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
+
+
     // Define the relationship with the Approver model
     public function approver()
     {

@@ -5,7 +5,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h1>Department Configuration</h1>
+                    <h3>Department Configuration</h3>
+                </div>
+                <div class="card-body">
+
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="department">Select Department:</label>
@@ -32,48 +35,49 @@
                         </div>
                     </div>
 
-                </div>
-                @if ($selectedDepartment && $selectedBranch)
-                    <div class="card-body">
-                        @foreach ($levels as $level)
-                            <div class="col-md-6">
-                                <label class="m-t-15" for="approver_level_{{ $level }}">Approver Level
-                                    {{ $level }}:</label>
-                                <select class="form-control" wire:model="selectedApprovers.{{ $level }}">
-                                    <option value="">Select Approver Level {{ $level }}</option>
-                                    @foreach ($this->getApproversForLevel($level) as $approver)
-                                        <option value="{{ $approver->id }}">
-                                            {{ $approver->employee->last_name . ', ' . $approver->employee->first_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endforeach
-                        <div class="m-t-15">
-                            @if ($canAddLevel)
-                                <div class="col-md-6 text-right">
-                                    <button type="button" class="btn btn-primary" wire:click="addLevel">
-                                        Add Level
-                                        <!-- SVGO-optimized SVG icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                            height="24" class="main-grid-item-icon" fill="none"
-                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" x2="12" y1="8" y2="16" />
-                                            <line x1="8" x2="16" y1="12" y2="12" />
-                                        </svg>
-                                    </button>
+
+                    @if ($selectedDepartment && $selectedBranch)
+                        <div class="card-body">
+                            @foreach ($levels as $level)
+                                <div class="col-md-6">
+                                    <label class="m-t-15" for="approver_level_{{ $level }}">Approver Level
+                                        {{ $level }}:</label>
+                                    <select class="form-control" wire:model="selectedApprovers.{{ $level }}">
+                                        <option value="">Select Approver Level {{ $level }}</option>
+                                        @foreach ($this->getApproversForLevel($level) as $approver)
+                                            <option value="{{ $approver->id }}">
+                                                {{ $approver->employee->last_name . ', ' . $approver->employee->first_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                            @endif
-                            <div class="col-md-6 m-t-15">
-                                <button type="button" class="btn btn-success" wire:click="submitForm">
-                                    Save
-                                </button>
-                                <a href="{{ route('settings.deptconfig') }}" class="btn btn-success">Cancel</a>
+                            @endforeach
+                            <div class="m-t-15">
+                                @if ($canAddLevel)
+                                    <div class="col-md-6 text-right">
+                                        <button type="button" class="btn btn-primary" wire:click="addLevel">
+                                            Add Level
+                                            <!-- SVGO-optimized SVG icon -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                height="24" class="main-grid-item-icon" fill="none"
+                                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" x2="12" y1="8" y2="16" />
+                                                <line x1="8" x2="16" y1="12" y2="12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                @endif
+                                <div class="col-md-6 m-t-15">
+                                    <button type="button" class="btn btn-success" wire:click="submitForm">
+                                        Save
+                                    </button>
+                                    <a href="{{ route('settings.deptconfig') }}" class="btn btn-success">Cancel</a>
+                                </div>
                             </div>
-                        </div>
-                @endif
+                    @endif
+                </div>
             </div>
         </div>
     </div>

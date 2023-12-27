@@ -4,12 +4,10 @@
     <div class="content container-fluid">
         <div class="page-header">
             <div class="row">
-                <div class="col-sm-12 mt-5">
-                    <h3 class="page-title mt-3">Great Day {{ Auth::user()->employee->first_name }}!</h3>
-
-
+                <div class="col-sm-12 mt-5 bg-white">
+                    <h3 class="page-title m-t-15">Great Day {{ Auth::user()->employee->first_name }}!</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        <li class="breadcrumb-item active  m-b-15">Dashboard</li>
                     </ul>
                 </div>
             </div>

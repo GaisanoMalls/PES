@@ -102,8 +102,8 @@
                                     @endforeach
 
                                     <div class="text-right">
-                                        <button class="btn btn-primary" type="button"
-                                            onclick="openAddFactorModal({{ $partIndex }})">Add Factor</button>
+                                        <button class="btn btn-primary" type="button" data-toggle="modal"
+                                            data-target="#addFactorModal_{{ $partIndex }}">Add Factor</button>
                                     </div>
                                 </div>
                                 <!-- Add Factor Modal -->
@@ -181,7 +181,7 @@
             </div>
         </div>
     </div>
-    <script>
+    {{-- <script>
         function openAddFactorModal(partIndex) {
             console.log("Received partIndex:", partIndex);
             // ... Store the partIndex in a variable accessible within the function
@@ -189,6 +189,6 @@
             // ... Open the modal using the dynamic ID
             $(`#addFactorModal_${currentPartIndex}`).modal('show');
         }
-    </script>
+    </script> --}}
 
 </div>

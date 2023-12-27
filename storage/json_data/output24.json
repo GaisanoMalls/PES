@@ -2208,6 +2208,18 @@
         "BUSINESSNAME": "TCRC"
     },
     {
+        "EMPID": "1819031722",
+        "LNAME": "MANATAD",
+        "FNAME": "ANTHONETH",
+        "MNAME": "TEREC",
+        "DEPARTMENTNAME": "DEPARTMENT STORE",
+        "DTEHIRED": "2021-02-01",
+        "EMPLOYMENTSTATUS": "AGENCY-CEDAR",
+        "BRANCHNAME": "DIGOS",
+        "PSITIONNAME": "PROMODISER",
+        "BUSINESSNAME": "TCRC"
+    },
+    {
         "EMPID": "1802053940",
         "LNAME": "GRAVADOR",
         "FNAME": "JOENIL",
@@ -3102,7 +3114,7 @@
         "MNAME": "CAMPOREDONDO",
         "DEPARTMENTNAME": "TRMO",
         "DTEHIRED": "2023-06-22",
-        "EMPLOYMENTSTATUS": "REGULAR",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DIGOS",
         "PSITIONNAME": "JUNIOR ARCHITECT",
         "BUSINESSNAME": "TCRC"
@@ -3224,7 +3236,7 @@
         "DTEHIRED": "2023-12-20",
         "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DIGOS",
-        "PSITIONNAME": "MARKETING COORDINATOR",
+        "PSITIONNAME": "MKTG COORDINATOR",
         "BUSINESSNAME": "TCRC"
     },
     {
@@ -8136,6 +8148,18 @@
         "BUSINESSNAME": "GDI"
     },
     {
+        "EMPID": "9603071103",
+        "LNAME": "BETOL ",
+        "FNAME": "ROBEN ",
+        "MNAME": "TUMALAO ",
+        "DEPARTMENTNAME": "SUPERMARKET",
+        "DTEHIRED": "1996-07-03",
+        "EMPLOYMENTSTATUS": "AGENCY-QAFAR",
+        "BRANCHNAME": "GENERAL SANTOS",
+        "PSITIONNAME": "MERCHANDISER",
+        "BUSINESSNAME": "GDI"
+    },
+    {
         "EMPID": "2316091917",
         "LNAME": "BILANG ",
         "FNAME": "MOJAHID ",
@@ -11116,11 +11140,11 @@
         "LNAME": "OTCHIA",
         "FNAME": "ANGELICA",
         "MNAME": "COLA",
-        "DEPARTMENTNAME": "FINANCE",
+        "DEPARTMENTNAME": "SUPERMARKET",
         "DTEHIRED": "2019-09-11",
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "TREASURY STAFF",
+        "PSITIONNAME": "SENIOR CASHIER",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -12132,6 +12156,18 @@
         "BUSINESSNAME": "DSG"
     },
     {
+        "EMPID": "1608113005",
+        "LNAME": "CAARE",
+        "FNAME": "JESSAH MAE",
+        "MNAME": "LASAP",
+        "DEPARTMENTNAME": "DEPARTMENT STORE",
+        "DTEHIRED": "2019-04-11",
+        "EMPLOYMENTSTATUS": "REGULAR",
+        "BRANCHNAME": "DAVAO",
+        "PSITIONNAME": "STAFF",
+        "BUSINESSNAME": "DSG"
+    },
+    {
         "EMPID": "1614114023",
         "LNAME": "OROCIO",
         "FNAME": "RHEA MAE",
@@ -12213,6 +12249,18 @@
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "ENGINEER",
+        "BUSINESSNAME": "DSG"
+    },
+    {
+        "EMPID": "1629114644",
+        "LNAME": "AMPARADO",
+        "FNAME": "EDGAR",
+        "MNAME": "VALENZUELA",
+        "DEPARTMENTNAME": "CORPORATE",
+        "DTEHIRED": "2016-11-29",
+        "EMPLOYMENTSTATUS": "REGULAR",
+        "BRANCHNAME": "DAVAO",
+        "PSITIONNAME": "PROJECT MANAGER",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -15282,9 +15330,9 @@
         "MNAME": "BACHARO",
         "DEPARTMENTNAME": "DEPARTMENT STORE",
         "DTEHIRED": "2023-06-26",
-        "EMPLOYMENTSTATUS": "REGULAR",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "STOCK CLERK",
+        "PSITIONNAME": "SALES ASSOCIATE",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -16884,6 +16932,18 @@
         "BUSINESSNAME": "DSG"
     },
     {
+        "EMPID": "2105071211",
+        "LNAME": "QUEJANO",
+        "FNAME": "GRISHA MARIE",
+        "MNAME": "ONG",
+        "DEPARTMENTNAME": "FINANCE",
+        "DTEHIRED": "2021-07-05",
+        "EMPLOYMENTSTATUS": "REGULAR",
+        "BRANCHNAME": "DAVAO",
+        "PSITIONNAME": "MANAGER",
+        "BUSINESSNAME": "DSG"
+    },
+    {
         "EMPID": "2113074407",
         "LNAME": "CABANOG",
         "FNAME": "JESSALY",
@@ -17106,7 +17166,7 @@
         "MNAME": "MASANGKAY",
         "DEPARTMENTNAME": "SPECIALTY STORE",
         "DTEHIRED": "2023-06-26",
-        "EMPLOYMENTSTATUS": "REGULAR",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "SENIOR CASHIER",
         "BUSINESSNAME": "DSG"
@@ -18078,7 +18138,7 @@
         "MNAME": "TRAZO",
         "DEPARTMENTNAME": "DEPARTMENT STORE",
         "DTEHIRED": "2023-06-26",
-        "EMPLOYMENTSTATUS": "REGULAR",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "CASHIER",
         "BUSINESSNAME": "DSG"
@@ -19929,30 +19989,6 @@
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "HR ASSOCIATE",
-        "BUSINESSNAME": "DSG"
-    },
-    {
-        "EMPID": "2321124208",
-        "LNAME": "ALBIA",
-        "FNAME": "ERNAN",
-        "MNAME": "CORONEL",
-        "DEPARTMENTNAME": "ICT",
-        "DTEHIRED": "2023-12-21",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "JUNIOR APPLICATION ADMIN",
-        "BUSINESSNAME": "DSG"
-    },
-    {
-        "EMPID": "2322124741",
-        "LNAME": "BAROY",
-        "FNAME": "GENEVIEVE",
-        "MNAME": "ASTRONOMO",
-        "DEPARTMENTNAME": "HRD",
-        "DTEHIRED": "2023-12-22",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "PAYROLL SUPERVISOR",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -23496,6 +23532,18 @@
         "BUSINESSNAME": "DSG"
     },
     {
+        "EMPID": "2330084948",
+        "LNAME": "BLANCO",
+        "FNAME": "ADRIAN",
+        "MNAME": "DULAY",
+        "DEPARTMENTNAME": "ICT",
+        "DTEHIRED": "2023-08-30",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
+        "BRANCHNAME": "TORIL",
+        "PSITIONNAME": "SUPPORT STAFF",
+        "BUSINESSNAME": "DSG"
+    },
+    {
         "EMPID": "2330084712",
         "LNAME": "PILI",
         "FNAME": "JOYCE",
@@ -23709,18 +23757,6 @@
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "TAGUM",
         "PSITIONNAME": "WELDER STAINLESS",
-        "BUSINESSNAME": "TCRC"
-    },
-    {
-        "EMPID": "2319122902",
-        "LNAME": "BOCTOTO",
-        "FNAME": "VRAD LEE",
-        "MNAME": "COSTILLAS",
-        "DEPARTMENTNAME": "FPM",
-        "DTEHIRED": "2023-12-19",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "TAGUM",
-        "PSITIONNAME": "RAC TECHNICIAN",
         "BUSINESSNAME": "TCRC"
     },
     {
@@ -28764,18 +28800,6 @@
         "BUSINESSNAME": "TCRC"
     },
     {
-        "EMPID": "2321121330",
-        "LNAME": "CUESTAS",
-        "FNAME": "JUNELIBEN",
-        "MNAME": "VELASCO",
-        "DEPARTMENTNAME": "CCTV.COMM",
-        "DTEHIRED": "2023-12-21",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "TAGUM",
-        "PSITIONNAME": "TECHNICAL SUPPORT",
-        "BUSINESSNAME": "TCRC"
-    },
-    {
         "EMPID": "1629095827",
         "LNAME": "CODIZAR",
         "FNAME": "MAY ANN",
@@ -29864,18 +29888,6 @@
         "DTEHIRED": "2022-07-13",
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "CEBU",
-        "PSITIONNAME": "STAFF",
-        "BUSINESSNAME": "DSG"
-    },
-    {
-        "EMPID": "1608113005",
-        "LNAME": "CAARE",
-        "FNAME": "JESSAH MAE",
-        "MNAME": "LASAP",
-        "DEPARTMENTNAME": "DEPARTMENT STORE",
-        "DTEHIRED": "2019-04-11",
-        "EMPLOYMENTSTATUS": "REGULAR",
-        "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "STAFF",
         "BUSINESSNAME": "DSG"
     },

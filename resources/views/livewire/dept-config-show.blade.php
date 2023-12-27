@@ -5,7 +5,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h1>Edit Department Configuration</h1>
+                    <h3>Edit Department Configuration</h3>
                 </div>
                 @if ($selectedDepartment && $config)
                     <div class="card-body">
@@ -14,10 +14,10 @@
                             <strong>Number of Approvers:</strong> {{ $config->number_of_approvers }}
                         </div>
                         <div>
-                            <strong>Department ID:</strong> {{ $config->department->name }}
+                            <strong>Department Name:</strong> {{ $config->department->name }}
                         </div>
                         <div>
-                            <strong>Branch ID:</strong> {{ $config->branch_id }}
+                            <strong>Branch Name:</strong> {{ $config->branch->name }}
                         </div>
                         <!-- Display table of evaluation approvers -->
                         <div class="m-t-30">

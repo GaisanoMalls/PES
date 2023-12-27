@@ -136,19 +136,22 @@ class ReviewEvaluation extends Component
             // Delete existing entry in DisapprovalReason
             DisapprovalReason::where('evaluation_id', $this->evaluation->id)->delete();
         }
+
         $departmentConfig = DepartmentConfiguration::where('department_id', $this->evaluation->employee->department_id)
             ->where('branch_id', $this->evaluation->employee->branch_id)
             ->first();
 
-        $maxApproverLevel = $departmentConfig ? $departmentConfig->max_approver_level : 0;
+        $numberOfApprovers = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
 
 
 
         $this->evaluation->approver_count += 1; // Increment approver_count by 1
         // Check if approver_count has reached the maximum allowed approver level
-        if ($this->evaluation->approver_count >= $maxApproverLevel) {
+        if ($this->evaluation->approver_count == $numberOfApprovers) {
             // Set evaluation status to 2
             $this->evaluation->status = 2;
+        } else {
+            $this->evaluation->status = 1;
         }
 
         $this->evaluation->save();
@@ -160,17 +163,19 @@ class ReviewEvaluation extends Component
 
         // Find all HR users (role_id = 5)
         $hrUsers = User::where('role_id', 5)->get();
+        $url = env('APP_URL');
 
         // Check if the evaluator is found
         if ($evaluator && $evaluator->email) {
             $dataEvaluator = [
                 'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
                 'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
-                // Add any additional data you want to pass to the email view
+                'link' => $url . 'evaluations/view/' . $this->evaluation->id,
+
             ];
 
             // Send email to the evaluator
-            // Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+            Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject'], $dataEvaluator['link']));
             NotificationEvaluation::create([
                 'type' => 'evaluation',
                 'notifiable_id' => $evaluator->employee_id,
@@ -181,24 +186,27 @@ class ReviewEvaluation extends Component
         }
 
         // Check if there are HR users
-        if ($hrUsers->count() > 0) {
-            $dataHR = [
-                'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
-                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
-                // Add any additional data you want to pass to the email view
-            ];
 
-            // Send email to each HR user
-            foreach ($hrUsers as $hrUser) {
-                if ($hrUser->email) {
-                    //     Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject']));
-                    NotificationEvaluation::create([
-                        'type' => 'evaluation',
-                        'notifiable_id' => $hrUser->employee_id,
-                        'person_id' => $this->evaluation->id,
-                        'notif_title' =>  $dataHR['subject'],
-                        'notif_desc' => $dataHR['body'],
-                    ]);
+        if ($this->evaluation->status = 2) {
+            if ($hrUsers->count() > 0) {
+                $dataHR = [
+                    'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
+                    'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
+                    'link' => $url . 'evaluations/view/' . $this->evaluation->id,
+                ];
+
+                // Send email to each HR user
+                foreach ($hrUsers as $hrUser) {
+                    if ($hrUser->email) {
+                        Mail::to($hrUser->email)->send(new EmailNotification($dataHR['body'], $dataHR['subject'], $dataHR['link']));
+                        NotificationEvaluation::create([
+                            'type' => 'evaluation',
+                            'notifiable_id' => $hrUser->employee_id,
+                            'person_id' => $this->evaluation->id,
+                            'notif_title' =>  $dataHR['subject'],
+                            'notif_desc' => $dataHR['body'],
+                        ]);
+                    }
                 }
             }
         }
@@ -233,16 +241,17 @@ class ReviewEvaluation extends Component
 
         // Find the user who evaluated the performance
         $evaluator = User::where('employee_id', $this->evaluation->evaluator_id)->first();
+        $url = env('APP_URL');
 
         // Check if the evaluator is found
         if ($evaluator && $evaluator->email) {
             $dataEvaluator = [
                 'subject' => 'Disapproved Evaluation ' . 'ID: ' . $this->evaluation->id,
                 'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name, 'has been disapproved.',
-                // Add any additional data you want to pass to the email view
+                'link' => $url . 'evaluations/view/' . $this->evaluation->id,
             ];
             // Send email to the evaluator
-            //  Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject']));
+            Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject'], $dataEvaluator['link']));
             NotificationEvaluation::create([
                 'type' => 'evaluation',
                 'notifiable_id' => $evaluator->employee_id,

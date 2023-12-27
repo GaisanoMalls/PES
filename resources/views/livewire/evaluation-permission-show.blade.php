@@ -3,8 +3,9 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h2>Evaluation Permission</h2>
-
+                    <h3>Evaluation Permission</h3>
+                </div>
+                <div class="card-body">
                     <h6>Employee ID: {{ $employeeId }}</h6>
                     <h6>Evaluator ID: {{ $selectedEvaluator }}</h6>
                     @if ($evaluationPermissions->isNotEmpty())

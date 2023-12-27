@@ -46,4 +46,8 @@ class Employee extends Model
     {
         return $this->hasMany(Evaluation::class);
     }
+    public function evaluation_permissions()
+    {
+        return $this->hasMany(EvaluationPermission::class, 'employee_id', 'id');
+    }
 }

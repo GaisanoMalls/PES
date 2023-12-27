@@ -675,7 +675,7 @@
         <div class="m-t-50">
             <div class="row">
                 <div class="col-4">
-                    <label class="col-lg-2">READ: </label>
+                    <label class="col-lg-2">ACKNOWLEDGED: </label>
                     <input type="text" class="form-control" style="height: 45px !important;">
                     <p class="">
                         NAME OF EMPLOYEE

@@ -739,29 +739,33 @@
                 </div>
 
             </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <label class="col-lg-2">REVIEWED BY: </label>
-                    @if ($evaluation->approver_id)
+
+                    @foreach ($evaluationApprovers as $index => $approver)
+                        @php
+                            $hasApproved = $approver->approver_level <= $evaluation->approver_count;
+                            $greenLightClass = $hasApproved ? 'btn btn-m bg-success-light mb-2 strong-text' : 'btn btn-m bg-warning-pending mb-2 strong-text';
+                        @endphp
                         <a href="#"
-                            @if ($evaluation->status == 2) class="btn btn-m bg-success-light mb-2 strong-text"
-                                   @elseif ($evaluation->status == 3)
-                                   class="btn btn-lg bg-danger-light mb-2 strong-text"   @else class="btn btn-lg bg-warning-light mb-2 strong-text" @endif
-                            style="cursor: default; width: 300px;">{{ $evaluation->approverEmployee->first_name . ' ' . $evaluation->approverEmployee->last_name }}
-                            @if ($evaluation->status == 2)
+                            class="{{ $evaluation->status == 2 ? $greenLightClass : ($evaluation->status == 3 ? 'btn btn-m bg-danger-light mb-2 strong-text' : ($evaluation->status == 4 ? 'btn btn-m bg-warning-light mb-2 strong-text' : $greenLightClass)) }}"
+                            style="cursor: default;">
+                            {{ $approver->employee->first_name . ' ' . $approver->employee->last_name }}
+                            @if ($evaluation->status == 2 || $hasApproved)
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                     height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                     <polyline points="22 4 12 14.01 9 11.01" />
                                 </svg>
-                            @elseif ($evaluation->status == 3)
+                            @elseif ($evaluation->status == 1)
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                     height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                     <circle cx="12" cy="12" r="10" />
-                                    <line x1="15" x2="9" y1="9" y2="15" />
-                                    <line x1="9" x2="15" y1="9" y2="15" />
+                                    <polyline points="12 6 12 12 16 14" />
                                 </svg>
                             @elseif ($evaluation->status == 4)
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
@@ -771,29 +775,26 @@
                                     <line x1="12" x2="12" y1="8" y2="12" />
                                     <line x1="12" x2="12.01" y1="16" y2="16" />
                                 </svg>
+                            @elseif ($evaluation->status == 3)
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                    height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="15" x2="9" y1="9" y2="15" />
+                                    <line x1="9" x2="15" y1="9" y2="15" />
+                                </svg>
                             @endif
                         </a>
-                    @else
-                        <a href="#" class="btn btn-m bg-warning-pending mb-2 text-center strong-text"
-                            style="cursor: default; width: 300px;">PENDING REVIEW
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                height="24" class="main-grid-item-icon" fill="none" stroke="currentColor"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                <circle cx="12" cy="12" r="10" />
-                                <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                        </a>
-                    @endif
-                    <p class="m-l-15">
-                        @if ($evaluation->approver_id)
-                            {{ $evaluation->approverEmployee->department->name . ' - ' . $evaluation->approverEmployee->position }}
-                        @else
-                            APPROVER
-                        @endif
-                    </p>
-                </div>
+                        <p class="m-l-15">
+                            {{ 'Level: ' . $approver->approver_level . ' (' . $approver->employee->department->name . ' - ' . $approver->employee->position . ')' }}
+                        </p>
+                    @endforeach
 
+                </div>
             </div>
+
+
+
         </div>
         <div class="m-t-50">
             <div class="comment">
@@ -809,7 +810,7 @@
         <div class="bg-white22">
             <div class="row">
                 <div class="col-md-6">
-                    <label class="col-lg-2">READ: </label>
+                    <label class="col-lg-2">ACKNOWLEDGED: </label>
                     @if ($evaluation->ratees_comment == null)
                         <a class="btn btn-m bg-warning-pending mb-2 strong-text"
                             style="cursor: default;  width: 300px;">{{ $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name }}

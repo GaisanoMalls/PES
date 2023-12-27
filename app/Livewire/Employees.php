@@ -58,7 +58,8 @@ final class Employees extends PowerGridComponent
                 ->on('employees.branch_id', '=', 'evaluation_permissions.branch_id')
                 ->where('evaluation_permissions.evaluator_id', $evaluatorId);
         })
-            ->select('employees.*');
+            ->select('employees.*')
+            ->distinct();;
     }
 
 

@@ -6,7 +6,9 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h2>Evaluation Permission Details</h2>
+                        <h3>Evaluation Permission Details</h3>
+                    </div>
+                    <div class="card-body">
                         <h6>Employee Name:
                             {{ $evaluationPermissions->first()->employee->first_name . ' ' . $evaluationPermissions->first()->employee->last_name }}
                         </h6>
@@ -30,8 +32,8 @@
 
                         <a href="{{ route('settings.evalpermShow', ['id' => $evaluationPermissions->first()->employee_id]) }}"
                             class="btn btn-success m-t-15 m-l-15">Edit</a>
-
                     </div>
+
                 </div>
             </div>
         </div>

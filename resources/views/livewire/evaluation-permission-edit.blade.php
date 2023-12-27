@@ -5,7 +5,9 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h1>Evaluation Permission</h1>
+                    <h3>Evaluation Permission</h3>
+                </div>
+                <div class="card-body">
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="evaluator">Select Evaluator:</label>
