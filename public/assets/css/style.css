@@ -1122,11 +1122,7 @@ button.bg-danger:hover {
     text-align: center
 }
 
-.btn-light {
-    border-color: #1A8DF8;
-    color: #fff;
-    background-color: #1A8DF8
-}
+
 
 .bootstrap-datetimepicker-widget table td.active,
 .bootstrap-datetimepicker-widget table td.active:hover {
