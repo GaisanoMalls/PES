@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- @livewire('employee-index') --}}
+    <div class="m-t-30">
 
-    <livewire:employees />
+        @livewire('employee-index')
+    </div>
+    {{-- <livewire:employees /> --}}
 @endsection

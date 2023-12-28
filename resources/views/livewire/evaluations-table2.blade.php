@@ -86,7 +86,7 @@
         </thead>
         <tbody>
 
-            @foreach ($evaluations as $evaluation)
+            @forelse ($evaluations as $evaluation)
                 @if ($userRoleId == 5 && $evaluation->status != 2)
                     @continue
                 @endif
@@ -150,17 +150,13 @@
                                     (Auth::user()->role_id == 3 && $evaluation->status == 1) ||
                                         (Auth::user()->role_id == 3 && $evaluation->status == 4) ||
                                         (Auth::user()->role_id == 5 && $evaluation->status == 2) ||
-                                        (Auth::user()->role_id == 3 && $evaluation->status == 2))
+                                        (Auth::user()->role_id == 3 && $evaluation->status == 2) ||
+                                        (Auth::user()->role_id == 3 && $evaluation->status == 3))
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.review', ['evaluation' => $evaluation->id]) }}">
                                         Review
                                     </a>
                                 @endif
-                                @if (Auth::user()->role_id == 3 && ($evaluation->status == 2 || $evaluation->status == 3))
-                                    <a class="dropdown-item" wire:click="approveEvaluation({{ $evaluation->id }})">
-                                        Mark as pending</a>
-                                @endif
-
                                 @if ($evaluation->evaluator_id == Auth::user()->employee_id)
                                     <a class="dropdown-item"
                                         href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}">
@@ -180,7 +176,11 @@
                         </div>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="2">No data available</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
     <div class="mt-3">

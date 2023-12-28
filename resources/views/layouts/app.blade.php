@@ -14,31 +14,35 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
 
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <!-- Include SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @livewireStyles
+
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/feathericon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.css" />
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-    <!-- Include SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @livewireStyles
 
 
     <!-- Scripts -->
@@ -127,6 +131,18 @@
                                                                                 viewBox="0 0 24 24" width="24"
                                                                                 height="24" class="main-grid-item-icon"
                                                                                 fill="none" stroke="#339900"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                                                            </svg>
+                                                                        @elseif (stripos($notification->notif_title, 'Partially') === 0)
+                                                                            <!-- https://feathericons.dev/?search=clock&iconset=feather -->
+
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#586D4D"
                                                                                 stroke-linecap="round" stroke-linejoin="round"
                                                                                 stroke-width="2">
                                                                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -225,8 +241,6 @@
                                                                     @endif
                                                                     <span
                                                                         class="noti-title">{{ $notification->notif_title }}</span>
-                                                                    <span
-                                                                        class="noti-title">{{ $notification->notif_desc }}</span>
 
                                                                 </p>
                                                                 <p class="noti-time">

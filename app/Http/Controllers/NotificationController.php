@@ -17,7 +17,7 @@ class NotificationController extends Controller
         $employeeNotification = NotificationEmployee::find($id);
 
         // Check which type of notification exists and update the read_at value
-        if ($evaluationNotification) {
+        if ($evaluationNotification && !$employeeNotification) {
             $this->updateReadAt($evaluationNotification);
         } elseif ($employeeNotification) {
             $this->updateReadAt($employeeNotification);

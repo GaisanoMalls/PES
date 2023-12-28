@@ -283,6 +283,7 @@ class EvaluationForm extends Component
 
 
 
+
         // EMAIL NOTIF AND SYSTEM NOTIF
         // Get the department configuration based on department_id and branch_id
         $departmentConfiguration = DepartmentConfiguration::where('department_id', $evaluation->employee->department_id)
@@ -300,14 +301,12 @@ class EvaluationForm extends Component
                 $personId = $approver->approver_id;
                 $userApprover = User::where('employee_id', $approver->employee_id)->first();
                 $url = env('APP_URL');
-
                 // Prepare the data for the email
                 $data = [
-                    'subject' => 'New Performance Review ' . 'ID: ' . $evaluation->id,
+                    'subject' => 'New Performance Evaluation  ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' (ID:' . $evaluation->id . ')',
                     'body' => 'This email is to notify you that ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' is now available for your review.',
                     'link' => $url . 'evaluations/review/' . $evaluation->id,
                 ];
-
                 // Send email to each approver
                 Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
                 // Store notification in the database
@@ -322,14 +321,20 @@ class EvaluationForm extends Component
         }
 
 
-        //Notify employee
+        // Notify employee
+        $data = [
+            'subject' => 'New Performance Evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' (ID: ' . $evaluation->id . ')',
+            'body' => 'This email is to notify you that your performance evaluation is now available for review.',
+        ];
+
         NotificationEvaluation::create([
             'type' => 'evaluation',
-            'notifiable_id' =>  $this->employeeId,
+            'notifiable_id' => $this->employeeId,
             'person_id' => $evaluation->id,
             'notif_title' => $data['subject'],
             'notif_desc' => $data['body'],
         ]);
+
 
 
         //ADD RECOMMENDATION

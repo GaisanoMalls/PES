@@ -125,7 +125,6 @@ class ReviewEvaluation extends Component
     public function approveEvaluation()
     {
         $this->loading = true; // Set loading to true when the form is being submitted
-
         $this->dispatch('swal:success2', [
             'callback' => 'redirectAfterClose'
         ]);
@@ -150,8 +149,10 @@ class ReviewEvaluation extends Component
         if ($this->evaluation->approver_count == $numberOfApprovers) {
             // Set evaluation status to 2
             $this->evaluation->status = 2;
+            $statusLabel = 'Approved';
         } else {
             $this->evaluation->status = 1;
+            $statusLabel = 'Partially Approved';
         }
 
         $this->evaluation->save();
@@ -168,12 +169,10 @@ class ReviewEvaluation extends Component
         // Check if the evaluator is found
         if ($evaluator && $evaluator->email) {
             $dataEvaluator = [
-                'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
-                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
+                'subject' => $statusLabel . ' Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID: ' . $this->evaluation->id . ')',
+                'body' => 'Level ' . $this->evaluation->approver_count . ' has approved the evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
                 'link' => $url . 'evaluations/view/' . $this->evaluation->id,
-
             ];
-
             // Send email to the evaluator
             Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject'], $dataEvaluator['link']));
             NotificationEvaluation::create([
@@ -190,11 +189,10 @@ class ReviewEvaluation extends Component
         if ($this->evaluation->status = 2) {
             if ($hrUsers->count() > 0) {
                 $dataHR = [
-                    'subject' => 'Approved Evaluation ' . 'ID: ' . $this->evaluation->id,
-                    'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
+                    'subject' => $statusLabel . ' Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID: ' . $this->evaluation->id . ')',
+                    'body' => 'Level ' . $this->evaluation->approver_count . ' has approved the evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
                     'link' => $url . 'evaluations/view/' . $this->evaluation->id,
                 ];
-
                 // Send email to each HR user
                 foreach ($hrUsers as $hrUser) {
                     if ($hrUser->email) {
@@ -227,7 +225,7 @@ class ReviewEvaluation extends Component
 
         $userEmployeeId = Auth::user()->employee_id;
         $this->evaluation->status = 3;
-        $this->evaluation->approver_count -= 1;
+
         $this->evaluation->save();
 
         //  $userEmployeeId = Auth::user()->employee_id;
@@ -243,11 +241,12 @@ class ReviewEvaluation extends Component
         $evaluator = User::where('employee_id', $this->evaluation->evaluator_id)->first();
         $url = env('APP_URL');
 
+
         // Check if the evaluator is found
         if ($evaluator && $evaluator->email) {
             $dataEvaluator = [
-                'subject' => 'Disapproved Evaluation ' . 'ID: ' . $this->evaluation->id,
-                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name, 'has been disapproved.',
+                'subject' => 'Disapproved Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID: ' . $this->evaluation->id . ')',
+                'body' => 'Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name, ' has been disapproved.',
                 'link' => $url . 'evaluations/view/' . $this->evaluation->id,
             ];
             // Send email to the evaluator

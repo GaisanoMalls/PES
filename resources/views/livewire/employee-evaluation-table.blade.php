@@ -11,19 +11,30 @@
                     placeholder="Search by Employee ID/Name">
             </div>
         </div>
-        @if (Auth::user()->role_id != 2)
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label>Department</label>
-                    <select wire:model.debounce.300ms="departmentFilter" class="form-control">
-                        <option value="">All</option>
-                        @foreach ($departments as $department)
-                            <option value="{{ $department->id }}">{{ $department->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+        {{-- @if (Auth::user()->role_id != 2) --}}
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Department</label>
+                <select wire:model.debounce.300ms="departmentFilter" class="form-control">
+                    <option value="">All</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
             </div>
-        @endif
+        </div>
+        {{-- @endif --}}
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Branch</label>
+                <select wire:model="branchFilter" class="form-control">
+                    <option value="">All</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
 
         <div class="col-md-3">
@@ -37,38 +48,53 @@
         </div>
 
     </div>
-    <table class="table bg-white table-active table-bordered">
-        <thead>
-            <tr class="text-center">
-                <th>Employee ID</th>
-                <th>Employee Name</th>
-                <th>Department</th>
-                <th>Position</th>
-                <th>Latest Evaluation Date</th>
 
-                <th>Evaluations (Total)</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($employees as $employee)
-                <tr class="text-center">
-                    <td>{{ $employee->employee_id }}</td>
-                    <td>{{ $employee->last_name . ', ' . $employee->first_name }}</td>
-                    <td>{{ $employee->department->name }}</td>
-                    <td>{{ $employee->position }}</td>
-                    <td>{{ $latestEvaluationDates[$employee->id] }}</td>
-                    <td>{{ $employee->evaluations->count() }}</td>
-                    <td>
-                        <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->id]) }}"
-                            class="btn btn-outline-secondary">Show</a>
-                    </td>
+    <div class="card card-table">
+        <div class="table-responsive">
+            <div class="datatable table table-bordered">
 
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <div class="mt-3">
-        {{ $employees->links() }}
+                <table class="table bg-white table-hover table-bordered">
+                    <thead>
+                        <tr class="">
+                            <th>Employee ID</th>
+                            <th>Department</th>
+                            <th>Branch</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Position</th>
+                            <th>Latest Evaluation Date</th>
+                            <th>Evaluations (Total)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($employees as $employee)
+                            <tr class="">
+                                <td>{{ $employee->employee_id }}</td>
+                                <td>{{ $employee->department->name }}</td>
+                                <td>{{ $employee->branch->name }}</td>
+                                <td>{{ $employee->last_name }}</td>
+                                <td>{{ $employee->first_name }}</td>
+                                <td>{{ $employee->position }}</td>
+                                <td>{{ $latestEvaluationDates[$employee->id] }}</td>
+                                <td>{{ $employee->evaluations->count() }}</td>
+                                <td>
+                                    <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->id]) }}"
+                                        class="btn btn-outline-secondary">Show</a>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2">No data available</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                <div class="mt-3">
+                    {{ $employees->links() }}
+                </div>
+            </div>
+        </div>
     </div>
 </div>

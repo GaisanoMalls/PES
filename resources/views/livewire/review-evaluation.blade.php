@@ -201,7 +201,7 @@
                                 $greenLightClass = $hasApproved ? 'btn btn-m bg-success-light mb-2 text-center strong-text form-control' : 'btn btn-m bg-warning-pending mb-2 text-center strong-text form-control';
                             @endphp
                             <a href="#"
-                                class="{{ $evaluation->status == 2 ? $greenLightClass : ($evaluation->status == 3 ? 'btn btn-m bg-danger-light mb-2 text-center strong-text form-control' : ($evaluation->status == 4 ? 'btn btn-m bg-warning-light mb-2 text-center strong-text form-control' : $greenLightClass)) }}"
+                                class="{{ $evaluation->status == 2 || ($evaluation->status == 3 && $hasApproved) ? $greenLightClass : ($evaluation->status == 3 ? 'btn btn-m bg-danger-light mb-2 text-center strong-text form-control' : ($evaluation->status == 4 ? 'btn btn-m bg-warning-light mb-2 text-center strong-text form-control' : $greenLightClass)) }}"
                                 style="cursor: default;">
                                 {{ $approver->employee->first_name . ' ' . $approver->employee->last_name }}
                                 @if ($evaluation->status == 2 || $hasApproved)
@@ -347,20 +347,25 @@
             @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
 
 
+                @if ($evaluation->status != 2)
+                    <button wire:click="approveEvaluation" wire:loading.attr="disabled"
+                        @if ($isApproverLevelValid == false) disabled @endif
+                        class="btn btn-outline-success btn-right mr-2"
+                        @if ($evaluation->status == 3) style="display: none;" @endif> <span wire:loading
+                            wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
+                            role="status"></span>
+                        <span wire:loading.remove wire:target="approveEvaluation"></span>Approve Evaluation
+                    </button>
 
-                <button wire:click="approveEvaluation" wire:loading.attr="disabled"
-                    @if ($isApproverLevelValid == false) disabled @endif class="btn btn-outline-success btn-right mr-2">
-                    <span wire:loading wire:target="approveEvaluation" class="spinner-border spinner-border-sm mr-2"
-                        role="status"></span>
-                    <span wire:loading.remove wire:target="approveEvaluation"></span>Approve Evaluation
-                </button>
 
-
-                {{-- disapprover evaluation --}}
-                <button data-toggle="modal" data-target="#disapproveModal"
-                    @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
-                    Evaluation
-                </button>
+                    {{-- disapprover evaluation --}}
+                    <button data-toggle="modal" data-target="#disapproveModal"
+                        @if ($evaluation->status == 3) style="display: none;" @endif
+                        @if ($isApproverLevelValid == false) disabled @endif
+                        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right m-r-5 " disabled @else class="btn btn-outline-danger btn-right mr-2" @endif>Disapprove
+                        Evaluation
+                    </button>
+                @endif
 
                 {{-- recommendation button --}}
                 @if ($evaluation->recommendation && Auth::user()->role_id == 3)
