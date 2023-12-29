@@ -137,7 +137,6 @@ class ReviewEvaluation extends Component
     }
 
     public $loading = false;
-    public $wireIgnore = false;
 
     public function approveEvaluation()
     {
