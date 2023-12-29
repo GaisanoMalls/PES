@@ -279,8 +279,15 @@ class EditEvaluation extends Component
         $branch = $this->evaluation->employee->branch; // Corrected typo: 'brahcn' to 'branch'
 
         $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->where('branch_id', $branch->id)->first();
+        $departmentConfigId = optional($departmentConfig)->id;
 
-        $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)->get();
+        // Check if $evaluationApprovers is null
+        $isDepartmentConfigNull = is_null($departmentConfig);
+        // Use conditional check to prevent accessing id property on null object
+        $evaluationApprovers = $isDepartmentConfigNull
+            ? collect()  // Provide an empty collection if $departmentConfig is null
+            : EvaluationApprovers::where('department_configuration_id', $departmentConfigId)->get();
+
 
         $parts = Part::where('evaluation_template_id', $this->evaluation->evaluation_template_id)->get();
         $this->partsWithFactors = [];
@@ -406,23 +413,38 @@ class EditEvaluation extends Component
             // Save the clarification to the database
             $clarification = new Clarification();
             $clarification->evaluation_id = $this->evaluation->id;
-            $clarification->approver_id = $this->evaluation->approver_id;
             $clarification->evaluator_id = $this->evaluation->evaluator_id;
             $clarification->description = $this->clarificationDescription;
             $clarification->commentor_id = $user->employee->id;
             $clarification->status = 4;
             $clarification->save();
 
-            // Change the evaluation status
+            // Get department configuration based on department_id and branch_id
+            $departmentConfiguration = DepartmentConfiguration::where('department_id', $this->evaluation->employee->department_id)
+                ->where('branch_id', $this->evaluation->employee->branch_id)
+                ->first();
+
+            if ($departmentConfiguration) {
+                // Access the evaluation_approvers table
+                $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfiguration->id)
+                    ->get();
+
+                // Get the employee_id from evaluation_approvers and store it on notifiable_id
+                foreach ($evaluationApprovers as $approver) {
+                    $notifiableId = $approver->employee_id;
+
+                    // Store notification in the database
+                    NotificationEvaluation::create([
+                        'type' => 'evaluation',
+                        'notifiable_id' => $notifiableId,
+                        'person_id' => $this->evaluation->id,
+                        'notif_title' => "Clarification on evaluation ID: " . $this->evaluation->id,
+                        'notif_desc' => $this->clarificationDescription,
+                    ]);
+                }
+            }
             $this->evaluation->status = 4;
             $this->evaluation->save();
-            NotificationEvaluation::create([
-                'notifiable_id' => $this->evaluation->approver_id,
-                'type' => 'evaluation',
-                'person_id' => $this->evaluation->id,
-                'notif_title' => "Clarificaiton on evaluation ID: " . '' . $this->evaluation->id,
-                'notif_desc' => $this->clarificationDescription,
-            ]);
         }
 
 
@@ -431,6 +453,8 @@ class EditEvaluation extends Component
         // Refresh the Livewire component or any other necessary action
         $this->dispatch('refreshComponent');
     }
+
+
     public function editClarification($clarificationId)
     {
         $clarification = Clarification::find($clarificationId);

@@ -12,15 +12,16 @@ class EvaluationPermissionCreate extends Component
 {
     public $selectedEvaluator;
     public $selectedDepartments = [];
-
     public function render()
     {
         // Fetch all branches
         $branches = Branch::all();
         $departments = Department::all();
 
-        // Fetch users with role_id 2 (assuming 'role_id' is the foreign key in the users table)
-        $evaluators = User::where('role_id', 2)->get();
+        // Fetch users with role_id 2 and exclude those with employee_id in evaluation_permission table
+        $evaluators = User::where('role_id', 2)
+            ->whereNotIn('employee_id', EvaluationPermission::pluck('employee_id'))
+            ->get();
 
         return view('livewire.evaluation-permission-create', [
             'branches' => $branches,

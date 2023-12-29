@@ -12,7 +12,6 @@ class Clarification extends Model
 
     protected $fillable = [
         'evaluation_id',
-        'approver_id',
         'evaluator_id',
         'commentor_id',
         'description',

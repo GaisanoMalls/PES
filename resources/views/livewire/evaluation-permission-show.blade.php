@@ -8,11 +8,9 @@
                 <div class="card-body">
                     <h6>Employee ID: {{ $employeeId }}</h6>
                     <h6>Evaluator ID: {{ $selectedEvaluator }}</h6>
-                    @if ($evaluationPermissions->isNotEmpty())
-                        <p>Employee Name: {{ $evaluationPermissions->first()->employee->first_name }}
-                            {{ $evaluationPermissions->first()->employee->last_name }}</p>
-                    @endif
-
+                    <p>Employee Name:
+                        {{ $evaluationPermissions->first()->employee->first_name . ' ' . $evaluationPermissions->first()->employee->last_name }}
+                    </p>
                     <div>
                         <label>Choose Branches and Departments:</label><br>
                         @foreach ($branches as $branch)
@@ -32,6 +30,7 @@
                         <a href="{{ route('settings.evalpermEdit', ['id' => $evaluationPermissions->first()->employee_id]) }}"
                             class="btn btn-success">Cancel</a>
                     </div>
+
                 </div>
             </div>
         </div>

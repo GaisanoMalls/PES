@@ -8,7 +8,11 @@
                     <h3>Department Configuration</h3>
                 </div>
                 <div class="card-body">
-
+                    @if (session('error'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="department">Select Department:</label>
@@ -34,8 +38,6 @@
                             </select>
                         </div>
                     </div>
-
-
                     @if ($selectedDepartment && $selectedBranch)
                         <div class="card-body">
                             @foreach ($levels as $level)
@@ -76,6 +78,7 @@
                                     <a href="{{ route('settings.deptconfig') }}" class="btn btn-success">Cancel</a>
                                 </div>
                             </div>
+                        </div>
                     @endif
                 </div>
             </div>

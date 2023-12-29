@@ -90,7 +90,7 @@
                                     if (userRoleId == 2 || userRoleId == 5) {
                                         window.location.href = baseUrl + '/view/' + evaluationId;
                                     } else if (userRoleId == 3 || userRoleId == 4) {
-                                        window.location.href = baseUrl + '/' + evaluationId + '/review';
+                                        window.location.href = baseUrl + '/review/' + evaluationId;
                                     }
                                 }
                             </script>

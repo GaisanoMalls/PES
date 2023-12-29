@@ -43,9 +43,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-
-
                         <!-- Show the edit form when in edit mode -->
                         @if ($editMode)
                             <div class="card-body">
@@ -76,7 +73,6 @@
                                     </div>
                                 @endforeach
                                 <div class="m-t-15">
-
                                     <div class="col-md-6 text-right">
                                         @if ($canAddLevel)
                                             <button type="button" class="btn btn-primary" wire:click="addLevel">
@@ -87,11 +83,8 @@
                                             Save
                                         </button>
                                     </div>
-
-
                                 </div>
                             </div>
-
                         @endif
                         @if (!$editMode)
                             <button class="btn btn-secondary" wire:click="toggleEditMode">

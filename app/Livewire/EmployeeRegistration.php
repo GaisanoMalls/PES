@@ -40,7 +40,15 @@ class EmployeeRegistration extends Component
     public $passwordConfirmation;
     public $successMessage;
 
-
+    protected $rules = [
+        'bu_id' => 'required|numeric',
+        'department_id' => 'required|numeric',
+        'position' => 'required|string',
+        'contact_no' => 'required|string',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:8',
+        'passwordConfirmation' => 'required|same:password',
+    ];
     public function mount($employee)
     {
         $this->employeeId = $employee;
@@ -91,13 +99,42 @@ class EmployeeRegistration extends Component
     }
     public function saveFormRole()
     {
+        $this->resetValidation();
 
+        if ($this->role_id == 1) {
+        } elseif ($this->role_id == 2) {
+            $this->validate([
+                'bu_id' => 'required|numeric',
+                'department_id' => 'required|numeric',
+                'position' => 'required|string',
+                'contact_no' => 'required|string',
+            ]);
+        } elseif ($this->role_id == 3) {
+            $this->validate(
+                [
+                    'bu_id' => 'required|numeric',
+                    'position' => 'required|string',
+                    'contact_no' => 'required|string',
+                ]
+            );
+        } elseif ($this->role_id == 4) {
+        } elseif ($this->role_id == 5) {
+            $this->validate(
+                [
+                    'bu_id' => 'required|numeric',
+                    'position' => 'required|string',
+                    'contact_no' => 'required|string',
+                ]
+            );
+        }
 
-        // Reset the form fields
         $this->formSubmitted = true;
     }
     public function register()
     {
+
+        $this->validate();
+
         // Create a new Evaluator record in the database
         $evaluator = null;
         $approver = null;
@@ -163,5 +200,6 @@ class EmployeeRegistration extends Component
 
         $this->successMessage = 'User registered successfully.';
         $this->reset(['email', 'password', 'passwordConfirmation']);
+        return redirect()->route('users.index');
     }
 }

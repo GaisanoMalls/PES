@@ -19,8 +19,8 @@
                                 <tr class="text-center">
                                     <th>ID</th>
                                     <th>Number of Approvers</th>
-                                    <th>Department ID</th>
-                                    <th>Branch ID</th>
+                                    <th>Department Name</th>
+                                    <th>Branch Name</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('clarifications', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('evaluation_id');
-            $table->bigInteger('approver_id');
             $table->bigInteger('evaluator_id');
             $table->bigInteger('commentor_id');
             $table->text('description');

@@ -73,16 +73,24 @@ class DepartmentConfig extends Component
     }
 
 
-    // Method to handle the form submission
     public function submitForm()
     {
+        // Check if the DepartmentConfiguration record already exists
+        $existingConfiguration = DepartmentConfiguration::where('department_id', $this->selectedDepartment)
+            ->where('branch_id', $this->selectedBranch)
+            ->first();
+
+        // If the record already exists, set an error message and return
+        if ($existingConfiguration) {
+            session()->flash('error', 'The selected Department and Branch already exist.');
+            return;
+        }
 
         // Create a new DepartmentConfiguration record
         $departmentConfiguration = DepartmentConfiguration::create([
             'number_of_approvers' => count($this->selectedApprovers),
             'department_id' => $this->selectedDepartment,
-            'branch_id' => $this->selectedBranch, // Use the selected branch
-            // You may need to add the branch_id based on your logic
+            'branch_id' => $this->selectedBranch,
         ]);
 
         // Save the Approvers for each level in the EvaluationApprovers table
@@ -91,15 +99,13 @@ class DepartmentConfig extends Component
 
             if ($approver) {
                 EvaluationApprovers::create([
-                    'approver_id' => $approver->person_id, // Assuming 'person_id' is the identifier for the approver
+                    'approver_id' => $approver->person_id,
                     'employee_id' => $approver->employee_id,
                     'department_configuration_id' => $departmentConfiguration->id,
                     'approver_level' => $level,
                 ]);
             }
         }
-
-
 
         // Optionally, you can reset the form after submission
         $this->reset();

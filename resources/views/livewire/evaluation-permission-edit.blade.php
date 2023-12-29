@@ -1,4 +1,4 @@
-<!-- Add the required Select2 CSS and JS files -->
+{{-- <!-- Add the required Select2 CSS and JS files -->
 
 <div class="m-t-30">
     <div class="row">
@@ -36,4 +36,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

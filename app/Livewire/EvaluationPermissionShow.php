@@ -22,6 +22,20 @@ class EvaluationPermissionShow extends Component
         // Fetch the evaluator_id for the given employee
         $evaluatorId = EvaluationPermission::where('employee_id', $employeeId)->value('evaluator_id');
         $this->selectedEvaluator = $evaluatorId;
+
+        // Fetch EvaluationPermissions for the given employee
+        $evaluationPermissions = EvaluationPermission::where('employee_id', $this->employeeId)->get();
+
+        // Initialize an array to store pre-selected departments
+        $preSelectedDepartments = [];
+
+        // Loop through EvaluationPermissions to pre-select departments
+        foreach ($evaluationPermissions as $permission) {
+            $preSelectedDepartments[$permission->branch_id][] = $permission->department_id;
+        }
+
+        // Set the selected departments
+        $this->selectedDepartments = $preSelectedDepartments;
     }
 
     public function render()
@@ -56,8 +70,10 @@ class EvaluationPermissionShow extends Component
             $employeeId = EvaluationPermission::where('evaluator_id', $this->selectedEvaluator)
                 ->value('employee_id');
 
-            // Delete existing records for the selected evaluator
-            EvaluationPermission::where('evaluator_id', $this->selectedEvaluator)->delete();
+            // Delete existing records for the selected evaluator and employee
+            EvaluationPermission::where('evaluator_id', $this->selectedEvaluator)
+                ->where('employee_id', $employeeId)
+                ->delete();
 
             // Loop through selected branches and departments and store in the database
             foreach ($this->selectedDepartments as $branchId => $selectedDepartmentIds) {
@@ -71,6 +87,7 @@ class EvaluationPermissionShow extends Component
                     ]);
                 }
             }
+
             // Add any additional logic or success messages here
 
             return redirect()->route('settings.evalpermEdit', ['id' => $employeeId]);

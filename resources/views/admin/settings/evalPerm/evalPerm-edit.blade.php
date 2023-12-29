@@ -29,7 +29,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-
                         <a href="{{ route('settings.evalpermShow', ['id' => $evaluationPermissions->first()->employee_id]) }}"
                             class="btn btn-success m-t-15 m-l-15">Edit</a>
                     </div>

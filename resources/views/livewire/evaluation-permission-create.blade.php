@@ -8,7 +8,6 @@
                     <h3>Evaluation Permission</h3>
                 </div>
                 <div class="card-body">
-
                     <div class="form-row">
                         <div class="col-md-6">
                             <label for="evaluator">Select Evaluator:</label>

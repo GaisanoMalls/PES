@@ -425,8 +425,14 @@ class ReviewEvaluation extends Component
         $branch = $this->evaluation->employee->branch; // Corrected typo: 'brahcn' to 'branch'
 
         $departmentConfig = DepartmentConfiguration::where('department_id', $department->id)->where('branch_id', $branch->id)->first();
+        $departmentConfigId = optional($departmentConfig)->id;
 
-        $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)->get();
+        // Check if $evaluationApprovers is null
+        $isDepartmentConfigNull = is_null($departmentConfig);
+        // Use conditional check to prevent accessing id property on null object
+        $evaluationApprovers = $isDepartmentConfigNull
+            ? collect()  // Provide an empty collection if $departmentConfig is null
+            : EvaluationApprovers::where('department_configuration_id', $departmentConfigId)->get();
 
         // Access the number_of_approvers or set it to a default value (e.g., 0) if not found
         $departmentApproversCount = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
