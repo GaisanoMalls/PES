@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Branch;
 use App\Models\Department;
 use App\Models\DisapprovalReason;
 use App\Models\Evaluation;
@@ -20,6 +21,7 @@ class EvaluationsTable2 extends Component
     public $statusFilter;
     public $recommendationFilter;
     public $departmentFilter = ''; // Add this property
+    public $branchFilter = '';
     protected $paginationTheme = 'bootstrap';
     public $showAllEvaluations = true; // Add this property
 
@@ -70,6 +72,17 @@ class EvaluationsTable2 extends Component
                 });
             });
         }
+        if ($this->departmentFilter && $this->departmentFilter !== 'All') {
+            $evaluationsQuery->whereHas('employee', function ($query) {
+                $query->where('department_id', $this->departmentFilter);
+            });
+        }
+
+        if ($this->branchFilter && $this->branchFilter !== 'All') {
+            $evaluationsQuery->whereHas('employee', function ($query) {
+                $query->where('branch_id', $this->branchFilter);
+            });
+        }
 
         // Search evaluations based on Status
         if ($this->statusFilter && $this->statusFilter !== 'All') {
@@ -85,6 +98,7 @@ class EvaluationsTable2 extends Component
         }
 
         $departments = Department::all();
+        $branches = Branch::all();
 
         // Additional condition for user role 3
         if ($userRoleId == 3) {
@@ -118,8 +132,6 @@ class EvaluationsTable2 extends Component
                     });
                 });
             }
-
-            // ... (remaining code of the original query)
         }
 
         $evaluationsQuery->orderBy('created_at', 'desc'); // Add this line to sort by the latest
@@ -137,7 +149,8 @@ class EvaluationsTable2 extends Component
             'evaluations' => $evaluations,
             'evaluationTotals' => $evaluationTotals,
             'userRoleId' => $userRoleId,
-            'departments' => $departments
+            'departments' => $departments,
+            'branches' => $branches  // Remove the extra space here
         ]);
     }
 

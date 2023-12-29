@@ -61,9 +61,13 @@ class ReviewEvaluation extends Component
     public $disapprovalReason;
     public $approverFirstName;
     public $isEditing = false;
-    protected $rules = [
-        'disapprovalDescription' => 'required', // Add required validation rule for the disapproval description
-    ];
+    public function rules()
+    {
+        return [
+            'disapprovalDescription' => 'required',
+        ];
+    }
+
     public function mount(Evaluation $evaluation)
     {
         $this->evaluation = $evaluation->load('evaluationTemplate');
@@ -133,6 +137,7 @@ class ReviewEvaluation extends Component
     }
 
     public $loading = false;
+    public $wireIgnore = false;
 
     public function approveEvaluation()
     {

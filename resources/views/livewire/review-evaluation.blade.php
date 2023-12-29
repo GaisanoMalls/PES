@@ -408,8 +408,9 @@
         ])
     @endif
 
+
     <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
-        aria-labelledby="disapproveModalLabel" aria-hidden="true">
+        aria-labelledby="disapproveModalLabel" aria-hidden="true" wire:ignore>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -421,52 +422,51 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <textarea wire:model="disapprovalDescription" id="description" placeholder="Please state the reason for disapproval"
-                            class="form-control">{{ $evaluation }}</textarea>
-                        @error('disapprovalDescription')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                            class="form-control"></textarea>
+
+                        @if ($errors->has('disapprovalDescription'))
+                            <span class="text-danger">{{ $errors->first('disapprovalDescription') }}</span>
+                        @endif
                     </div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary m-t-15" data-dismiss="modal">Close</button>
                     @if ($evaluation->status != 3)
                         <button wire:click="disapproveEvaluation" wire:loading.attr="disabled"
-                            @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif
-                            @unless ($errors->has('disapprovalDescription')) data-dismiss="modal" @endif>
-                        <span wire:loading wire:target="disapproveEvaluation"
-                            class="spinner-border spinner-border-sm mr-2" role="status">Loading..</span>
-                        <span wire:loading.remove>
-                            Disapprove Evaluation
-                        </span>
-                    </button>
-                 @endif
-                            </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="modal fade" id="disapproveModal2" tabindex="-1" role="dialog"
-            aria-labelledby="disapproveModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>
+                            <span wire:loading wire:target="disapproveEvaluation"
+                                class="spinner-border spinner-border-sm mr-2" role="status"></span>Disapprove
+                            Evaluation
                         </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <span>Disapproved by {{ $approverFirstName }}:</span>
-                            <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="disapproveModal2" tabindex="-1" role="dialog"
+        aria-labelledby="disapproveModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>Disapproved by {{ $approverFirstName }}:</span>
+                        <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div

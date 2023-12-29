@@ -14,13 +14,15 @@
     </div>
     <div class="row formtype">
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label>Employee ID - Name</label>
                 <input wire:model.debounce.300ms="searchName" type="text" class="form-control mb-3"
-                    placeholder="Search by Employee ID/Name">
+                    placeholder="Search Employee">
             </div>
         </div>
+
+
         <div class="col-md-2">
             <div class="form-group">
                 <label>Department</label>
@@ -28,6 +30,18 @@
                     <option value="">All</option>
                     @foreach ($departments as $department)
                         <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Branch</label>
+                <select wire:model.debounce.300ms="branchFilter" class="form-control">
+                    <option value="">All</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -55,7 +69,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label>Search</label>
                 <!-- Add search button -->

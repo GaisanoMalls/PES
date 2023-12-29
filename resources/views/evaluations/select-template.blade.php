@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-white2">
+    <div class="bg-white2 m-t-30">
         <div class="d-flex justify-content-center align-items-center">
             <div class="col-md-5 text-center m-t-20">
                 <h2>Select an Evaluation Template</h2>

@@ -18,8 +18,9 @@
                                 <tr class="text-center">
                                     <th>ID</th>
                                     <th>Employee ID</th>
-                                    <th>Evaluator First Name</th>
-                                    <th>Evaluator Last Name</th>
+                                    <th>Email</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
                                     <th>Actions</th>
                                     <!-- Add more columns as needed -->
                                 </tr>
@@ -29,6 +30,7 @@
                                     <tr class="text-center">
                                         <td>{{ $permission->id }}</td>
                                         <td>{{ $permission->employee->employee_id }}</td>
+                                        <td>{{ $permission->user->email }}</td>
                                         <td>{{ $permission->employee->first_name }}</td>
                                         <td>{{ $permission->employee->last_name }}</td>
                                         <td>
@@ -41,8 +43,7 @@
 
                                                     <a class="dropdown-item"
                                                         href="{{ route('settings.evalpermEdit', ['id' => $permission->employee->id]) }}">Show</a>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('settings.evalpermShow', ['id' => $permission->employee->id]) }}">Edit</a>
+
                                                 </div>
 
                                             </div>

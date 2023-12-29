@@ -25,6 +25,11 @@ class EvaluationPermission extends Model
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'employee_id', 'employee_id');
+    }
+
 
 
     public function branch()

@@ -93,15 +93,17 @@
                                 </div>
                             </div>
                         @endif
-                        @if (!$editMode)
-                            <button class="btn btn-secondary" wire:click="toggleEditMode">
-                                Edit
-                            </button>
-                        @else
-                            <button class="btn btn-secondary" wire:click="toggleEditMode">
-                                Cancel
-                            </button>
-                        @endif
+                        <div class="m-t-30">
+                            @if (!$editMode)
+                                <button class="btn btn-secondary" wire:click="toggleEditMode">
+                                    Edit
+                                </button>
+                            @else
+                                <button class="btn btn-secondary" wire:click="toggleEditMode">
+                                    Cancel
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 @endif
             </div>
