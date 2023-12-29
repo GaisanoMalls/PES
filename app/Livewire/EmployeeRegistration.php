@@ -39,16 +39,9 @@ class EmployeeRegistration extends Component
     public $password;
     public $passwordConfirmation;
     public $successMessage;
+    protected $rules = [];
 
-    protected $rules = [
-        'bu_id' => 'required|numeric',
-        'department_id' => 'required|numeric',
-        'position' => 'required|string',
-        'contact_no' => 'required|string',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:8',
-        'passwordConfirmation' => 'required|same:password',
-    ];
+
     public function mount($employee)
     {
         $this->employeeId = $employee;
@@ -101,7 +94,8 @@ class EmployeeRegistration extends Component
     {
         $this->resetValidation();
 
-        if ($this->role_id == 1) {
+        if ($this->role_id == 1 || $this->role_id == 4) {
+            $this->formSubmitted = true;
         } elseif ($this->role_id == 2) {
             $this->validate([
                 'bu_id' => 'required|numeric',
@@ -110,22 +104,16 @@ class EmployeeRegistration extends Component
                 'contact_no' => 'required|string',
             ]);
         } elseif ($this->role_id == 3) {
-            $this->validate(
-                [
-                    'bu_id' => 'required|numeric',
-                    'position' => 'required|string',
-                    'contact_no' => 'required|string',
-                ]
-            );
-        } elseif ($this->role_id == 4) {
+            $this->validate([
+                'bu_id' => 'required|numeric',
+                'position' => 'required|string',
+                'contact_no' => 'required|string',
+            ]);
         } elseif ($this->role_id == 5) {
-            $this->validate(
-                [
-                    'bu_id' => 'required|numeric',
-                    'position' => 'required|string',
-                    'contact_no' => 'required|string',
-                ]
-            );
+            $this->validate([
+                'position' => 'required|string',
+                'contact_no' => 'required|string',
+            ]);
         }
 
         $this->formSubmitted = true;
@@ -133,7 +121,7 @@ class EmployeeRegistration extends Component
     public function register()
     {
 
-        $this->validate();
+
 
         // Create a new Evaluator record in the database
         $evaluator = null;
@@ -146,6 +134,13 @@ class EmployeeRegistration extends Component
             $personId = $this->employeeId;
             $employeeId = $this->employeeId;
         } elseif ($this->role_id == 2) { // Evaluator
+            $this->validate([
+                'bu_id' => 'required|numeric',
+                'department_id' => 'required|numeric',
+                'position' => 'required|string',
+                'contact_no' => 'required|string',
+            ]);
+
             $evaluator = Evaluator::create([
                 'bu_id' => $this->bu_id,
                 'department_id' => $this->department_id,
@@ -158,6 +153,12 @@ class EmployeeRegistration extends Component
             $personId = $evaluator->id;
             $employeeId = $this->employeeId;
         } else if ($this->role_id == 3) {
+            $this->validate([
+                'bu_id' => 'required|numeric',
+                'position' => 'required|string',
+                'contact_no' => 'required|string',
+            ]);
+
             $approver = Approver::create([
                 'bu_id' => $this->bu_id,
                 'first_name' => $this->first_name,
@@ -166,14 +167,19 @@ class EmployeeRegistration extends Component
                 'position' => $this->position,
                 'is_active' => $this->is_active,
             ]);
+
             $personId = $approver->id;
             $employeeId = $this->employeeId;
         } else if ($this->role_id == 4) {
             $personId = $this->employeeId;
             $employeeId = $this->employeeId;
         } else if ($this->role_id == 5) {
+            $this->validate([
+                'position' => 'required|string',
+                'contact_no' => 'required|string',
+            ]);
+
             $humanResource = HumanResource::create([
-                'bu_id' => $this->bu_id,
                 'first_name' => $this->first_name,
                 'last_name' => $this->last_name,
                 'contact_no' => $this->contact_no,

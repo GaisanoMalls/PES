@@ -191,25 +191,18 @@
                             @elseif ($role_id == 4 && !$formSubmitted)
                                 <div class="m-t-30">
                                     <h5>Employee Form</h5>
-
                                     <form wire:submit.prevent="saveFormRole">
                                         <div class="form-group">
                                             <label for="employeeId2">Employee ID</label>
                                             <input wire:model="employeeId2" type="text" name="employeeId2"
                                                 id="employeeId2" class="form-control" value="{{ $employeeId2 }}"
                                                 readonly>
-                                            @error('employeeId2')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
                                         <div class="form-group">
                                             <label for="first_name">First Name</label>
                                             <input wire:model="first_name" type="text" name="first_name"
                                                 id="first_name" class="form-control" value="{{ $first_name }}"
                                                 readonly>
-                                            @error('first_name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
 
                                         <div class="form-group">
@@ -217,9 +210,6 @@
                                             <input wire:model="last_name" type="text" name="last_name"
                                                 id="last_name" class="form-control" value="{{ $last_name }}"
                                                 readonly>
-                                            @error('last_name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
                                         <button type="submit" class="btn btn-primary">Set Employee
                                             Credentials</button>
