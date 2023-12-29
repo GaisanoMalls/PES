@@ -109,6 +109,5 @@ class DepartmentConfig extends Component
 
         // Optionally, you can reset the form after submission
         $this->reset();
-        // You can add any additional logic or redirects here
     }
 }

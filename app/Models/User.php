@@ -37,6 +37,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Approver::class, 'person_id');
     }
+
+
     public function evaluator()
     {
         return $this->belongsTo(Evaluator::class, 'person_id');

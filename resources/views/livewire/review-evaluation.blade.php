@@ -362,7 +362,6 @@
                     class="btn btn-outline-success m-t-15">Back</button></a>
             @if (Auth::user()->role_id != 4 && Auth::user()->role_id != 5)
 
-
                 @if ($evaluation->status != 2)
                     <button wire:click="approveEvaluation" wire:loading.attr="disabled"
                         @if ($isApproverLevelValid == false) disabled @endif

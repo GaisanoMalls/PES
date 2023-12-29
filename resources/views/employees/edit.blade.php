@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="m-t-30">
-        <h1>Edit Employee</h1>
+        <h3>Edit Employee</h3>
         <form action="{{ route('employees.update', $employee->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -57,6 +57,8 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Update</button>
+            <a href="{{ route('employees.show', ['employee_id' => $employee->employee_id]) }}"
+                class="btn btn-outline-success">Cancel</a>
         </form>
     </div>
 @endsection

@@ -2,7 +2,6 @@
 
     <div class="profile-header">
         <h3>Employee Details</h3>
-
         <div class="row align-items-center">
             <div class="col-auto profile-image">
                 <a href="#"> <img class="rounded-circle" alt="User Image"
@@ -33,9 +32,7 @@
                     </a>
                 </div>
             @endif
-
         </div>
-
     </div>
 
     <div class="m-t-20">

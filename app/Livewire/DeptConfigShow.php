@@ -37,7 +37,7 @@ class DeptConfigShow extends Component
         $config = DepartmentConfiguration::find($this->configId);
 
         $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $this->configId)
-            ->with('employee') // Load the related employee details
+            ->with('employee')->with('user') // Load the related employee details
             ->get();
 
 

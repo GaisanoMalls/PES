@@ -10,6 +10,10 @@
                 @if ($selectedDepartment && $config)
                     <div class="card-body">
                         <!-- Display department configuration details -->
+
+                        <div>
+                            <strong>Configuration ID:</strong> {{ $config->id }}
+                        </div>
                         <div>
                             <strong>Number of Approvers:</strong> {{ $config->number_of_approvers }}
                         </div>
@@ -26,6 +30,7 @@
                                 <thead>
                                     <tr>
                                         <th>Employee ID</th>
+                                        <th>Email</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Level</th>
@@ -35,11 +40,13 @@
                                     @foreach ($evaluationApprovers as $evalApprover)
                                         <tr>
                                             <td>{{ $evalApprover->employee_id }}</td>
+                                            <td>{{ $evalApprover->user->email }}</td>
                                             <td>{{ $evalApprover->employee->first_name }}</td>
                                             <td>{{ $evalApprover->employee->last_name }}</td>
                                             <td>{{ $evalApprover->approver_level }}</td>
                                         </tr>
                                     @endforeach
+
                                 </tbody>
                             </table>
                         </div>

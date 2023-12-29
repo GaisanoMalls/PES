@@ -500,12 +500,21 @@ class ReviewEvaluation extends Component
             $maxApproverLevel = $departmentConfig ? $departmentConfig->number_of_approvers : 0;
 
             $currentUserEmployeeId = auth()->user()->employee_id;
-            $currentUserApprover = EvaluationApprovers::where('employee_id', $currentUserEmployeeId)->first();
+            $currentUserApprover = EvaluationApprovers::where('employee_id', $currentUserEmployeeId)
+                ->where('department_configuration_id', $departmentConfig->id)
+                ->first();
 
             if ($currentUserApprover) {
                 // Check if the current user's approver level matches the expected level
-                if ($currentUserApprover->approver_level == $this->evaluation->approver_count + 1) {
-                    $isApproverLevelValid = true;
+                if ($currentUserApprover->approver_level === $this->evaluation->approver_count + 1) {
+                    // Check if the department_configuration_id matches the current $departmentConfig id
+                    $matchingDepartmentConfig = $currentUserApprover->department_configuration_id == $departmentConfig->id;
+
+                    if ($matchingDepartmentConfig) {
+                        $isApproverLevelValid = true;
+                    } else {
+                        $isApproverLevelValid = false;
+                    }
                 } else {
                     $isApproverLevelValid = false;
                 }

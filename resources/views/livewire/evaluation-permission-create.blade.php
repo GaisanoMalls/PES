@@ -36,6 +36,7 @@
                             <div class="rating-scale"></div>
                         @endforeach
                         <button wire:click="saveSelection" class="btn btn-success">Save</button>
+                        <a href="{{ route('settings.evalperm') }}" class="btn btn-success">Cancel</a>
                     </div>
                 </div>
             </div>
