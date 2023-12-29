@@ -36,7 +36,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
     <!-- Include SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @livewireStyles
+
 
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}">
@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
-
+    @livewireStyles
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -180,7 +180,7 @@
                                                                                 <line x1="9" x2="15"
                                                                                     y1="9" y2="15" />
                                                                             </svg>
-                                                                        @elseif (stripos($notification->notif_title, 'Clarificaiton') !== false)
+                                                                        @elseif (stripos($notification->notif_title, 'Clarification') === 0)
                                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                                 viewBox="0 0 24 24" width="24"
                                                                                 height="24" class="main-grid-item-icon"
@@ -445,10 +445,10 @@
 
 
     </div>
-
+    @livewireScripts
     <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
 
-    @livewireScripts
+
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

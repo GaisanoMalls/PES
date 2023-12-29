@@ -58,14 +58,26 @@ class ReviewEvaluation extends Component
 
     public $clarificationDescription;
     public $editingClarificationId = null;
-
+    public $disapprovalReason;
+    public $approverFirstName;
     public $isEditing = false;
-
+    protected $rules = [
+        'disapprovalDescription' => 'required', // Add required validation rule for the disapproval description
+    ];
     public function mount(Evaluation $evaluation)
     {
         $this->evaluation = $evaluation->load('evaluationTemplate');
         $this->loadEmployeeData();
         $this->loadRatingScales();
+
+        // Load disapproval reason information
+        $disapprovalReason = DisapprovalReason::where('evaluation_id', $evaluation->id)->first();
+
+        if ($disapprovalReason) {
+            $this->disapprovalReason = $disapprovalReason;
+            $approver = Employee::find($disapprovalReason->approver_id);
+            $this->approverFirstName = $approver ? $approver->first_name . ' ' . $approver->last_name : '';
+        }
     }
 
 
@@ -215,6 +227,8 @@ class ReviewEvaluation extends Component
     }
     public function disapproveEvaluation()
     {
+        $this->validate(); // Validate the form data
+
         $this->loading = true; // Set loading to true when the form is being submitted
 
 
@@ -228,19 +242,9 @@ class ReviewEvaluation extends Component
 
         $this->evaluation->save();
 
-        //  $userEmployeeId = Auth::user()->employee_id;
-        // $this->evaluation->status = 3;
-        // $this->evaluation->approver_id = $userEmployeeId;
-        // $this->evaluation->save();
-
-
-
-
-
         // Find the user who evaluated the performance
         $evaluator = User::where('employee_id', $this->evaluation->evaluator_id)->first();
         $url = env('APP_URL');
-
 
         // Check if the evaluator is found
         if ($evaluator && $evaluator->email) {
@@ -260,19 +264,19 @@ class ReviewEvaluation extends Component
             ]);
         }
 
-
         // Store disapproval reason
         DisapprovalReason::create([
             'evaluation_id' => $this->evaluation->id,
             'approver_id' => $userEmployeeId, // Assuming the approver is the authenticated user
             'evaluator_id' => $this->evaluation->evaluator_id, // Assuming you have the evaluator ID available
-            'description' => $this->disapprovalDescription, // Use the entered description
+            'description' => $this->disapprovalDescription,
             'status' =>   $this->evaluation->status, // Set the status as needed
         ]);
         $this->isFormSubmitted = true;
         $this->loading = false; // Set loading back to false after the form submission is complete
 
-        return redirect()->to(route('evaluations.index'));
+
+        return Redirect::route('evaluations.index');
     }
 
     public function submitClarification()

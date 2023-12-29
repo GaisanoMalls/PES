@@ -21,7 +21,7 @@
                 </svg>
 
             </a>
-            <a data-toggle="modal" data-target="#disapproveModal" class="" style="cursor: pointer;">
+            <a data-toggle="modal" data-target="#disapproveModal2" class="" style="cursor: pointer;">
                 View Reason of Disapproval
             </a>
         @elseif ($evaluation->status === 4)
@@ -422,7 +422,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <textarea wire:model="disapprovalDescription" id="description" placeholder="Please state the reason for disapproval"
-                            class="form-control"></textarea>
+                            class="form-control">{{ $evaluation }}</textarea>
                         @error('disapprovalDescription')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -430,20 +430,44 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                    <button wire:click="disapproveEvaluation" wire:loading.attr="disabled"
-                        @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif>
+                    @if ($evaluation->status != 3)
+                        <button wire:click="disapproveEvaluation" wire:loading.attr="disabled"
+                            @if ($evaluation->status == 3) class="btn btn-outline-secondary btn-right" disabled @else  class="btn btn-outline-danger btn-right" @endif
+                            @unless ($errors->has('disapprovalDescription')) data-dismiss="modal" @endif>
                         <span wire:loading wire:target="disapproveEvaluation"
-                            class="spinner-border spinner-border-sm mr-2" role="status"></span>
-                        <span wire:loading.remove wire:target="disapproveEvaluation"></span>Disapprove
-                        Evaluation
+                            class="spinner-border spinner-border-sm mr-2" role="status">Loading..</span>
+                        <span wire:loading.remove>
+                            Disapprove Evaluation
+                        </span>
                     </button>
+                 @endif
+                            </div>
+                </div>
+            </div>
+        </div>
 
+
+        <div class="modal fade" id="disapproveModal2" tabindex="-1" role="dialog"
+            aria-labelledby="disapproveModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <span>Disapproved by {{ $approverFirstName }}:</span>
+                            <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-</div>
-
-</div>
+</div
