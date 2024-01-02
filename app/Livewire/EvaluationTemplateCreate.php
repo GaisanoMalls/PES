@@ -17,8 +17,6 @@ class EvaluationTemplateCreate extends Component
 
     public $name;
     public $parts = [];
-    // Add this method to your Livewire component
-    // New property to handle the modal state
     public $newFactorName = '';
     public $newFactorDescription = '';
     public $newFactorRatingScales = [];

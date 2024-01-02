@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\EvaluationPermission;
-use App\Models\User;
 use Livewire\Component;
 
 class EvaluationPermissionEdit extends Component
@@ -98,7 +97,6 @@ class EvaluationPermissionEdit extends Component
                     }
                 }
             }
-            // Add any additional logic or success messages here
 
             return redirect()->route('settings.evalpermEdit', ['id' => $employeeId]);
         } catch (\Exception $e) {

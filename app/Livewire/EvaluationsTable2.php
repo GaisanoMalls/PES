@@ -44,7 +44,6 @@ class EvaluationsTable2 extends Component
             $evaluation->update(['status' => $newStatus]);
         }
     }
-    // ... (existing code)
 
     public function render()
     {
@@ -154,10 +153,7 @@ class EvaluationsTable2 extends Component
         ]);
     }
 
-    // ... (existing code)
 
-
-    // New method for handling the search
     public function search()
     {
         $this->render();

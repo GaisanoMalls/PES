@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Department;
 use App\Models\DisapprovalReason;
 use App\Models\Employee;
 use App\Models\Evaluation;
@@ -17,16 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use Carbon\Carbon;
-use PDF;
+
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailNotification;
 use App\Models\Clarification;
 use App\Models\DepartmentConfiguration;
 use App\Models\EvaluationApprovers;
-use Barryvdh\Snappy\Facades\SnappyPdf;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Response;
+
 
 class ReviewEvaluation extends Component
 {
@@ -235,8 +232,6 @@ class ReviewEvaluation extends Component
 
         $this->loading = true; // Set loading to true when the form is being submitted
 
-
-
         if ($this->isFormSubmitted) {
             return;
         }
@@ -380,6 +375,13 @@ class ReviewEvaluation extends Component
 
     public function storeRateeComment()
     {
+
+
+        $this->loading = true; // Set loading to true when the form is being submitted
+
+        if ($this->isFormSubmitted) {
+            return;
+        }
         $this->evaluation->update(['ratees_comment' => $this->rateeComment]);
         $this->isEditing = false;
 
@@ -396,10 +398,15 @@ class ReviewEvaluation extends Component
                 'notifiable_id' => $this->evaluation->evaluator_id,
                 'type' => 'evaluation',
                 'person_id' => $this->evaluation->id,
-                'notif_title' => "Evaluation ID: " . '' . $this->evaluation->id,
+                'notif_title' => "Employee acknowledged the evaluation (ID: " . '' . $this->evaluation->id,
                 'notif_desc' => "The employee has acknowledged the evaluation.",
             ]);
         }
+
+        $this->isFormSubmitted = true;
+        $this->loading = false; // Set loading back to false after the form submission is complete
+
+
     }
     public function toggleEditMode()
     {

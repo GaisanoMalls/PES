@@ -49,8 +49,6 @@ class EvaluationPermissionCreate extends Component
             }
         }
 
-        // Optional: You can add a success message or perform other actions here
-        // Clear the selected values after storing in the database
         $this->selectedEvaluator = null;
         $this->selectedDepartments = [];
 

@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\EvaluationPermission;
-use App\Models\User;
 use Livewire\Component;
 
 class EvaluationPermissionShow extends Component

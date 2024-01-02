@@ -84,11 +84,6 @@ class EmployeeRegistration extends Component
     {
         // Reset the Livewire component's data for the form
         $this->resetValidation();
-
-        // You can customize the logic to update the form content based on the selected role
-        // For example, if role_id is 2 (Evaluator), show the Evaluator form fields
-        // If role_id is 3 (Approver), show the Approver form fields
-        // For other roles, you can handle them accordingly
     }
     public function saveFormRole()
     {
