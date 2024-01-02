@@ -41,8 +41,7 @@
                                                     aria-labelledby="dropdownMenuButton">
                                                     <a class="dropdown-item"
                                                         href="{{ route('settings.deptconfigEdit', ['id' => $config->id]) }}">Show</a>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('settings.deptconfigEdit', ['id' => $config->id]) }}">Edit</a>
+
                                                 </div>
                                             </div>
                                         </td>

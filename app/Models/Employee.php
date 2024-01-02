@@ -42,12 +42,14 @@ class Employee extends Model
     {
         return $this->hasMany(Recommendation::class, 'employee_id', 'id');
     }
+    // Employee model
     public function evaluations()
     {
-        return $this->hasMany(Evaluation::class);
+        return $this->hasMany(Evaluation::class, 'employee_id', 'employee_id');
     }
+
     public function evaluation_permissions()
     {
-        return $this->hasMany(EvaluationPermission::class, 'employee_id', 'id');
+        return $this->hasMany(EvaluationPermission::class, 'employee_id', 'employee_id');
     }
 }

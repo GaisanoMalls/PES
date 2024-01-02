@@ -81,7 +81,9 @@ class EmployeeController extends Controller
 
     public function edit($id)
     {
-        $employee = Employee::find($id);
+
+        $employee = Employee::where('employee_id', $id)->firstOrFail();
+
         $departments = Department::all(); // Assuming your model is named 'Department'
 
         return view('employees.edit', compact('employee', 'departments'));

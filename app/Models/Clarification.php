@@ -25,7 +25,7 @@ class Clarification extends Model
     }
     public function commentorName()
     {
-        return $this->belongsTo(Employee::class, 'commentor_id');
+        return $this->belongsTo(Employee::class, 'commentor_id', 'employee_id');
     }
     public function role()
     {

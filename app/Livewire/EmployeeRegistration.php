@@ -51,7 +51,8 @@ class EmployeeRegistration extends Component
         $businessUnits = BusinessUnit::all();
         $departments = Department::all();
 
-        $employee = Employee::find($this->employeeId);
+        $employee = Employee::where('employee_id', $this->employeeId)->first();
+
         $this->name = $employee->first_name . ' ' . $employee->last_name;
 
         // Get the employee_id from the Employee model
@@ -115,9 +116,6 @@ class EmployeeRegistration extends Component
     }
     public function register()
     {
-
-
-
         // Create a new Evaluator record in the database
         $evaluator = null;
         $approver = null;

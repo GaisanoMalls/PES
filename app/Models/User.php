@@ -26,18 +26,17 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
+    // User model
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
     }
-
 
     // Define the relationship with the Approver model
     public function approver()
     {
         return $this->belongsTo(Approver::class, 'person_id');
     }
-
 
     public function evaluator()
     {

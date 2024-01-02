@@ -19,14 +19,14 @@
             </div>
             @if (Auth::user()->role_id == 2)
                 <div class="col-auto profile-btn"> <a
-                        href="{{ route('evaluations.select', ['employeeId' => $employee->id]) }}"
+                        href="{{ route('evaluations.select', ['employeeId' => $employee->employee_id]) }}"
                         class="btn btn-primary mb-3">
                         Evaluate Employee
                     </a>
                 </div>
             @endif
             @if (Auth::user()->role_id == 5 || Auth::user()->role_id == 1)
-                <div class="col-auto profile-btn"> <a href="{{ route('employees.edit', $employee->id) }}"
+                <div class="col-auto profile-btn"> <a href="{{ route('employees.edit', $employee->employee_id) }}"
                         class="btn btn-primary mb-3">
                         Edit Employee
                     </a>

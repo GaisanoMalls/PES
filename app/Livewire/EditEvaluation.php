@@ -415,7 +415,7 @@ class EditEvaluation extends Component
             $clarification->evaluation_id = $this->evaluation->id;
             $clarification->evaluator_id = $this->evaluation->evaluator_id;
             $clarification->description = $this->clarificationDescription;
-            $clarification->commentor_id = $user->employee->id;
+            $clarification->commentor_id = $user->employee->employee_id;
             $clarification->status = 4;
             $clarification->save();
 

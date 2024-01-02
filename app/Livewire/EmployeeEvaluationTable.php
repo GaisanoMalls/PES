@@ -24,7 +24,7 @@ class EmployeeEvaluationTable extends Component
         $query->orderBy(function ($query) {
             $query->select('updated_at')
                 ->from('evaluations')
-                ->whereColumn('employee_id', 'employees.id')
+                ->whereColumn('employee_id', 'employees.employee_id') // Changed to reference employee_id in employees table
                 ->latest()
                 ->limit(1);
         }, 'desc');
@@ -64,7 +64,7 @@ class EmployeeEvaluationTable extends Component
         $latestEvaluationDates = [];
         foreach ($employees as $employee) {
             $latestEvaluation = $employee->evaluations->sortByDesc('updated_at')->first(); // Sort evaluations by updated_at in descending order
-            $latestEvaluationDates[$employee->id] = $latestEvaluation ? Carbon::parse($latestEvaluation->updated_at)->format('F d, Y g:i A') : 'N/A';
+            $latestEvaluationDates[$employee->employee_id] = $latestEvaluation ? Carbon::parse($latestEvaluation->updated_at)->format('F d, Y g:i A') : 'N/A';
         }
 
         return view('livewire.employee-evaluation-table', [
@@ -74,6 +74,7 @@ class EmployeeEvaluationTable extends Component
             'latestEvaluationDates' => $latestEvaluationDates,
         ]);
     }
+
 
     // New method for handling the search
     public function search()

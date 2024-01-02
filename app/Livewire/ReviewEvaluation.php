@@ -76,7 +76,10 @@ class ReviewEvaluation extends Component
 
         if ($disapprovalReason) {
             $this->disapprovalReason = $disapprovalReason;
-            $approver = Employee::find($disapprovalReason->approver_id);
+
+            // Change 'id' to 'employee_id' in the find method
+            $approver = Employee::where('employee_id', $disapprovalReason->approver_id)->first();
+
             $this->approverFirstName = $approver ? $approver->first_name . ' ' . $approver->last_name : '';
         }
     }
@@ -195,15 +198,63 @@ class ReviewEvaluation extends Component
                 'notif_title' => $dataEvaluator['subject'],
                 'notif_desc' => $dataEvaluator['body'],
             ]);
+            NotificationEvaluation::create([
+                'type' => 'evaluation',
+                'notifiable_id' => $this->evaluation->employee_id,
+                'person_id' => $this->evaluation->id,
+                'notif_title' => $dataEvaluator['subject'],
+                'notif_desc' => $dataEvaluator['body'],
+            ]);
         }
 
-        // Check if there are HR users
 
+
+        // Assuming you have the authenticated user
+        $currentUser = auth()->user();
+
+        // NOTIFY APPROVER
+        if ($departmentConfig) {
+            // Access the evaluation_approvers table
+            $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)
+                ->get();
+
+            // Get the employee_id from evaluation_approvers and store it on notifiable_id
+            foreach ($evaluationApprovers as $approver) {
+                $notifiableId = $approver->employee_id;
+                $personId = $approver->approver_id;
+                $userApprover = $approver->user;
+
+                // Check if the userApprover should be notified
+                if ($currentUser && $currentUser->employee_id != $approver->employee_id && $userApprover && $userApprover->email && $this->evaluation->approver_count != $numberOfApprovers) {
+                    $url = env('APP_URL');
+                    // Prepare the data for the email
+                    $data = [
+                        'subject' =>  $statusLabel . 'Evaluation for' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID:' . $this->evaluation->id . ')',
+                        'body' => 'Level ' . $this->evaluation->approver_count . ' has approved the evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
+                        'link' => $url . 'evaluations/review/' . $this->evaluation->id,
+                    ];
+                    // Send email to each approver
+                    Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
+                    // Store notification in the database
+                    NotificationEvaluation::create([
+                        'type' => 'evaluation',
+                        'notifiable_id' => $approver->employee_id,
+                        'person_id' => $this->evaluation->id,
+                        'notif_title' => $data['subject'],
+                        'notif_desc' => $data['body'],
+                    ]);
+                }
+            }
+        }
+
+
+
+        // Check if there are HR users
         if ($this->evaluation->status = 2) {
             if ($hrUsers->count() > 0) {
                 $dataHR = [
-                    'subject' => $statusLabel . ' Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID: ' . $this->evaluation->id . ')',
-                    'body' => 'Level ' . $this->evaluation->approver_count . ' has approved the evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
+                    'subject' => 'Approved Evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID: ' . $this->evaluation->id . ')',
+                    'body' => 'Evaluation Approved for employee ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
                     'link' => $url . 'evaluations/view/' . $this->evaluation->id,
                 ];
                 // Send email to each HR user
@@ -309,7 +360,7 @@ class ReviewEvaluation extends Component
             $clarification->evaluation_id = $this->evaluation->id;
             $clarification->evaluator_id = $this->evaluation->evaluator_id;
             $clarification->description = $this->clarificationDescription;
-            $clarification->commentor_id = $user->employee->id;
+            $clarification->commentor_id = $user->employee->employee_id;
             $clarification->status = 4;
             $clarification->save();
 

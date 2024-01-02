@@ -42,7 +42,7 @@ class EvaluationPermissionCreate extends Component
             foreach ($selectedDepartmentIds as $departmentId) {
                 EvaluationPermission::create([
                     'evaluator_id' => $this->selectedEvaluator,
-                    'employee_id' => optional(User::find($this->selectedEvaluator)->employee)->id,
+                    'employee_id' => optional(User::find($this->selectedEvaluator)->employee)->employee_id,
                     'department_id' => $departmentId,
                     'branch_id' => $branchId,
                 ]);

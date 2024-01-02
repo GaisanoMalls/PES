@@ -2628,6 +2628,18 @@
         "BUSINESSNAME": "DSG"
     },
     {
+        "EMPID": "2019030744",
+        "LNAME": "HERAMIL",
+        "FNAME": "IRENE GRACE",
+        "MNAME": "CERBO",
+        "DEPARTMENTNAME": "SUPERMARKET",
+        "DTEHIRED": "2023-12-27",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
+        "BRANCHNAME": "DIGOS",
+        "PSITIONNAME": "ENCODER",
+        "BUSINESSNAME": "DSG"
+    },
+    {
         "EMPID": "2018035914",
         "LNAME": "MALANG",
         "FNAME": "JOLISA",
@@ -8804,7 +8816,7 @@
         "DTEHIRED": "2011-09-16",
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "DEPARTMENT HEAD",
+        "PSITIONNAME": "ASSOCIATE OPERATIONS MANAGER",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -10125,18 +10137,6 @@
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "STORE HEAD",
-        "BUSINESSNAME": "DSG"
-    },
-    {
-        "EMPID": "1418023225",
-        "LNAME": "GONZALES",
-        "FNAME": "JONELYN",
-        "MNAME": "",
-        "DEPARTMENTNAME": "CINEMA",
-        "DTEHIRED": "2017-02-17",
-        "EMPLOYMENTSTATUS": "REGULAR",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "PROJECTIONIST",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -12261,18 +12261,6 @@
         "EMPLOYMENTSTATUS": "REGULAR",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "STOCKMAN",
-        "BUSINESSNAME": "DSG"
-    },
-    {
-        "EMPID": "2202090344",
-        "LNAME": "RIVERA",
-        "FNAME": "MICAH CHARLENE",
-        "MNAME": "GOHETIA",
-        "DEPARTMENTNAME": "TRMO",
-        "DTEHIRED": "2022-09-02",
-        "EMPLOYMENTSTATUS": "REGULAR",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "COORDINATOR",
         "BUSINESSNAME": "DSG"
     },
     {
@@ -14796,18 +14784,6 @@
         "BUSINESSNAME": "DSG"
     },
     {
-        "EMPID": "1912023330",
-        "LNAME": "LLANES",
-        "FNAME": "SHAIRA",
-        "MNAME": "SINAMBAN",
-        "DEPARTMENTNAME": "FINANCE",
-        "DTEHIRED": "2019-02-12",
-        "EMPLOYMENTSTATUS": "REGULAR",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "ACCOUNTING SPECIALIST",
-        "BUSINESSNAME": "DSG"
-    },
-    {
         "EMPID": "1917024321",
         "LNAME": "BAUL",
         "FNAME": "EUNICE",
@@ -17268,18 +17244,6 @@
         "BUSINESSNAME": "DSG"
     },
     {
-        "EMPID": "2306011144",
-        "LNAME": "REYNOSO",
-        "FNAME": "MARIA ISABEL GRACE",
-        "MNAME": "BELDAD",
-        "DEPARTMENTNAME": "LEASING",
-        "DTEHIRED": "2023-01-06",
-        "EMPLOYMENTSTATUS": "REGULAR",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "LEASING MARKETING OFFICER",
-        "BUSINESSNAME": "DSG"
-    },
-    {
         "EMPID": "1617042843",
         "LNAME": "SANGLITAN",
         "FNAME": "ELESON",
@@ -19572,18 +19536,6 @@
         "BUSINESSNAME": "DSG"
     },
     {
-        "EMPID": "2306102435",
-        "LNAME": "ELIEDO",
-        "FNAME": "MICHELL",
-        "MNAME": "ZAFRA",
-        "DEPARTMENTNAME": "SPECIALTY STORE",
-        "DTEHIRED": "2023-10-04",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "CASHIER",
-        "BUSINESSNAME": "DSG"
-    },
-    {
         "EMPID": "0801043259",
         "LNAME": "HARINA",
         "FNAME": "SHIELA MAE",
@@ -19668,18 +19620,6 @@
         "BUSINESSNAME": "DSG"
     },
     {
-        "EMPID": "2311105803",
-        "LNAME": "RUELAN",
-        "FNAME": "JANETH",
-        "MNAME": "NAVARRO",
-        "DEPARTMENTNAME": "SPECIALTY STORE",
-        "DTEHIRED": "2023-10-11",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "CASHIER",
-        "BUSINESSNAME": "DSG"
-    },
-    {
         "EMPID": "2318100236",
         "LNAME": "PULANGAS",
         "FNAME": "RIZZA JANE",
@@ -19698,18 +19638,6 @@
         "MNAME": "TAWAS",
         "DEPARTMENTNAME": "SPECIALTY STORE",
         "DTEHIRED": "2023-10-11",
-        "EMPLOYMENTSTATUS": "PROBATIONARY",
-        "BRANCHNAME": "DAVAO",
-        "PSITIONNAME": "CASHIER",
-        "BUSINESSNAME": "DSG"
-    },
-    {
-        "EMPID": "2331100958",
-        "LNAME": "SUPANGAN",
-        "FNAME": "CATHERINE",
-        "MNAME": "NOBLE",
-        "DEPARTMENTNAME": "SPECIALTY STORE",
-        "DTEHIRED": "2023-10-31",
         "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "CASHIER",
@@ -19926,7 +19854,7 @@
         "MNAME": "TAMPAL",
         "DEPARTMENTNAME": "HRD",
         "DTEHIRED": "2023-12-07",
-        "EMPLOYMENTSTATUS": "REGULAR",
+        "EMPLOYMENTSTATUS": "PROBATIONARY",
         "BRANCHNAME": "DAVAO",
         "PSITIONNAME": "HR ASSOCIATE",
         "BUSINESSNAME": "DSG"
@@ -30950,7 +30878,7 @@
     {
         "EMPID": "2328035647",
         "LNAME": "GALOCGOC III",
-        "FNAME": "MC EARL ",
+        "FNAME": "POTENCIANO MC EARL ",
         "MNAME": "ANGUS",
         "DEPARTMENTNAME": "TRMO",
         "DTEHIRED": "2023-03-28",

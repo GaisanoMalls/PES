@@ -53,7 +53,8 @@ class EvaluationController extends Controller
     //create evaluation for employee
     public function create($employee, $template)
     {
-        $employee = Employee::find($employee);
+        $employee = Employee::where('employee_id', $employee)->firstOrFail();
+
         $template = EvaluationTemplate::find($template);
 
         if (!$employee || !$template) {
@@ -69,8 +70,8 @@ class EvaluationController extends Controller
 
     public function selectTemplate($employeeId)
     {
-        // Fetch employee data from the database
-        $employee = Employee::find($employeeId);
+
+        $employee = Employee::where('employee_id', $employeeId)->firstOrFail();
 
         // Fetch evaluation templates from the database
         $evaluationTemplates = EvaluationTemplate::where('status', 1)->get();

@@ -57,8 +57,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Update</button>
-            <a href="{{ route('employees.show', ['employee_id' => $employee->employee_id]) }}"
-                class="btn btn-outline-success">Cancel</a>
+            <a href="{{ route('employees.index') }}" class="btn btn-outline-success">Cancel</a>
         </form>
     </div>
 @endsection

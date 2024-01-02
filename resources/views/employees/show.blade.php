@@ -25,7 +25,7 @@
                 <a href="{{ route('employees.create', ['employee_id' => $employee->employee_id]) }}">
                     <button class="btn btn-primary">Create User</button>
                 </a>
-                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ route('employees.edit', $employee->employee_id) }}" class="btn btn-warning">Edit</a>
                 <a href="{{ route('employees.index') }}" class="btn btn-secondary">Back to List</a>
             </div>
         </div>

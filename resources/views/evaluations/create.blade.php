@@ -6,7 +6,7 @@
     <div class="m-t-30">
         <div class="container">
 
-            <livewire:evaluation-form :employee="$employee->id" :templateName="$templateName" :templateId="$template->id" />
+            <livewire:evaluation-form :employee="$employee->employee_id" :templateName="$templateName" :templateId="$template->id" />
         </div>
 
     </div>

@@ -40,12 +40,9 @@
                                                         class="fas fa-ellipsis-v ellipse_color"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right"
                                                     aria-labelledby="dropdownMenuButton">
-
                                                     <a class="dropdown-item"
-                                                        href="{{ route('settings.evalpermEdit', ['id' => $permission->employee->id]) }}">Show</a>
-
+                                                        href="{{ route('settings.evalpermEdit', ['id' => $permission->employee->employee_id]) }}">Show</a>
                                                 </div>
-
                                             </div>
                                         </td>
                                     </tr>

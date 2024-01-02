@@ -23,7 +23,7 @@
     <script>
         document.getElementById('continueButton').addEventListener('click', function() {
             var templateId = document.getElementById('template').value;
-            var employeeId = '{{ $employee->id }}'; // Assuming you have access to the employee ID
+            var employeeId = '{{ $employee->employee_id }}'; // Assuming you have access to the employee ID
 
             if (templateId !== "--Select--") {
                 var url = '/evaluations/create/' + employeeId + '/' + templateId;

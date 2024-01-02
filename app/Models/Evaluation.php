@@ -33,14 +33,15 @@ class Evaluation extends Model
     {
         return $this->belongsTo(Evaluator::class, 'evaluator_id', 'id');
     }
+    // Evaluation.php (or your relevant model file)
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
     }
 
     public function evaluatorEmployee()
     {
-        return $this->belongsTo(Employee::class, 'evaluator_id', 'id');
+        return $this->belongsTo(Employee::class, 'evaluator_id', 'employee_id');
     }
     public function approverEmployee()
     {

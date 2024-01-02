@@ -76,10 +76,10 @@
                                 <td>{{ $employee->last_name }}</td>
                                 <td>{{ $employee->first_name }}</td>
                                 <td>{{ $employee->position }}</td>
-                                <td>{{ $latestEvaluationDates[$employee->id] }}</td>
+                                <td>{{ $latestEvaluationDates[$employee->employee_id] }}</td>
                                 <td>{{ $employee->evaluations->count() }}</td>
                                 <td>
-                                    <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->id]) }}"
+                                    <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->employee_id]) }}"
                                         class="btn btn-outline-secondary">Show</a>
                                 </td>
 

@@ -19,7 +19,7 @@ class EmployeeDetails extends Component
 
     public function render()
     {
-        $employee = Employee::findOrFail($this->employeeId);
+        $employee = Employee::where('employee_id', $this->employeeId)->firstOrFail();
         $evaluations = Evaluation::where('employee_id', $this->employeeId)
             ->orderBy('created_at', 'desc') // Add this line to order by latest date
             ->get();

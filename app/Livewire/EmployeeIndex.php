@@ -47,7 +47,7 @@ class EmployeeIndex extends Component
         } else {
             // Retrieve the current user's evaluator ID
             $evaluatorId = Auth::user()->employee_id;
-
+            // dd($evaluatorId);
             // Build the query with evaluation permissions
             $query = Employee::join('evaluation_permissions', function ($join) use ($evaluatorId) {
                 $join->on('employees.department_id', '=', 'evaluation_permissions.department_id')

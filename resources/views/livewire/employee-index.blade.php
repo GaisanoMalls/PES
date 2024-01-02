@@ -114,10 +114,10 @@
                                                         <a href="{{ route('employees.show', ['employee_id' => $employee->employee_id]) }}"
                                                             class="btn btn-outline-success">Show</a>
                                                     @elseif(Auth::user()->role_id == 2)
-                                                        <a href="{{ route('evaluations.select', ['employeeId' => $employee->id]) }}"
+                                                        <a href="{{ route('evaluations.select', ['employeeId' => $employee->employee_id]) }}"
                                                             class="btn btn-outline-success">Evaluate</a>
                                                     @endif
-                                                    <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->id]) }}"
+                                                    <a href="{{ route('employees.evaluations-view', ['employee_id' => $employee->employee_id]) }}"
                                                         class="btn btn-outline-success">View</a>
 
                                                 </td>

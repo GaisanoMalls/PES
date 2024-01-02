@@ -218,7 +218,7 @@ class EvaluationForm extends Component
         // Create a new evaluation record
         $evaluation =  Evaluation::create([
             'approver_count' => 0,
-            'evaluator_id' => $user->employee->id,
+            'evaluator_id' => $user->employee->employee_id,
             'employee_id' => $this->employeeId,
             'evaluation_template_id' => $this->templateId,
             'recommendation_note' => $recommendationNote,
@@ -264,7 +264,7 @@ class EvaluationForm extends Component
                     // Create the evaluation point record with the found IDs
                     EvaluationPoint::create([
                         'evaluation_id' => $evaluation->id,
-                        'evaluator_id' => $user->employee->id,
+                        'evaluator_id' => $user->employee->employee_id,
                         'employee_id' => $this->employeeId,
                         'evaluation_template_id' => $this->templateId,
                         'part_id' => $part->id,
@@ -312,7 +312,7 @@ class EvaluationForm extends Component
                 // Store notification in the database
                 NotificationEvaluation::create([
                     'type' => 'evaluation',
-                    'notifiable_id' => $notifiableId,
+                    'notifiable_id' => $userApprover->employee_id,
                     'person_id' => $evaluation->id,
                     'notif_title' => $data['subject'],
                     'notif_desc' => $data['body'],
@@ -372,7 +372,8 @@ class EvaluationForm extends Component
 
     public function render()
     {
-        $employee = Employee::find($this->employeeId);
+        $employee = Employee::where('employee_id', $this->employeeId)->firstOrFail();
+
         $department = Department::find($employee->department_id);
         $this->departmentName = $department->name;
         $this->employeeIdCompany = $employee->employee_id;
