@@ -293,8 +293,8 @@ class EvaluationForm extends Component
         if ($departmentConfiguration) {
             // Access the evaluation_approvers table
             $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfiguration->id)
+                ->where('approver_level', 1) // Add this condition to filter by approver_level equal to 1
                 ->get();
-
             // Get the employee_id from evaluation_approvers and store it on notifiable_id
             foreach ($evaluationApprovers as $approver) {
                 $notifiableId = $approver->employee_id;
