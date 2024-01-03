@@ -13,6 +13,10 @@
                                     <label>Evaluation Template Name</label>
                                     <input type="text" wire:model="name" class="form-control">
                                 </div>
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+
                             </div>
                         </div>
                         <div>
@@ -30,6 +34,9 @@
                                                 <input type="text" class="form-control"
                                                     id="part_name_{{ $partIndex }}"
                                                     wire:model="parts.{{ $partIndex }}.name">
+                                                @error('parts.' . $partIndex . '.name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -66,7 +73,10 @@
                                                         <input class="form-control" type="text"
                                                             id="factor_name_{{ $partIndex }}_{{ $factorIndex }}"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.name">
-
+                                                        @error('parts.' . $partIndex . '.factors.' . $factorIndex .
+                                                            '.name')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>
@@ -79,6 +89,10 @@
                                                             Description:</label>
                                                         <textarea class="form-control" type="text" id="factor_desc_{{ $partIndex }}_{{ $factorIndex }}"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.description"></textarea>
+                                                        @error('parts.' . $partIndex . '.factors.' . $factorIndex .
+                                                            '.description')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>
@@ -90,6 +104,10 @@
                                                         <label>{{ $scale['name'] }}</label>
                                                         <input class="form-control" type="number"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
+                                                        @error('parts.' . $partIndex . '.factors.' . $factorIndex .
+                                                            '.rating_scales.' . $scale['id'])
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -107,9 +125,9 @@
                                     </div>
                                 </div>
                                 <!-- Add Factor Modal -->
-                                <div wire:ignore.self class="modal fade" id="addFactorModal_{{ $partIndex }}"
-                                    tabindex="-1" role="dialog"
-                                    aria-labelledby="addFactorModalLabel_{{ $partIndex }}" aria-hidden="true">
+                                <div class="modal fade" id="addFactorModal_{{ $partIndex }}" tabindex="-1"
+                                    role="dialog" aria-labelledby="addFactorModalLabel_{{ $partIndex }}"
+                                    aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -123,25 +141,16 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                @if ($errors->any())
-                                                    <div class="alert alert-danger">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
+
                                                 <!-- Modal content goes here, similar to the fields for adding a factor -->
                                                 <div class="form-group">
                                                     <label for="newFactorName">Factor Name:</label>
                                                     <input type="text" class="form-control" id="newFactorName"
-                                                        wire:model="newFactorName" wire:change="validateInputs">
+                                                        wire:model="newFactorName">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="newFactorDescription">Factor Description:</label>
-                                                    <textarea class="form-control" id="newFactorDescription" wire:model="newFactorDescription"
-                                                        wire:change="validateInputs"></textarea>
+                                                    <textarea class="form-control" id="newFactorDescription" wire:model="newFactorDescription"></textarea>
                                                 </div>
                                                 <!-- Rating Scales and Equivalent Points -->
                                                 <div class="rating-scale"></div>
@@ -150,9 +159,8 @@
                                                     @foreach ($ratingScales as $scale)
                                                         <div class="col-md-2">
                                                             <label>{{ $scale['name'] }}</label>
-                                                            <input class="form-control" type="number" step="0.01"
-                                                                wire:model="newFactorRatingScales.{{ $scale['id'] }}"
-                                                                wire:change="validateInputs">
+                                                            <input class="form-control" type="number"
+                                                                wire:model="newFactorRatingScales.{{ $scale['id'] }}">
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -162,7 +170,7 @@
                                                     data-dismiss="modal">Close</button>
                                                 <button type="button" class="btn btn-primary"
                                                     wire:click="addFactor({{ $partIndex }})"
-                                                    @if ($isValid) data-dismiss="modal" @endif>Add
+                                                    data-dismiss="modal">Add
                                                     Factor</button>
                                             </div>
                                         </div>
@@ -181,14 +189,4 @@
             </div>
         </div>
     </div>
-    {{-- <script>
-        function openAddFactorModal(partIndex) {
-            console.log("Received partIndex:", partIndex);
-            // ... Store the partIndex in a variable accessible within the function
-            const currentPartIndex = partIndex;
-            // ... Open the modal using the dynamic ID
-            $(`#addFactorModal_${currentPartIndex}`).modal('show');
-        }
-    </script> --}}
-
 </div>

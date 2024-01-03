@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\ActiveUserExports;
 use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
@@ -156,5 +157,12 @@ Route::middleware('auth')->group(
             Auth::user()->unreadNotifications->markAsRead();
             return redirect()->back();
         })->name('markAllAsRead');
+
+
+
+        //REPORT
+        Route::get('/recommended', [ReportsController::class, 'recommended'])->name('reports.recommended');
+        Route::get('/recommended/download-excel', [ReportsController::class, 'downloadExcel'])->name('reports.recommended.download.excel');
+        Route::get('/recommended/download-pdf', [ReportsController::class, 'downloadPdf'])->name('reports.recommended.download.pdf');
     }
 );

@@ -98,7 +98,7 @@ class DailyNotification extends Command
                     NotificationEmployee::create([
                         'type' => 'employee',
                         'notifiable_id' => $user->employee_id,
-                        'person_id' => $employee->id,
+                        'person_id' => $employee->employee_id,
                         'notif_title' => $subject,
                         'notif_desc' => $body,
                     ]);
@@ -133,7 +133,7 @@ class DailyNotification extends Command
                     NotificationEmployee::create([
                         'type' => 'employee',
                         'notifiable_id' => $user->employee_id,
-                        'person_id' => $employee->id,
+                        'person_id' => $employee->employee_id,
                         'notif_title' => $subject,
                         'notif_desc' => $body,
                     ]);

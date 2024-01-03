@@ -43,6 +43,10 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+
     @livewireStyles
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -462,6 +466,9 @@
     <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
     <script>
         window.addEventListener('swal:modal', event => {

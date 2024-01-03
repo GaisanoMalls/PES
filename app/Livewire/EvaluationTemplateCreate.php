@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 
 class EvaluationTemplateCreate extends Component
 {
+    protected $debug = true;
 
 
     public $name;
@@ -23,18 +24,16 @@ class EvaluationTemplateCreate extends Component
     public $currentPartIndex;
     public $currentFactorIndex;
 
-    protected $rules = [
-        'newFactorName' => 'required',
-        'newFactorDescription' => 'required',
-        'newFactorRatingScales' => 'required|array|filled:numeric|between:0,100|size:5|descending_order',
-        'newFactorRatingScales.*' => 'numeric|between:0,100', // Assuming a numeric rating scale between 0 and 100
-    ];
-    public $isValid = false; // Add this line
-    public function validateInputs()
+    public function addPart()
     {
-        $this->validate();
-        $this->isValid = true;
+        $this->parts[] = [
+            'name' => '',
+            'criteria_allocation' => 0.0,
+            'factors' => []
+        ];
     }
+
+
     public function addFactor($partIndex)
     {
 
@@ -44,9 +43,6 @@ class EvaluationTemplateCreate extends Component
             if (!is_array($this->newFactorRatingScales)) {
                 $this->newFactorRatingScales = [];
             }
-            arsort($this->newFactorRatingScales);
-
-            $this->validate();
 
             $newFactor = [
                 'name' => $this->newFactorName,
@@ -59,53 +55,76 @@ class EvaluationTemplateCreate extends Component
 
             // Reset the input fields
             $this->reset(['newFactorName', 'newFactorDescription', 'newFactorRatingScales']);
-            $this->isValid = true;
-        } else {
-            // Set $isValid to false if any required field is empty
-            $this->isValid = false;
+
+            // Close the modal
+            $this->dispatch('closeAddFactorModal');
         }
     }
 
-    public function addPart()
-    {
-        $this->parts[] = [
-            'name' => '',
-            'criteria_allocation' => 0.0,
-            'factors' => []
-        ];
-    }
-
-    public function removeFactor($partIndex, $factorIndex)
-    {
-        array_splice($this->parts[$partIndex]['factors'], $factorIndex, 1);
-    }
-
-    public function removePart($partIndex)
-    {
-        $partModel = isset($this->template->parts[$partIndex]) ? $this->template->parts[$partIndex] : null;
-
-        // Delete the part and its factors only if it exists
-        if ($partModel) {
-            // Delete factors
-            foreach ($partModel->factors as $factor) {
-                $factor->delete();
-            }
-
-            // Delete the part
-            $partModel->delete();
-        }
-
-        array_splice($this->parts, $partIndex, 1);
-    }
     public function createEvaluationTemplate()
     {
-        // Calculate the total criteria allocation
-        $totalAllocation = array_sum(array_column($this->parts, 'criteria_allocation'));
 
-        // Validate total criteria allocation
-        if ($totalAllocation !== 100) {
-            $this->addError('parts.criteria_allocation', 'Total criteria allocation must be 100.');
-            return;
+        // // Validate Evaluation Template Name
+        // $this->validate([
+        //     'name' => 'required|string|max:255',
+        // ]);
+        // // Calculate the total criteria allocation
+        // $totalAllocation = array_sum(array_column($this->parts, 'criteria_allocation'));
+
+        // // Validate total criteria allocation
+        // if ($totalAllocation !== 100) {
+        //     $this->addError('parts.criteria_allocation', 'Total criteria allocation must be 100.');
+        //     return;
+        // }
+
+        // // Validate Parts and Factors
+        // foreach ($this->parts as $partIndex => $part) {
+        //     $partRules = [
+        //         'parts.' . $partIndex . '.name' => 'required|string|max:255',
+        //         'parts.' . $partIndex . '.criteria_allocation' => 'required|numeric|min:0|max:100',
+        //     ];
+
+        //     foreach ($part['factors'] as $factorIndex => $factor) {
+        //         $factorRules = [
+        //             'parts.' . $partIndex . '.factors.' . $factorIndex . '.name' => 'required|string|max:255',
+        //             'parts.' . $partIndex . '.factors.' . $factorIndex . '.description' => 'required|string',
+        //         ];
+
+
+
+        //         foreach ($factor['rating_scales'] as $scaleId => $equivalentPoints) {
+        //             $factorRules['parts.' . $partIndex . '.factors.' . $factorIndex . '.rating_scales'] = 'required|array|size:5|descending_order';
+        //         }
+        //         $this->validate($factorRules);
+        //     }
+
+        //     $this->validate($partRules);
+        // }
+        $this->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Validate Parts and Factors
+        foreach ($this->parts as $partIndex => $part) {
+            $partRules = [
+                'parts.' . $partIndex . '.name' => 'required|string|max:255',
+                'parts.' . $partIndex . '.criteria_allocation' => 'required|numeric|min:0|max:100',
+            ];
+
+            foreach ($part['factors'] as $factorIndex => $factor) {
+                $factorRules = [
+                    'parts.' . $partIndex . '.factors.' . $factorIndex . '.name' => 'required|string|max:255',
+                    'parts.' . $partIndex . '.factors.' . $factorIndex . '.description' => 'required|string',
+                ];
+
+                foreach ($factor['rating_scales'] as $scaleId => $equivalentPoints) {
+                    $factorRules['parts.' . $partIndex . '.factors.' . $factorIndex . '.rating_scales' . $scaleId] = 'required|array|size:5|descending_order';
+                }
+
+                $this->validate($factorRules);
+            }
+
+            $this->validate($partRules);
         }
 
 
@@ -167,5 +186,30 @@ class EvaluationTemplateCreate extends Component
         $ratingScales = RatingScale::all();
 
         return view('livewire.evaluation-template-create', ['ratingScales' => $ratingScales]);
+    }
+
+
+
+    public function removeFactor($partIndex, $factorIndex)
+    {
+        array_splice($this->parts[$partIndex]['factors'], $factorIndex, 1);
+    }
+
+    public function removePart($partIndex)
+    {
+        $partModel = isset($this->template->parts[$partIndex]) ? $this->template->parts[$partIndex] : null;
+
+        // Delete the part and its factors only if it exists
+        if ($partModel) {
+            // Delete factors
+            foreach ($partModel->factors as $factor) {
+                $factor->delete();
+            }
+
+            // Delete the part
+            $partModel->delete();
+        }
+
+        array_splice($this->parts, $partIndex, 1);
     }
 }
