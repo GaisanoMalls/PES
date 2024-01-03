@@ -109,5 +109,6 @@ class DepartmentConfig extends Component
 
         // Optionally, you can reset the form after submission
         $this->reset();
+        $this->dispatch('showSuccessAlert', ['message' => 'Form submitted successfully!']);
     }
 }

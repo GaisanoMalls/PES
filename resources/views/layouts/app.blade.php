@@ -385,7 +385,7 @@
                                 @if (Auth::user()->role_id == 5)
                                     <li class="{{ request()->routeIs('templates.index') ? 'active' : '' }}">
                                         <a href="{{ route('templates.index') }}"><i
-                                                class="fa fa-user-circle"></i><span>Evaluation Template</span></a>
+                                                class="fas fa-file-alt"></i><span>Evaluation Template</span></a>
                                     </li>
                                     <li>
                                         <a><i class="fe fe-table"></i> <span> Reports

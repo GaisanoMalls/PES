@@ -25,7 +25,7 @@ class Recommendation extends Model
     // Define the relationship with the Employee model
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'employee_id', 'id');
+        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
     }
 
     // Define the relationship with the Evaluation model

@@ -40,7 +40,7 @@ class Employee extends Model
     // Define the inverse relationship with the Recommendation model
     public function recommendations()
     {
-        return $this->hasMany(Recommendation::class, 'employee_id', 'id');
+        return $this->hasMany(Recommendation::class, 'employee_id', 'employee_id');
     }
     // Employee model
     public function evaluations()

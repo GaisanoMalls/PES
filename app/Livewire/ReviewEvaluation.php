@@ -229,7 +229,7 @@ class ReviewEvaluation extends Component
                     $url = env('APP_URL');
                     // Prepare the data for the email
                     $data = [
-                        'subject' =>  $statusLabel . 'Evaluation for' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID:' . $this->evaluation->id . ')',
+                        'subject' =>  $statusLabel . ' Evaluation for' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID:' . $this->evaluation->id . ')',
                         'body' => 'Level ' . $this->evaluation->approver_count . ' has approved the evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name,
                         'link' => $url . 'evaluations/review/' . $this->evaluation->id,
                     ];
