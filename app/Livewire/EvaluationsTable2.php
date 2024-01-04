@@ -156,6 +156,10 @@ class EvaluationsTable2 extends Component
 
     public function search()
     {
+        // Reset pagination to the first page before applying the search
+        $this->resetPage();
+
+        // Trigger the render method to apply the search
         $this->render();
     }
 }

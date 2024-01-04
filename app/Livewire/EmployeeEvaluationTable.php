@@ -76,9 +76,13 @@ class EmployeeEvaluationTable extends Component
     }
 
 
-    // New method for handling the search
+
     public function search()
     {
+        // Reset pagination to the first page before applying the search
+        $this->resetPage();
+
+        // Trigger the render method to apply the search
         $this->render();
     }
 }

@@ -89,7 +89,10 @@ class EmployeeIndex extends Component
     // Add the search method
     public function search()
     {
-        // You can add additional logic here if needed
-        $this->render(); // Trigger the render method to apply the search
+        // Reset pagination to the first page before applying the search
+        $this->resetPage();
+
+        // Trigger the render method to apply the search
+        $this->render();
     }
 }
