@@ -37,5 +37,10 @@ class AppServiceProvider extends ServiceProvider
 
             return $descendingOrder;
         });
+
+        Validator::replacer('descending_order', function ($message, $attribute, $rule, $parameters) {
+            // Custom error message for the descending_order rule
+            return str_replace(':attribute', $attribute, 'The Equivalent Points must be in descending order.');
+        });
     }
 }

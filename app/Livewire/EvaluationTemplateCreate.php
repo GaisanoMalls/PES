@@ -13,9 +13,6 @@ use Illuminate\Validation\Rule;
 
 class EvaluationTemplateCreate extends Component
 {
-    protected $debug = true;
-
-
     public $name;
     public $parts = [];
     public $newFactorName = '';
@@ -63,69 +60,63 @@ class EvaluationTemplateCreate extends Component
 
     public function createEvaluationTemplate()
     {
-
-        // // Validate Evaluation Template Name
-        // $this->validate([
-        //     'name' => 'required|string|max:255',
-        // ]);
-        // // Calculate the total criteria allocation
-        // $totalAllocation = array_sum(array_column($this->parts, 'criteria_allocation'));
-
-        // // Validate total criteria allocation
-        // if ($totalAllocation !== 100) {
-        //     $this->addError('parts.criteria_allocation', 'Total criteria allocation must be 100.');
-        //     return;
-        // }
-
-        // // Validate Parts and Factors
-        // foreach ($this->parts as $partIndex => $part) {
-        //     $partRules = [
-        //         'parts.' . $partIndex . '.name' => 'required|string|max:255',
-        //         'parts.' . $partIndex . '.criteria_allocation' => 'required|numeric|min:0|max:100',
-        //     ];
-
-        //     foreach ($part['factors'] as $factorIndex => $factor) {
-        //         $factorRules = [
-        //             'parts.' . $partIndex . '.factors.' . $factorIndex . '.name' => 'required|string|max:255',
-        //             'parts.' . $partIndex . '.factors.' . $factorIndex . '.description' => 'required|string',
-        //         ];
-
-
-
-        //         foreach ($factor['rating_scales'] as $scaleId => $equivalentPoints) {
-        //             $factorRules['parts.' . $partIndex . '.factors.' . $factorIndex . '.rating_scales'] = 'required|array|size:5|descending_order';
-        //         }
-        //         $this->validate($factorRules);
-        //     }
-
-        //     $this->validate($partRules);
-        // }
         $this->validate([
             'name' => 'required|string|max:255',
         ]);
+        // Calculate the total criteria allocation
+        $totalAllocation = array_sum(array_column($this->parts, 'criteria_allocation'));
+
+        // Validate total criteria allocation
+        if ($totalAllocation > 100) {
+            $this->addError('parts.criteria_allocation', 'Total criteria allocation for parts must not exceed 100.');
+            return;
+        } elseif ($totalAllocation < 100) {
+            $this->addError('parts.criteria_allocation', 'Total criteria allocation overall must be 100.');
+            return;
+        }
 
         // Validate Parts and Factors
+        $hasAtLeastOnePart = false;
+
         foreach ($this->parts as $partIndex => $part) {
             $partRules = [
                 'parts.' . $partIndex . '.name' => 'required|string|max:255',
                 'parts.' . $partIndex . '.criteria_allocation' => 'required|numeric|min:0|max:100',
             ];
 
+            $hasAtLeastOneFactor = false;
+
             foreach ($part['factors'] as $factorIndex => $factor) {
                 $factorRules = [
                     'parts.' . $partIndex . '.factors.' . $factorIndex . '.name' => 'required|string|max:255',
                     'parts.' . $partIndex . '.factors.' . $factorIndex . '.description' => 'required|string',
+                    'parts.' . $partIndex . '.factors.' . $factorIndex . '.rating_scales' => 'required|array|size:5|descending_order',
                 ];
 
-                foreach ($factor['rating_scales'] as $scaleId => $equivalentPoints) {
-                    $factorRules['parts.' . $partIndex . '.factors.' . $factorIndex . '.rating_scales' . $scaleId] = 'required|array|size:5|descending_order';
-                }
-
                 $this->validate($factorRules);
+
+                // Set flag if at least one factor is present
+                $hasAtLeastOneFactor = true;
+            }
+
+            // Validate that at least one factor is present for the current part
+            if (!$hasAtLeastOneFactor) {
+                $this->addError('parts.' . $partIndex . '.factors', 'Each part must have at least one factor.');
+                return;
             }
 
             $this->validate($partRules);
+
+            // Set flag if at least one part is present
+            $hasAtLeastOnePart = true;
         }
+
+        // Validate that at least one part is present for the template
+        if (!$hasAtLeastOnePart) {
+            $this->addError('parts', 'Each template must have at least one part.');
+            return;
+        }
+
 
 
         $this->dispatch('swal:success', [
@@ -167,6 +158,14 @@ class EvaluationTemplateCreate extends Component
         $this->reset(['name', 'parts']);
     }
 
+
+    public function render()
+    {
+        $ratingScales = RatingScale::all();
+
+        return view('livewire.evaluation-template-create', ['ratingScales' => $ratingScales]);
+    }
+
     // Function to find the maximum equivalent points
     private function getMaxEquivalentPoints($ratingScales)
     {
@@ -180,14 +179,6 @@ class EvaluationTemplateCreate extends Component
 
         return $maxPoints;
     }
-
-    public function render()
-    {
-        $ratingScales = RatingScale::all();
-
-        return view('livewire.evaluation-template-create', ['ratingScales' => $ratingScales]);
-    }
-
 
 
     public function removeFactor($partIndex, $factorIndex)

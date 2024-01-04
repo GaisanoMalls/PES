@@ -19,12 +19,16 @@
 
                             </div>
                         </div>
+                        @error('parts')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         <div>
-                            <h5 class="card-title">Parts</h5>
+
+                            <h4 class="card-title">Parts</h4>
                             @foreach ($parts as $partIndex => $part)
                                 <div class="rating-scale"></div>
                                 <div class="text-center">
-                                    <h4 class="card-title">Part {{ $loop->iteration }}</h4>
+                                    <h5 class="card-title">Part {{ $loop->iteration }}</h5>
                                 </div>
                                 <div>
                                     <div class="row">
@@ -58,11 +62,16 @@
                                         wire:click.prevent="removePart({{ $partIndex }})">Remove
                                         Part</button>
                                     <div class="rating-scale"></div>
-                                    <h5 class="card-title">Factors</h5>
+
+                                    <h4 class="card-title">Factors</h4>
+                                    @error('parts.' . $partIndex . '.factors')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                     @foreach ($part['factors'] as $factorIndex => $factor)
                                         <div class="rating-scale"></div>
-                                        <h5 class="card-title">Factor {{ $loop->iteration }}</h5>
-
+                                        <div class="text-center">
+                                            <h5 class="card-title">Factor {{ $loop->iteration }}</h5>
+                                        </div>
                                         <div>
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -104,12 +113,14 @@
                                                         <label>{{ $scale['name'] }}</label>
                                                         <input class="form-control" type="number"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
-                                                        @error('parts.' . $partIndex . '.factors.' . $factorIndex .
-                                                            '.rating_scales.' . $scale['id'])
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                        @enderror
                                                     </div>
                                                 @endforeach
+                                                <div class="m-t-15">
+                                                    @error('parts.' . $partIndex . '.factors.' . $factorIndex .
+                                                        '.rating_scales')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
                                             </div>
                                             <div class="text-center m-t-15 m-b-20">
                                                 <button type="button" class="btn btn-outline-danger active"
