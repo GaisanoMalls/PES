@@ -175,6 +175,10 @@
                                                         </div>
                                                     @endforeach
                                                 </div>
+                                                @error('newFactorRatingScales')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"

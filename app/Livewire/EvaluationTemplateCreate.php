@@ -36,6 +36,7 @@ class EvaluationTemplateCreate extends Component
 
         // Check if the required fields are not empty
         if (!empty($this->newFactorName) || !empty($this->newFactorDescription) || !empty($this->newFactorRatingScales)) {
+
             // Make sure $this->newFactorRatingScales is an array
             if (!is_array($this->newFactorRatingScales)) {
                 $this->newFactorRatingScales = [];

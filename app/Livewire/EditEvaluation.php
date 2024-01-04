@@ -259,11 +259,9 @@ class EditEvaluation extends Component
             ]);
         }
 
-        // You may want to update the $this->evaluation variable with the latest data
         $this->evaluation = $this->evaluation->fresh();
 
 
-        // After updating, you can redirect or perform any other actions
         session()->flash('success', 'Evaluation updated successfully.');
         return redirect()->to(route('evaluations.index'));
     }
@@ -474,9 +472,6 @@ class EditEvaluation extends Component
             $clarification->delete();
             $this->dispatch('refreshComponent');
         } else {
-            // Handle the case where the clarification does not exist (optional)
-            // For example, you can show an error message or log the issue.
-            // You can also choose to do nothing in this case if it's not critical.
         }
     }
 

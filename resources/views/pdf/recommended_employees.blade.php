@@ -362,7 +362,7 @@
             @foreach ($employeesWithRecommendations as $employee)
                 <tr>
                     <td>{{ $employee->employee_id }}</td>
-                    <td>{{ $employee->first_name }}</td>
+                    <td>{{ $employee->first_name . ' ' . $employee->last_name }}</td>
                     <td>{{ $employee->last_name }}</td>
                     <td>{{ $employee->department->name }}</td>
                     <td>{{ $employee->position }}</td>

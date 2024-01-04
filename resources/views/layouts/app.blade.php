@@ -416,7 +416,7 @@
 
                                 @if (Auth::user()->role_id == 1)
                                     <li class="submenu">
-                                        <a href="#"><i class="fas fa-user"></i> <span> Settings </span>
+                                        <a href="#"><i class="fa fa-cog"></i> <span> Settings </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
                                             style="{{ request()->routeIs('settings.evalperm') || request()->routeIs('settings.deptconfig') || request()->routeIs('settings.evalpermShow') || request()->routeIs('settings.deptconfigEdit') || request()->routeIs('settings.evalpermCreate') || request()->routeIs('settings.deptconfigCreate') || request()->routeIs('settings.evalpermEdit') ? 'display:block' : 'display:none' }}">

@@ -25,11 +25,11 @@
                         <label class="m-t-15">Choose Branches and Departments:</label><br>
                         @foreach ($branches as $branch)
                             <label>{{ $branch->name }}</label>
-                            <select class="selectpicker" wire:model="selectedDepartments.{{ $branch->id }}" multiple
-                                data-live-search="true" style="width: 100% !important;" data-width="100%" multiple
+                            <select class="selectpicker" wire:model="selectedDepartments.{{ $branch->id }}"
+                                data-live-search="true" style="width: 100% !important;" data-width="100%"
                                 data-actions-box="true" multiple title="Choose Department">
                                 @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}" style="width: 100% !important;">
+                                    <option value="{{ $department->id }}">
                                         {{ $department->name }}</option>
                                 @endforeach
                             </select><br>

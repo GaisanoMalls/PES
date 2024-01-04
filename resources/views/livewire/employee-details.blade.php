@@ -79,7 +79,7 @@
                         <td>{{ \Carbon\Carbon::parse($evaluation->created_at)->format('F d, Y g:i A') }}</td>
 
                         <th> <a class="btn btn-outline-secondary"
-                                onclick="redirectToEvaluation('{{ $evaluation->id }}', '{{ Auth::user()->role_id }}')">Show</a>
+                                onclick="redirectToEvaluation('{{ $evaluation->id }}', '{{ Auth::user()->role_id }}')">View</a>
                             <script>
                                 function redirectToEvaluation(evaluationId, userRoleId) {
                                     var baseUrl = '/evaluations';
@@ -91,7 +91,11 @@
                                     }
                                 }
                             </script>
+                            <a class="btn btn-outline-secondary"
+                                href="{{ route('evaluations.pdf', ['evaluation' => $evaluation->id]) }}">Generate
+                                PDF</a>
                         </th>
+
                     </tr>
                 @empty
                     <tr>

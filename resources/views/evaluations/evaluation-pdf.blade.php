@@ -868,74 +868,75 @@
         </div>
         {{-- END OF EMPLOYEE INPUTS --}}
 
+        @if (Auth::user()->role_id != 4)
+            @if ($evaluation->recommendation)
+                <div class="page-break"></div>
+                <div class="m-t-10">
+                    <h4 class="text-center">Recommendation</h4>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="current_salary">Current Salary:</label>
+                                <input type="number" class="form-control" wire:model="currentSalary"
+                                    value="{{ $evaluation->recommendation->current_salary }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_position">Recommended Position:</label>
+                                <input type="text" class="form-control" wire:model="recommendedPosition"
+                                    value="{{ $evaluation->recommendation->recommended_position }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="level">Level:</label>
+                                <input type="text" class="form-control" wire:model="level"
+                                    value="{{ $evaluation->recommendation->level }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_salary">Recommended Salary:</label>
+                                <input type="number" class="form-control" wire:model="recommendedSalary"
+                                    value="{{ $evaluation->recommendation->recommended_salary }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="recommended_salary">Percentage Increase:</label>
+                                <input type="number" class="form-control" wire:model="recommendedSalary"
+                                    value="{{ $evaluation->recommendation->percentage_increase }}"
+                                    style="height: 45px !important;">
+                            </div>
+                        </div>
 
-        @if ($evaluation->recommendation)
-            <div class="page-break"></div>
-            <div class="m-t-10">
-                <h4 class="text-center">Recommendation</h4>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="current_salary">Current Salary:</label>
-                            <input type="number" class="form-control" wire:model="currentSalary"
-                                value="{{ $evaluation->recommendation->current_salary }}"
-                                style="height: 45px !important;">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="effectivity_timestamp">Effectivity Timestamp:</label>
+                                <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
+                                    value="{{ $evaluation->recommendation->effectivity }}"
+                                    style="height: 45px !important;">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="recommended_position">Recommended Position:</label>
-                            <input type="text" class="form-control" wire:model="recommendedPosition"
-                                value="{{ $evaluation->recommendation->recommended_position }}"
-                                style="height: 45px !important;">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="level">Level:</label>
-                            <input type="text" class="form-control" wire:model="level"
-                                value="{{ $evaluation->recommendation->level }}" style="height: 45px !important;">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="remarks">Remarks:</label>
+                                <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
+                                    style="height: 150px; overflow: hidden;">{{ $evaluation->recommendation->remarks }}</textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="recommended_salary">Recommended Salary:</label>
-                            <input type="number" class="form-control" wire:model="recommendedSalary"
-                                value="{{ $evaluation->recommendation->recommended_salary }}"
-                                style="height: 45px !important;">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="recommended_salary">Percentage Increase:</label>
-                            <input type="number" class="form-control" wire:model="recommendedSalary"
-                                value="{{ $evaluation->recommendation->percentage_increase }}"
-                                style="height: 45px !important;">
-                        </div>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="effectivity_timestamp">Effectivity Timestamp:</label>
-                            <input type="datetime-local" class="form-control" wire:model="effectivityTimestamp"
-                                value="{{ $evaluation->recommendation->effectivity }}"
-                                style="height: 45px !important;">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="remarks">Remarks:</label>
-                            <textarea name="remarks" id="remarks" class="form-control" wire:model="remarks"
-                                style="height: 150px; overflow: hidden;">{{ $evaluation->recommendation->remarks }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         @endif
-
     </div>
 </div>
