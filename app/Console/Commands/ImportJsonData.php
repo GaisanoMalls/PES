@@ -61,6 +61,7 @@ class ImportJsonData extends Command
                     'date_hired' => $item['DTEHIRED'] ?? now(),
                     'position' => $item['PSITIONNAME'] ?? 'Unknown',
                     'employment_status' => $item['EMPLOYMENTSTATUS'] ?? 'Unknown',
+                    'level' => $item['SHIFTNAME'] ?? 'Unknown',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]

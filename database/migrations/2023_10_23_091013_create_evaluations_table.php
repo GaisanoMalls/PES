@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('approver_count');
             $table->bigInteger('evaluator_id');
-            $table->bigInteger('employee_id');
+            $table->string('employee_id');
             $table->bigInteger('evaluation_template_id');
             $table->text('recommendation_note');
             $table->text('ratees_comment');

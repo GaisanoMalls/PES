@@ -1122,6 +1122,11 @@ button.bg-danger:hover {
     text-align: center
 }
 
+input.custom-radio:disabled:checked {
+    color: #0062cc !important;
+    background-color: #0062cc !important;
+    border-color: #0062cc !important; /* Add this line to override border color if applicable */
+}
 
 
 .bootstrap-datetimepicker-widget table td.active,

@@ -145,7 +145,7 @@
                             </div>
                         @elseif($evaluation->status == 4)
                             <div class="actions">
-                                <a href="#" class="btn btn-sm bg-default-light mr-2"
+                                <a href="#" class="btn btn-sm bg-warning-light mr-2"
                                     style="cursor: default;">Clarifications</a>
                             </div>
                         @endif

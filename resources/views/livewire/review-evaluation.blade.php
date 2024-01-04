@@ -113,8 +113,15 @@
                                                 </label>
                                                 @foreach ($factorData['rating_scales'] as $ratingScale)
                                                     <label class="radio-inline">
-                                                        {{ $ratingScale->acronym }}<br>
-                                                        {{ $ratingScale->equivalent_points }}<br>
+                                                        @if (isset($selectedValues[$ratingScale->factor_id]) &&
+                                                                $selectedValues[$ratingScale->factor_id] === $ratingScale->equivalent_points)
+                                                            <strong>{{ $ratingScale->acronym }}</strong><br>
+                                                            <strong>{{ $ratingScale->equivalent_points }}</strong><br>
+                                                        @else
+                                                            {{ $ratingScale->acronym }}<br>
+                                                            {{ $ratingScale->equivalent_points }}<br>
+                                                        @endif
+
                                                         <input disabled class="custom-radio" type="radio"
                                                             name="rating_{{ $ratingScale->factor_id }}"
                                                             value="{{ $ratingScale->equivalent_points }}"
@@ -122,6 +129,7 @@
                                                                     $selectedValues[$ratingScale->factor_id] === $ratingScale->equivalent_points) checked @endif>
                                                     </label>
                                                 @endforeach
+
                                                 <label class="radio-inline">
                                                     @if ($loop->parent->first && $loop->first)
                                                         <span>POINTS<br><br>
@@ -141,7 +149,6 @@
                                             </div>
                                         </div>
                                     </div>
-
 
                                     @if ($loop->last)
                                         <div class="c m-t-20 m-r-15">
@@ -372,7 +379,6 @@
                         <span wire:loading.remove wire:target="approveEvaluation"></span>Approve Evaluation
                     </button>
 
-
                     {{-- disapprover evaluation --}}
                     <button data-toggle="modal" data-target="#disapproveModal"
                         @if ($evaluation->status == 3) style="display: none;" @endif
@@ -389,11 +395,12 @@
                         View Recommendation
                     </button>
                 @endif
+                {{-- view clarifications button --}}
+                <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5"
+                    @if ($showClarificationSection) disabled @endif>View
+                    Clarifications</button>
             @endif
-            {{-- view clarifications button --}}
-            <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5"
-                @if ($showClarificationSection) disabled @endif>View
-                Clarifications</button>
+
         </div>
 
     @endif

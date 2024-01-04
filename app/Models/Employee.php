@@ -19,6 +19,7 @@ class Employee extends Model
         'date_hired',
         'position',
         'employment_status',
+        'level',
         'is_active',
     ];
 

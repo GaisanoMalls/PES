@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('date_hired')->default('No date hired');
             $table->string('position')->default('No position');
             $table->string('employment_status')->default('No e-status');
+            $table->string('level')->default('No level');
             $table->tinyInteger('is_active')->default(1); // Default value set to 1 (active)
             $table->timestamps(); // Created at and updated at timestamps
         });
