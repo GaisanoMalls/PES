@@ -59,6 +59,15 @@
                     {{ $this->getModeButtonText() }}
                 </button>
             @endif
+        @elseif ($evaluation->status === 5)
+            <a href="#" class="btn btn-lg bg-success-light2 mb-2" style="cursor: default;">Processed
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+            </a>
         @else
             @if ($evaluation->evaluator_id == Auth::user()->employee_id)
                 <button wire:click="toggleEditMode" class="btn btn-outline-success mb-2">
@@ -377,6 +386,8 @@
                         @if ($evaluation->employee_id != Auth::user()->employee_id) readonly @endif></textarea>
                 </div>
             </div>
+
+
             {{-- END EMPLOYEE INPUTS --}}
 
 
@@ -387,15 +398,26 @@
             {{-- END CLARIFICATIONS --}}
 
 
-
             {{-- BUTTONS --}}
             <a href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}"><button
                     class="btn btn-outline-success m-t-15">Back</button></a>
 
-            @if ($evaluation->status === 2 || $evaluation->status === 3 || !$editMode)
+            @if ($evaluation->status === 3 || !$editMode)
             @else
                 <button wire:click="updateEvaluation" class="btn btn-outline-success btn-right">Update
                     Evaluation</button>
+            @endif
+
+            @if ($editMode)
+                {{-- <button wire:click="displayRecommendationSection" class="btn btn-outline-success btn-right"
+                    style="margin-right: 10px;" @if ($showRecommendationSection) hidden @endif
+                    wire:loading.attr="disabled">
+                    Add Recommendation
+                </button> --}}
+                <button type="button" class="btn btn-outline-secondary btn-right m-r-5" data-toggle="modal"
+                    data-target="#recommendationModalEdit">
+                    Add Recommendation
+                </button>
             @endif
 
             @if ($evaluation->recommendation)
@@ -415,13 +437,13 @@
             <button wire:click="displayClarificationSection" class="btn btn-outline-secondary btn-right m-r-5 "
                 @if ($showClarificationSection) disabled @endif>View
                 Clarifications</button>
-    @endif
-    {{-- END PAGE 2 --}}
+        </div>
+
+        {{-- END PAGE 2 --}}
 
 
-    {{-- MODALS --}}
-    <div wire:ignore>
-        @if ($evaluation->recommendation)
+        {{-- MODALS --}}
+        <div wire:ignore>
             <div class="modal fade" id="recommendationModalEdit" tabindex="-1" role="dialog"
                 aria-labelledby="recommendationModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document"> <!-- Add 'modal-lg' class for a larger width -->
@@ -455,16 +477,15 @@
 
                                 <div class="form-group">
                                     <label for="recommended_salary">Percentage Increase:</label>
-                                    <input type="number" class="form-control"
-                                        placeholder="{{ $evaluation->recommendation->percentage_increase }}" readonly
-                                        disabled wire:model="percentageIncrease" wire:loading.attr="disabled">
+                                    <input type="number" class="form-control" readonly disabled
+                                        wire:model="percentageIncrease" wire:loading.attr="disabled"
+                                        placeholder="{{ $evaluation->recommendation->percentage_increase }}">
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="recommended_position">Current Position:</label>
                                             <input disabled type="text" class="form-control"
-                                                wire:model="recommendedPosition"
                                                 placeholder="{{ $evaluation->employee->position ?? '' }}">
                                         </div>
                                     </div>
@@ -481,7 +502,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="level">Current Level:</label>
-                                            <input disabled type="text" class="form-control" wire:model="level"
+                                            <input disabled type="text" class="form-control"
                                                 placeholder="{{ $evaluation->employee->level ?? '' }}">
                                         </div>
                                     </div>
@@ -522,147 +543,148 @@
                     </div>
                 </div>
             </div>
-        @endif
-    </div>
 
-    <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
-        aria-labelledby="disapproveModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <span>Disapproved by {{ $approverFirstName }}:</span>
-                        <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div wire:ignore>
-        @if ($evaluation->recommendation)
-            <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog"
-                aria-labelledby="recommendationModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <!-- Add 'modal-lg' class for a larger width -->
+            <div class="modal fade" id="disapproveModal" tabindex="-1" role="dialog"
+                aria-labelledby="disapproveModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="recommendationModalLabel">Recommendation</h5>
+                            <h5 class="modal-title" id="disapproveModalLabel">Disapprove Evaluation</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="m-t-10">
-                                <div class="justify-content-center">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="current_salary">Current Salary:</label>
-                                                <input type="number" class="form-control" wire:model="currentSalary"
-                                                    wire:change="calculatePercentageIncrease"
-                                                    placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="recommended_salary">Recommended Salary:</label>
-                                                <input type="number"
-                                                    class="form-control"wire:model="recommendedSalary"
-                                                    wire:change="calculatePercentageIncrease"
-                                                    placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="recommended_salary">Percentage Increase:</label>
-                                        <input type="number" class="form-control"
-                                            placeholder="{{ $evaluation->recommendation->percentage_increase }}"
-                                            readonly disabled wire:model="percentageIncrease"
-                                            wire:loading.attr="disabled">
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="recommended_position">Current Position:</label>
-                                                <input type="text" class="form-control"
-                                                    wire:model="recommendedPosition"
-                                                    placeholder="{{ $evaluation->employee->position ?? '' }}"
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="recommended_position">Recommended Position:</label>
-                                                <input type="text" class="form-control"
-                                                    wire:model="recommendedPosition"
-                                                    placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="level">Current Level:</label>
-                                                <input type="text" class="form-control" wire:model="level"
-                                                    placeholder="{{ $evaluation->employee->level ?? '' }}" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="level">Recommended Level:</label>
-                                                <input type="text" class="form-control" wire:model="level"
-                                                    placeholder="{{ $evaluation->recommendation->level ?? '' }}"
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        @php
-                                            $effectivity = optional($evaluation->recommendation)->effectivity;
-                                            $formattedEffectivity = $effectivity ? \Carbon\Carbon::parse($effectivity)->format('Y-m-d') : null;
-                                        @endphp
-
-                                        <label for="effectivityTimestamp">Effectivity Date: </label>
-
-                                        <input type="text" class="form-control" wire:model="effectivityTimestamp"
-                                            disabled
-                                            @if ($formattedEffectivity) placeholder="{{ $formattedEffectivity }}" @endif>
-
-
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label for="remarks">Remarks:</label>
-                                        <textarea name="remarks" id="remarks" rows="5" class="form-control" wire:model="remarks"
-                                            placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" disabled></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="form-group">
+                                <span>Disapproved by {{ $approverFirstName }}:</span>
+                                <textarea id="description" class="form-control" disabled>{{ $disapprovalReason ? $disapprovalReason->description : '' }}</textarea>
                             </div>
                         </div>
-
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
-        @endif
-    </div>
+                </div>
+            </div>
 
+            <div wire:ignore>
+                <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog"
+                    aria-labelledby="recommendationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!-- Add 'modal-lg' class for a larger width -->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="recommendationModalLabel">Recommendation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="m-t-10">
+                                    <div class="justify-content-center">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="current_salary">Current Salary:</label>
+                                                    <input type="number" class="form-control"
+                                                        wire:model="currentSalary"
+                                                        wire:change="calculatePercentageIncrease"
+                                                        placeholder="{{ $evaluation->recommendation->current_salary ?? '' }}"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="recommended_salary">Recommended Salary:</label>
+                                                    <input type="number"
+                                                        class="form-control"wire:model="recommendedSalary"
+                                                        wire:change="calculatePercentageIncrease"
+                                                        placeholder="{{ $evaluation->recommendation->recommended_salary ?? '' }}"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="recommended_salary">Percentage Increase:</label>
+                                            <input type="number" class="form-control" readonly disabled
+                                                wire:model="percentageIncrease" wire:loading.attr="disabled"
+                                                placeholder="{{ $evaluation->recommendation->percentage_increase }}">
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="recommended_position">Current Position:</label>
+                                                    <input type="text" class="form-control"
+                                                        wire:model="recommendedPosition"
+                                                        placeholder="{{ $evaluation->employee->position ?? '' }}"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="recommended_position">Recommended Position:</label>
+                                                    <input type="text" class="form-control"
+                                                        wire:model="recommendedPosition"
+                                                        placeholder="{{ $evaluation->recommendation->recommended_position ?? '' }}"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="level">Current Level:</label>
+                                                    <input type="text" class="form-control" wire:model="level"
+                                                        placeholder="{{ $evaluation->employee->level ?? '' }}"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="level">Recommended Level:</label>
+                                                    <input type="text" class="form-control" wire:model="level"
+                                                        placeholder="{{ $evaluation->recommendation->level ?? '' }}"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @php
+                                                $effectivity = optional($evaluation->recommendation)->effectivity;
+                                                $formattedEffectivity = $effectivity ? \Carbon\Carbon::parse($effectivity)->format('Y-m-d') : null;
+                                            @endphp
+
+                                            <label for="effectivityTimestamp">Effectivity Date: </label>
+
+                                            <input type="text" class="form-control"
+                                                wire:model="effectivityTimestamp" disabled
+                                                @if ($formattedEffectivity) placeholder="{{ $formattedEffectivity }}" @endif>
+
+
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="remarks">Remarks:</label>
+                                            <textarea name="remarks" id="remarks" rows="5" class="form-control" wire:model="remarks"
+                                                placeholder="{{ $evaluation->recommendation->remarks ?? '' }}" disabled></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    @endif
 </div>

@@ -2,13 +2,18 @@
 
 namespace App\Livewire;
 
+use App\Mail\EmailNotification;
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\DepartmentConfiguration;
 use App\Models\DisapprovalReason;
 use App\Models\Evaluation;
+use App\Models\EvaluationApprovers;
 use App\Models\EvaluationPoint;
+use App\Models\NotificationEvaluation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -24,6 +29,7 @@ class EvaluationsTable2 extends Component
     public $branchFilter = '';
     protected $paginationTheme = 'bootstrap';
     public $showAllEvaluations = true; // Add this property
+    public $isProcessing = false;
 
     public function toggleShowAllEvaluations()
     {
@@ -44,6 +50,93 @@ class EvaluationsTable2 extends Component
             $evaluation->update(['status' => $newStatus]);
         }
     }
+    public function proccessedEvaluation($evaluationId)
+    {
+        $this->isProcessing = true;
+        $this->dispatch('swal:modalProcessed');
+
+
+        $evaluation = Evaluation::find($evaluationId);
+        $evaluation->status = 5;
+        $evaluation->save();
+
+        // Find the user who evaluated the performance
+        $evaluator = User::where('employee_id', $evaluation->evaluator_id)->first();
+
+        // Find all HR users (role_id = 5)
+        $url = env('APP_URL');
+
+        // Check if the evaluator is found
+        if ($evaluator && $evaluator->email) {
+            $dataEvaluator = [
+                'subject' => 'Processed Evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' (ID: ' . $evaluation->id . ')',
+                'body' => 'The evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' has been successfully processed. ' . $evaluation->approver_count . ' ' . ($evaluation->approver_count === 1 ? 'approval' : 'approvals') . ' have been obtained.',
+                'link' => $url . 'evaluations/view/' . $evaluation->id,
+            ];
+            // Send email to the evaluator
+            // Mail::to($evaluator->email)->send(new EmailNotification($dataEvaluator['body'], $dataEvaluator['subject'], $dataEvaluator['link']));
+            NotificationEvaluation::create([
+                'type' => 'evaluation',
+                'notifiable_id' => $evaluator->employee_id,
+                'person_id' => $evaluation->id,
+                'notif_title' => $dataEvaluator['subject'],
+                'notif_desc' => $dataEvaluator['body'],
+            ]);
+            NotificationEvaluation::create([
+                'type' => 'evaluation',
+                'notifiable_id' => $evaluation->employee_id,
+                'person_id' => $evaluation->id,
+                'notif_title' => $dataEvaluator['subject'],
+                'notif_desc' => $dataEvaluator['body'],
+            ]);
+        }
+
+
+        $departmentConfig = DepartmentConfiguration::where('department_id', $evaluation->employee->department_id)
+            ->where('branch_id', $evaluation->employee->branch_id)
+            ->first();
+
+
+        // NOTIFY APPROVER
+        if ($departmentConfig) {
+            // Access the evaluation_approvers table
+            $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfig->id)
+                ->get();
+
+            // Get the employee_id from evaluation_approvers and store it on notifiable_id
+            foreach ($evaluationApprovers as $approver) {
+
+                $userApprover = $approver->user;
+
+                $url = env('APP_URL');
+                // Prepare the data for the email
+                $data = [
+                    'subject' => 'Processed Evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' (ID: ' . $evaluation->id . ')',
+                    'body' => 'The evaluation for ' . $evaluation->employee->first_name . ' ' . $evaluation->employee->last_name . ' has been successfully processed. ' . $evaluation->approver_count . ' ' . ($evaluation->approver_count === 1 ? 'approval' : 'approvals') . ' have been obtained.',
+                    'link' => $url . 'evaluations/review/' . $evaluation->id,
+                ];
+                // Send email to each approver
+                //  Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
+                // Store notification in the database
+                NotificationEvaluation::create([
+                    'type' => 'evaluation',
+                    'notifiable_id' => $approver->employee_id,
+                    'person_id' => $evaluation->id,
+                    'notif_title' => $data['subject'],
+                    'notif_desc' => $data['body'],
+                ]);
+            }
+        }
+
+        $this->isProcessing = false;
+    }
+
+    public function unproccessedEvaluation($evaluationId)
+    {
+        $evaluation = Evaluation::find($evaluationId);
+        $evaluation->status = 2;
+        $evaluation->save();
+    }
 
     public function render()
     {
@@ -60,7 +153,7 @@ class EvaluationsTable2 extends Component
 
         // Additional condition for user role 5
         if ($userRoleId == 5) {
-            $evaluationsQuery->where('status', 2);
+            $evaluationsQuery->whereIn('status', [2, 5]);
         }
 
         if ($this->searchName) {
@@ -120,7 +213,7 @@ class EvaluationsTable2 extends Component
 
             // Additional condition for user role 5
             if ($userRoleId == 5) {
-                $evaluationsQuery->where('status', 2);
+                $evaluationsQuery->whereIn('status', [2, 5]);
             }
 
             if ($this->searchName) {

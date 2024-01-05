@@ -151,6 +151,18 @@
                                                                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                                                                 <polyline points="22 4 12 14.01 9 11.01" />
                                                                             </svg>
+                                                                        @elseif (stripos($notification->notif_title, 'Processed') === 0)
+                                                                            <!-- https://feathericons.dev/?search=clock&iconset=feather -->
+
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 24 24" width="24"
+                                                                                height="24" class="main-grid-item-icon"
+                                                                                fill="none" stroke="#0690d5"
+                                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                                stroke-width="2">
+                                                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                                                            </svg>
                                                                         @elseif (stripos($notification->notif_title, 'New') !== false)
                                                                             <!-- SVG code for New -->
                                                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -391,8 +403,8 @@
                                         <a href="{{ route('templates.index') }}"><i
                                                 class="fas fa-file-alt"></i><span>Evaluation Template</span></a>
                                     </li>
-                                    <li>
-                                        <a><i class="fe fe-table"></i> <span> Reports
+                                    <li class="submenu">
+                                        <a href="#"><i class="fe fe-table"></i> <span> Reports
                                             </span>
                                             <span class="menu-arrow"></span></a>
                                         <ul class="submenu_class"
@@ -495,7 +507,7 @@
             });
         });
 
-        window.addEventListener('swal:modal2', event => {
+        window.addEventListener('swal:modalProcessed', event => {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: "btn btn-secondary",
@@ -506,16 +518,15 @@
             swalWithBootstrapButtons.fire({
                 reverseButtons: true,
                 icon: "success",
-                title: "Evaluation Submitted with recommendations",
-                text: "2nd text",
-                footer: `2nd footer`,
+                title: "Evaluation Processed",
+                text: "Processing Complete: Employee, Evaluator and Approvers are notified. ",
                 confirmButtonText: "Close",
+                footer: ''
             }).then((result) => {
-                if (result.isConfirmed) {
-                    redirectAfterClose();
-                }
+                if (result.isConfirmed) {} else if (result.dismiss === Swal.DismissReason.cancel) {}
             });
         });
+
 
 
         window.addEventListener('swal:success', event => {

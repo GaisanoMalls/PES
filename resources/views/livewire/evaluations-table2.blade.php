@@ -60,14 +60,22 @@
             <div class="form-group">
                 <label>Status</label>
                 <select wire:model.debounce.300ms="statusFilter" class="form-control">
-                    <option value="All">All</option>
-                    <option value="1">Pending</option>
-                    <option value="2">Approved</option>
-                    <option value="3">Disapproved</option>
-                    <option value="4">Clarifications</option>
+                    @if (auth()->user()->role_id == 5)
+                        <option value="All">All</option>
+                        <option value="2">Approved</option>
+                        <option value="5">Processed</option>
+                    @else
+                        <option value="All">All</option>
+                        <option value="1">Pending</option>
+                        <option value="2">Approved</option>
+                        <option value="3">Disapproved</option>
+                        <option value="4">Clarifications</option>
+                        <option value="5">Processed</option>
+                    @endif
                 </select>
             </div>
         </div>
+
 
         <div class="col-md-2">
             <div class="form-group">
@@ -101,10 +109,9 @@
         <tbody>
 
             @forelse ($evaluations as $evaluation)
-                @if ($userRoleId == 5 && $evaluation->status != 2)
+                @if ($userRoleId == 5 && $evaluation->status != 5 && $evaluation->status != 2)
                     @continue
                 @endif
-
                 <tr class="text-center">
                     <td>{{ $evaluation->employee->employee_id }}</td>
                     <td>{{ $evaluation->employee->last_name . ', ' . $evaluation->employee->first_name }}</td>
@@ -136,7 +143,12 @@
                         @elseif($evaluation->status == 2)
                             <div class="actions">
                                 <a href="#" class="btn btn-sm bg-success-light mr-2"
-                                    style="cursor: default;">Approved</a>
+                                    wire:click="proccessedEvaluation({{ $evaluation->id }})"
+                                    wire:loading.attr="disabled" wire:target="proccessedEvaluation">
+                                    <span wire:loading wire:target="proccessedEvaluation"
+                                        class="spinner-border spinner-border-sm mr-2"></span>
+                                    Approved
+                                </a>
                             </div>
                         @elseif($evaluation->status == 3)
                             <div class="actions">
@@ -147,6 +159,11 @@
                             <div class="actions">
                                 <a href="#" class="btn btn-sm bg-warning-light mr-2"
                                     style="cursor: default;">Clarifications</a>
+                            </div>
+                        @elseif($evaluation->status == 5)
+                            <div class="actions">
+                                <a href="#" class="btn btn-sm bg-success-light2 mr-2"
+                                    style="cursor: default;">Processed</a>
                             </div>
                         @endif
                     </td>
@@ -185,6 +202,18 @@
                                             Delete
                                         </a>
                                     @endif
+                                @endif
+                                @if (Auth::user()->role_id == 5 && $evaluation->status == 2)
+                                    <a class="dropdown-item"
+                                        wire:click="proccessedEvaluation('{{ $evaluation->id }}')">
+                                        Processed
+                                    </a>
+                                @endif
+                                @if (Auth::user()->role_id == 5 && $evaluation->status == 5)
+                                    <a class="dropdown-item"
+                                        wire:click="unproccessedEvaluation({{ $evaluation->id }})">
+                                        Unprocess
+                                    </a>
                                 @endif
                             </div>
                         </div>

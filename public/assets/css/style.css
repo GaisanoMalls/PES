@@ -1165,6 +1165,13 @@ input.custom-radio:disabled:checked {
 }
 
 
+.bg-success-light2 {
+    background-color: rgba(15, 96, 183, 0.12) !important;
+    color: #0690d5 !important
+}
+
+
+
 
 .bg-purple-light {
     background-color: rgba(197, 128, 255, .12) !important;

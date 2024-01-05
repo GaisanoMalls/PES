@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\EmailNotification;
 use App\Models\Clarification;
 use App\Models\DepartmentConfiguration;
 use App\Models\DisapprovalReason;
@@ -17,7 +18,9 @@ use App\Models\Notification;
 use App\Models\NotificationEvaluation;
 use App\Models\Part;
 use App\Models\Recommendation;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class EditEvaluation extends Component
 {
@@ -67,8 +70,11 @@ class EditEvaluation extends Component
 
     public $disapprovalReason;
     public $approverFirstName;
-
-
+    public $showRecommendationSection = false;
+    public function displayRecommendationSection()
+    {
+        $this->showRecommendationSection = true;
+    }
     public function toggleEditMode()
     {
         $this->editMode = !$this->editMode;
@@ -160,6 +166,50 @@ class EditEvaluation extends Component
 
     public function updateEvaluation()
     {
+
+        // EMAIL NOTIF AND SYSTEM NOTIF
+        // Get the department configuration based on department_id and branch_id
+        $departmentConfiguration = DepartmentConfiguration::where('department_id', $this->evaluation->employee->department_id)
+            ->where('branch_id', $this->evaluation->employee->branch_id)
+            ->first();
+
+        if ($departmentConfiguration) {
+            // Access the evaluation_approvers table
+            $evaluationApprovers = EvaluationApprovers::where('department_configuration_id', $departmentConfiguration->id)->get();
+            // Get the employee_id from evaluation_approvers and store it on notifiable_id
+            foreach ($evaluationApprovers as $approver) {
+                $userApprover = User::where('employee_id', $approver->employee_id)->first();
+                $url = env('APP_URL');
+                // Prepare the data for the email
+                $data = [
+                    'subject' => 'Updated Performance Evaluation: ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' (ID:' . $this->evaluation->id . ')',
+                    'body' => 'This email is to inform you that the performance evaluation for ' . $this->evaluation->employee->first_name . ' ' . $this->evaluation->employee->last_name . ' has been updated and is now available for review. Kindly review the changes and proceed with the approval process.',
+                    'link' => $url . 'evaluations/review/' . $this->evaluation->id,
+                ];
+                // Send email to each approver
+                // Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
+                // Store notification in the database
+                $yourTimeThreshold = 1; // 1 minute
+
+                $existingNotification = NotificationEvaluation::where([
+                    'type' => 'evaluation',
+                    'notifiable_id' => $userApprover->employee_id,
+                    'person_id' => $this->evaluation->id,
+                    'notif_title' => $data['subject'],
+                    'notif_desc' => $data['body'],
+                ])->latest('created_at')->first();
+
+                if (!$existingNotification || now()->diffInMinutes($existingNotification->created_at) > $yourTimeThreshold) {
+                    NotificationEvaluation::create([
+                        'type' => 'evaluation',
+                        'notifiable_id' => $userApprover->employee_id,
+                        'person_id' => $this->evaluation->id,
+                        'notif_title' => $data['subject'],
+                        'notif_desc' => $data['body'],
+                    ]);
+                }
+            }
+        }
         foreach ($this->partsWithFactors as $partWithFactors) {
             foreach ($partWithFactors['factors'] as $factorData) {
                 $factorId = $factorData['factor']->id;
@@ -260,6 +310,11 @@ class EditEvaluation extends Component
         }
 
         $this->evaluation = $this->evaluation->fresh();
+
+
+        $this->evaluation->status = 1;
+        $this->evaluation->approver_count = 0;
+        $this->evaluation->save();
 
 
         session()->flash('success', 'Evaluation updated successfully.');
