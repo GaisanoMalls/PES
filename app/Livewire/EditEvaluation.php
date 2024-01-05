@@ -187,7 +187,7 @@ class EditEvaluation extends Component
                     'link' => $url . 'evaluations/review/' . $this->evaluation->id,
                 ];
                 // Send email to each approver
-                // Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
+                Mail::to($userApprover->email)->send(new EmailNotification($data['body'], $data['subject'], $data['link']));
                 // Store notification in the database
                 $yourTimeThreshold = 1; // 1 minute
 
