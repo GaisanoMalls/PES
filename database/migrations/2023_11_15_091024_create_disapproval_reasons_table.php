@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('disapproval_reasons', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('evaluation_id');
-            $table->unsignedBigInteger('approver_id');
-            $table->unsignedBigInteger('evaluator_id');
+            $table->string('approver_id');
+            $table->string('evaluator_id');
             $table->text('description');
             $table->tinyInteger('status');
             $table->timestamps();

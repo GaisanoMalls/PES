@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('recommendations', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('evaluation_id');
-            $table->bigInteger('employee_id');
+            $table->string('employee_id');
             $table->double('current_salary');
             $table->string('recommended_position');
             $table->string('level');

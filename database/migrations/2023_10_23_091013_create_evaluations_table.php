@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('approver_count');
-            $table->bigInteger('evaluator_id');
+            $table->string('evaluator_id');
             $table->string('employee_id');
             $table->bigInteger('evaluation_template_id');
             $table->text('recommendation_note');

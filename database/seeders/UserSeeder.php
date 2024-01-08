@@ -16,17 +16,11 @@ class UserSeeder extends Seeder
         // Define sample data for users
         $usersData = [
             [
-                'person_id' => 1, // Replace with the appropriate person_id from approvers, evaluators, or human resources
-                'role_id' => 3,  // Replace with the appropriate role_id (e.g., evaluator, approver, etc.)
-                'email' => 'approver@example.com',
-                'password' => bcrypt('password1'),
-                'is_active' => 1,
-            ],
-            [
-                'person_id' => 1, // Replace with the appropriate person_id from approvers, evaluators, or human resources
-                'role_id' => 2,  // Replace with the appropriate role_id (e.g., evaluator, approver, etc.)
-                'email' => 'evaluator@example.com',
-                'password' => bcrypt('password2'),
+                'employee_id' => 2312105223, // Replace with the appropriate person_id from approvers, evaluators, or human resources
+                'person_id' => 1,  // Replace with the appropriate role_id (e.g., evaluator, approver, etc.)
+                'role_id' => 1,
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('12'),
                 'is_active' => 1,
             ],
             // Add more users as needed

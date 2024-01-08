@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('evaluation_points', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('evaluation_id');
-            $table->bigInteger('evaluator_id');
-            $table->bigInteger('employee_id');
+            $table->string('evaluator_id');
+            $table->string('employee_id');
             $table->bigInteger('evaluation_template_id');
             $table->bigInteger('part_id');
             $table->bigInteger('factor_id');

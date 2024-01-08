@@ -192,7 +192,7 @@ class EvaluationsTable2 extends Component
         $departments = Department::all();
         $branches = Branch::all();
 
-        // Additional condition for user role 3
+        // Additional condition for user role 3 APPROVER
         if ($userRoleId == 3) {
             // New query for user role 3
             $evaluationsQuery->whereHas('employee.department', function ($query) {

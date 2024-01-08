@@ -7,11 +7,10 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ActiveUserExports implements FromQuery, WithHeadings
+class RecoEmployeeExports implements FromQuery, WithHeadings
 {
 
     use Exportable;
-
 
     private $columns = ['employee_id', 'first_name', 'last_name', 'department', 'position', 'recommendation_count'];
 

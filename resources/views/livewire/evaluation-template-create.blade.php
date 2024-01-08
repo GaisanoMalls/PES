@@ -111,7 +111,7 @@
                                                 @foreach ($ratingScales as $scale)
                                                     <div class="col-md-2">
                                                         <label>{{ $scale['name'] }}</label>
-                                                        <input class="form-control" type="number"
+                                                        <input class="form-control" type="number" step="0.01"
                                                             wire:model="parts.{{ $partIndex }}.factors.{{ $factorIndex }}.rating_scales.{{ $scale['id'] }}">
                                                     </div>
                                                 @endforeach
@@ -170,7 +170,7 @@
                                                     @foreach ($ratingScales as $scale)
                                                         <div class="col-md-2">
                                                             <label>{{ $scale['name'] }}</label>
-                                                            <input class="form-control" type="number"
+                                                            <input class="form-control" type="number" step="0.01"
                                                                 wire:model="newFactorRatingScales.{{ $scale['id'] }}">
                                                         </div>
                                                     @endforeach

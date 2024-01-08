@@ -161,8 +161,19 @@ Route::middleware('auth')->group(
 
 
         //REPORT
+        // LIST OF recommended
         Route::get('/recommended', [ReportsController::class, 'recommended'])->name('reports.recommended');
         Route::get('/recommended/download-excel', [ReportsController::class, 'downloadExcel'])->name('reports.recommended.download.excel');
         Route::get('/recommended/download-pdf', [ReportsController::class, 'downloadPdf'])->name('reports.recommended.download.pdf');
+
+
+        // LIST OF EVALUATED
+        Route::get('/evaluated/download-excel2', [ReportsController::class, 'downloadExcel2'])->name('reports.listevaluated.download.excel');
+        Route::get('/evaluated/download-pdf', [ReportsController::class, 'downloadPdf2'])->name('reports.listevaluated.download.pdf');
+
+
+        //Evalautions
+        Route::get('/evaluations/download-excel3', [ReportsController::class, 'downloadExcel3'])->name('reports.evaluation.download.excel');
+        Route::get('/evaluations/download-pdf', [ReportsController::class, 'downloadPdf2'])->name('reports.evaluation.download.pdf');
     }
 );

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('evaluation_permissions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('evaluator_id');
-            $table->bigInteger('employee_id');
+            $table->string('evaluator_id');
+            $table->string('employee_id');
             $table->bigInteger('department_id');
             $table->bigInteger('branch_id');
         });

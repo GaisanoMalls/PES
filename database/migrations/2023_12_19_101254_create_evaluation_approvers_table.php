@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('evaluation_approvers', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('approver_id');
-            $table->bigInteger('employee_id');
+            $table->string('approver_id');
+            $table->string('employee_id');
             $table->bigInteger('department_configuration_id');
             $table->integer('approver_level');
         });

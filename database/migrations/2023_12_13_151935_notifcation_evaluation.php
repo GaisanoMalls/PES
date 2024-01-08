@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('notification_evaluations', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->unsignedBigInteger('notifiable_id');
+            $table->string('notifiable_id');
             $table->bigInteger('person_id');
             $table->text('notif_title');
             $table->text('notif_desc');

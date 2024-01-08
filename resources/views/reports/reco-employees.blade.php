@@ -10,15 +10,15 @@
                 <div class="col-sm-12">
                     <div class="card card-table">
                         <div class="table-responsive">
-                            <div class="datatable table table-stripped">
-                                <table id="evaluation-templates" class="table table-hover">
+                            <div class="datatable table table-bordered">
+                                <table id="employees-table" class="table table-hover">
                                     <thead>
                                         <tr class="text-center">
-                                            <th><a class="text-black">Employee ID</a></th>
-                                            <th><a class="text-black">Department</a></th>
-                                            <th><a class="text-black">Employee Name</a></th>
-                                            <th><a class="text-black">Position</a></th>
-                                            <th><a class="text-black">Recommendation</a></th>
+                                            <th>Employee ID</th>
+                                            <th>Department</th>
+                                            <th>Employee Name</th>
+                                            <th>Position</th>
+                                            <th>Recommendation</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -38,6 +38,8 @@
                     </div>
                 </div>
             </div>
+
+            {{ $employeesWithRecommendations->links() }} <!-- This will render the pagination links -->
         </div>
     </div>
 @endsection
